@@ -5,7 +5,7 @@ interface Saveable {
     public function change($id);
     public function delete($id);
     public function getAll();
-    public function getHById($id);
+    public function getById($id);
 }
 
 ?>
