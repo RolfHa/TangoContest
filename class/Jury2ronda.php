@@ -1,17 +1,24 @@
 <?php
 class Jury2ronda {
-    private $id;
-    private $jury_id;
-    private $ronda_id;
-    private $sitzplatz;
 
-    public function __construct($jury_id, $ronda_id, $sitzplatz,$id)
+    private $jury_id;
+    private $jury;
+    private $ronda_id;
+    private $ronda;
+    private $sitzplatz;
+    private $id;
+
+
+    public function __construct($jury_id, $jury, $ronda_id, $ronda, $sitzplatz, $id)
     {
-        $this->id = $id;
         $this->jury_id = $jury_id;
+        $this->jury = $jury;
         $this->ronda_id = $ronda_id;
+        $this->ronda = $ronda;
         $this->sitzplatz = $sitzplatz;
+        $this->id = $id;
     }
+
 
     /**
      * @return mixed
@@ -77,6 +84,38 @@ class Jury2ronda {
         $this->sitzplatz = $sitzplatz;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getJury()
+    {
+        return $this->jury;
+    }
+
+    /**
+     * @param mixed $jury
+     */
+    public function setJury($jury)
+    {
+        $this->jury = $jury;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRonda()
+    {
+        return $this->ronda;
+    }
+
+    /**
+     * @param mixed $ronda
+     */
+    public function setRonda($ronda)
+    {
+        $this->ronda = $ronda;
+    }
+
 
 
 
@@ -97,6 +136,68 @@ class Jury2ronda {
             $row['sitzplatz'],
             $row['id']
         );
+        return $jury2ronda;
+    }
+
+    public static function getAll(){
+        $db = DB::connect();
+        //$sql = "SELECT * FROM jury2ronda";
+        $sql = "SELECT jury2ronda.id, 
+                jury_id, 
+                jury.vorname,
+                jury.nachname, 
+                jury2ronda.ronda_id, 
+                ronda.ronda, 
+                kategorie_id, 
+                kategorie, 
+                stufe_id, 
+                stufe, 
+                sitzplatz 
+                FROM jury2ronda 
+                join jury on jury2ronda.jury_id = jury.id
+                join ronda on jury2ronda.ronda_id=ronda.id
+                join kategorie on ronda.kategorie_id=kategorie.id
+                join stufe on ronda.stufe_id=stufe.id
+                order by sitzplatz
+                ;";
+        $result = mysqli_query($db, $sql);
+
+        $jury2ronda = array();
+        $i=0;
+        while ($row = mysqli_fetch_assoc($result)) {
+            //  *** Versuch Datenbankabfragen innerhalb einer Schleife zu vermeiden***
+
+            //$jury = Jury.getById($row['jury_id']);
+            $jury = new Jury($row['vorname'], $row['nachname'], $row['jury_id']);
+
+            //$kategorie = Kategorie.getById($row['kategorie_id']);
+            $kategorie = new Kategorie($row['kategorie'], $row['kategorie_id']);
+
+            //$stufe = Stufe.getById($row['stufe_id']);
+            $stufe =new Stufe( $row['stufe'], $row['stufe_id']);
+
+            //$ronda = Ronda.getById($row['ronda_id']);
+            $ronda = new Ronda(
+                $row['kategorie_id'],
+                $kategorie,
+                $row['stufe_id'],
+                $stufe,
+                $row['ronda'],
+                $row['ronda_id']
+            );
+
+            $jury2ronda[$i] = new Jury2ronda(
+                $row['jury_id'],
+                $jury,
+                $row['ronda_id'],
+                $ronda,
+                $row['sitzplatz'],
+                $row['id']
+            );
+            $i++;
+        }
+
+
         return $jury2ronda;
     }
 }

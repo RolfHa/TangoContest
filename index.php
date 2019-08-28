@@ -33,7 +33,7 @@
             </tr><tr>
                 <td><input type="submit" name="teilnehmerneu" value="neuer Teilnehmer"></td>
                 <td><input type="submit" name="tanzpaarneu" value="neues Tanzpaar"></td>
-                <td><input type="submit" name="juryliste" value="neues Jurymitglied"></td>
+                <td><input type="submit" name="juryneu" value="neues Jurymitglied"></td>
                 <td><input type="submit" name="rondaneu" value="Ronda anlegen"></td>
                 <td><input type="submit" name="punkeneu" value="Punkte eingeben"></td>
             </tr></table></form></nav>
@@ -84,24 +84,50 @@ elseif (isset ($_POST["tanzpaaredit"]) ){HTML::tanzpaarEdit(Tanzpaar::getById($i
 elseif (isset ($_POST["tanzpaarneu"]) ){HTML::tanzpaarNew(Tanzpaar::getAll());}
 elseif (isset ($_POST["tanzpaarspeichern"]) ){   }
 elseif (isset ($_POST["tanzpaarloeschen"]) ){   }
-
+*/
 
 //Jury
-elseif (isset ($_POST["juryliste"]) ){HTML::juryListe(Jury::getAll());}
-elseif (isset ($_POST["juryedit"]) ){HTML::juryEdit(Jury::getById($id));}
-elseif (isset ($_POST["juryneu"]) ){HTML::juryNew();}
+elseif (isset ($_POST["juryliste"]) ){
+    //HTML::juryListe(Jury::getAll());}
+    $test=Jury::getAll();
+    echo '<pre>';
+    print_r($test);
+    echo '</pre>';
+    }
+//elseif (isset ($_POST["juryedit"]) ){HTML::juryEdit(Jury::getById($id));}
+elseif (isset ($_POST["juryneu"]) ){
+    //HTML::juryNew();}
+    echo 'test id 5';
+    $test=Jury::getById(5);
+    echo '<pre>';
+    print_r($test);
+    echo '</pre>';
+}
 elseif (isset ($_POST["juryspeichern"]) ){   }
 elseif (isset ($_POST["juryloeschen"]) ){   }
 
 
 //Ronda
-//elseif (isset ($_POST["rondaliste"]) ){HTML::rondaListe(Ronda::getAll());}
-elseif (isset ($_POST["rondaedit"]) ){HTML::rondaEdit(Ronda::getById($id));}
-elseif (isset ($_POST["rondaneu"]) ){HTML::rondaNew();}
+elseif (isset ($_POST["rondaliste"]) ){
+    //HTML::rondaListe(Ronda::getAll());}
+    $test=Ronda::getAll();
+    echo '<pre>';
+    print_r($test);
+    echo '</pre>';
+}
+//elseif (isset ($_POST["rondaedit"]) ){HTML::rondaEdit(Ronda::getById($id));}
+elseif (isset ($_POST["rondaneu"]) ){
+    //HTML::rondaNew();}
+    echo 'test id 5';
+    $test=Ronda::getById(5);
+    echo '<pre>';
+    print_r($test);
+    echo '</pre>';
+}
 elseif (isset ($_POST["rondaspeichern"]) ){   }
 elseif (isset ($_POST["rondaoeschen"]) ){   }
 
-
+/*
 //Punkte
 elseif (isset ($_POST["punkteliste"]) ){HTML::punkteUebersicht(Ronda::getUebersicht());}
 elseif (isset ($_POST["punktetabelle"]) ){HTML::punkteListe(Tanzpaar::getTanzpaarByRondaId($id),Punkt::getAll());}

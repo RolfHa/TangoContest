@@ -65,7 +65,7 @@ class Jury {
 
     public static function getById($id){
         $db = DB::connect();
-        $sql = "SELECT * FROM jury WHERE ID=$id";
+        $sql = "SELECT * FROM jury WHERE id=$id";
         $result = mysqli_query($db, $sql);
         $row = mysqli_fetch_assoc($result);
         
@@ -79,7 +79,7 @@ class Jury {
 
     public static function getAll(){
         $db = DB::connect();
-        $sql = "SELECT * FROM jury WHERE ID=$id";
+        $sql = "SELECT * FROM jury;";
         $result = mysqli_query($db, $sql);
         $jury = array();
         $i=0;
@@ -89,6 +89,7 @@ class Jury {
                 $row['nachname'],
                 $row['id']
             );
+            $i++;
         }
         return $jury;
     }
