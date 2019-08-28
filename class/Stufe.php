@@ -39,4 +39,9 @@ class Stufe {
         return $stufe;
     }
 
+    public static function delete()
+    {
+        //Wird nicht benötigt
+    }
+
 }

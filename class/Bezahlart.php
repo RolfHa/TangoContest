@@ -38,6 +38,10 @@ class Bezahlart {
         );
         return $bezahlart;
     }
+    public static function delete()
+    {
+        //Wird nicht benötigt
+    }
 
     public static function getAll(){
         $db = DB::connect();

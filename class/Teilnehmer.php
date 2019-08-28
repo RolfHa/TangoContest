@@ -138,4 +138,16 @@ class Teilnehmer {
         }
         return $teilnehmer;
     }
+
+    public static function delete($id)
+    {
+        $db = DB::connect();
+        $result = Tanzpaar::getByTeilnehmerId($id);
+        if ($result === 0){
+            $sql = "DELETE FROM teilnehmer WHERE id = $id";
+            $success = mysqli_query($db, $sql);
+            return $success;
+        }
+        return false;
+    }
 }

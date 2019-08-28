@@ -152,4 +152,20 @@ class Tanzpaar {
         return $tanzpaar;
    }
 
+    public static function delete($id)
+    {
+        $db = DB::connect();
+        $sql = "DELETE FROM tanzpaar WHERE id = $id";
+        $success = mysqli_query($db, $sql);
+        return $success;
+    }
+
+    public static function getByTeilnehmerId($id)
+    {
+        $db = DB::connect();
+        $sql = "SELECT * FROM tanzpaar WHERE teilnehmer1_id = $id or teilnehmer2_id = $id";
+        $result = mysqli_num_rows($db, $sql);
+        return $result;
+    }
+
 }

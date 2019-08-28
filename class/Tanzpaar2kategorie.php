@@ -74,4 +74,9 @@ class Tanzpaar2kategorie {
         return $tanzpaar2kategorie;
     }
 
+    public static function delete()
+    {
+        //Wird nicht benötigt
+    }
+
 }
