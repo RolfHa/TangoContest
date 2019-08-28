@@ -20,10 +20,22 @@ class Jury2ronda {
         if (isset($id)){
             $this->id = $id;
         }
+
         $this->jury_id = $jury_id;
-        $this->jury = Jury::GetBYId($jury_id);
+        if ($jury==""){
+            $this->jury = Jury::GetBYId($jury_id);
+        }
+        else {
+            $this->jury = $jury;
+            }
+
         $this->ronda_id = $ronda_id;
-        $this->ronda = Ronda::GetBYId($ronda_id);
+        if ($ronda==""){
+            $this->ronda = Ronda::GetBYId($ronda_id);
+        }
+        else {
+            $this->ronda = $ronda;
+        }
         $this->sitzplatz = $sitzplatz;
     }
 
