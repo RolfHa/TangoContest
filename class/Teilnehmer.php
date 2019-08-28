@@ -99,7 +99,7 @@ class Teilnehmer {
 
    public static function getById($id){
         $db = DB::connect();
-        $sql = "SELECT * FROM teilnehmer WHERE ID=$id";
+        $sql = "SELECT * FROM teilnehmer WHERE id=$id";
         $result = mysqli_query($db, $sql);
         $row = mysqli_fetch_assoc($result);
         $teilnehmer = new Teilnehmer(
@@ -114,5 +114,28 @@ class Teilnehmer {
                 $row['id']
         );
         return $teilnehmer;
-   } 
+   }
+
+    public static function getAll(){
+        $db = DB::connect();
+        $sql = "SELECT * FROM teilnehmer ORDER by nachname";
+        $result = mysqli_query($db, $sql);
+        $teilnehmer = array();
+        $i=0;
+        while ($row = mysqli_fetch_assoc($result)) {
+            $teilnehmer[$i] = new Teilnehmer(
+                $row['vorname'],
+                $row['nachname'],
+                $row['geschlecht'],
+                $row['telefonnummer'],
+                $row['wohnort'],
+                $row['wohnland'],
+                $row['kuenstlername'],
+                $row['geburtsname'],
+                $row['id']
+                );
+            $i++;
+        }
+        return $teilnehmer;
+    }
 }
