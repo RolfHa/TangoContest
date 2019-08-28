@@ -1,13 +1,21 @@
 <?php
 class Jury {
+
     private $id;
     private $vorname;
     private $nachname;
 
-
-    public function __construct($vorname, $nachname,$id)
+    /**
+     * jury constructor.
+     * @param $id
+     * @param $vorname
+     * @param $nachname
+     */
+    public function __construct($vorname, $nachname, $id = null)
     {
-        $this->id = $id;
+        if (isset($id)){
+            $this->id = $id;
+        }
         $this->vorname = $vorname;
         $this->nachname = $nachname;
     }
@@ -59,10 +67,6 @@ class Jury {
     {
         $this->nachname = $nachname;
     }
-
-
-
-
     public static function getById($id){
         $db = DB::connect();
         $sql = "SELECT * FROM jury WHERE id=$id";
@@ -97,4 +101,18 @@ class Jury {
 
 
 
+
+    public static function delete($id)
+    {
+        $db = DB::connect();
+        $result = Punkte::getByJuryId($id);
+        if ($result === 0)
+        {
+            $success1 = Jury2ronda::deleteByJuryId($id);
+            $sql = "DELETE FROM jury WHERE id = $id";
+            $success2 = mysqli_query($db, $sql);
+            return $success1 && $success2;
+        }
+        return false;
+    }
 }

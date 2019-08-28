@@ -72,8 +72,8 @@ class Ronda {
         $result = mysqli_query($db, $sql);
         $row = mysqli_fetch_assoc($result);
         
-        $kategorie = Kategorie::getById($row['kategorie_id']);
-        $stufe = Stufe::getById($row['stufe_id']);
+        $kategorie = Kategorie.getById($row['kategorie_id']);
+        $stufe = Stufe.getById($row['stufe_id']);
         
         $ronda = new Ronda( 
             $row['kategorie_id'],
@@ -128,4 +128,49 @@ class Ronda {
         return $ronda;
     }
 
+
+    public static function  getRondaIdByStufeIdAndKategorieId($kategorie_id, $stufe_id)
+    {
+        $db = DB::connect();
+        $sql = "SELECT id FROM ronda WHERE kategorie_id=$kategorie_id AND stufe_id = $stufe_id";
+        $result = mysqli_query($db, $sql);
+        $rondaId = array();
+        while ($row = mysqli_fetch_assoc($result))
+        {
+            $rondaId[] = $row['id'];
+        }
+        return $rondaId;
+    }
+
+
+    // Löscht die ronda nur wenn noch kein Tanz in der betreffenden Kategorie und Stufe stattfand
+    public static function delete($id)
+    {
+        $db = DB::connect();
+        $resultKat = Ronda::getKategorieIdById($id); //Gibt Kategorie der ronda zurück
+        $resultStufe = Ronda::getStufeIdById($id); //Gibt Stufe der ronda zurück
+        $rondaIds = Ronda::getRondaIdByStufeIdAndKategorieId($resultKat, $resultStufe); //  Gibt alle ids züruck  die die gleiche Kategorie und Stufe haben
+        $ids = array();
+        $num = 0;
+        for ($i=0; $i < count($rondaIds); $i++)
+        {
+            $ids = Tanzpaar2ronda::getIdByRondaId($rondaIds[$i]);
+        }
+        for ($i=0; $i < count($ids); $i++)
+        {
+            $num = Punkte::getAmountByTanzpaar2RondaId($ids[$i]);
+            if($num !==0)
+            {
+                return false;
+            }
+            else
+            {
+                $success1 = Tanzpaar2ronda::delete($id);
+                $sql = "DELETE FROM ronda WHERE id = $id";
+                $success2 = mysqli_query($db, $sql);
+                return $success1 && $success2;
+            }
+        }
+
+    }
 }

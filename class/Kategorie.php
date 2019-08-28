@@ -27,7 +27,7 @@ class Kategorie {
     }
     
     public static function getById($id){
-        $db = DB::connect();
+        $db = db::connect();
         $sql = "SELECT * FROM kategorie WHERE ID=$id";
         $result = mysqli_query($db, $sql);
         $row = mysqli_fetch_assoc($result);
@@ -37,6 +37,11 @@ class Kategorie {
                 $row['id']
         );
         return $kategorie;
+    }
+
+    public static function delete()
+    {
+        //Wird nicht benötigt
     }
 
 

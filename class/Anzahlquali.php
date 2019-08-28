@@ -72,5 +72,9 @@ class Anzahlquali {
         );
         return $anzahlquali;
     }
+    public static function delete()
+    {
+        //Wird nicht benötigt
+    }
 
 }

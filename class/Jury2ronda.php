@@ -1,24 +1,31 @@
 <?php
 class Jury2ronda {
 
+    private $id;
     private $jury_id;
     private $jury;
     private $ronda_id;
     private $ronda;
     private $sitzplatz;
-    private $id;
 
-
-    public function __construct($jury_id, $jury, $ronda_id, $ronda, $sitzplatz, $id)
+    /**
+     * jury2Ronda constructor.
+     * @param $id
+     * @param $jury_id
+     * @param $ronda
+     * @param $sitzplatz
+     */
+    public function __construct($jury_id, $ronda_id, $sitzplatz, $id = null)
     {
+        if (isset($id)){
+            $this->id = $id;
+        }
         $this->jury_id = $jury_id;
-        $this->jury = $jury;
+        $this->jury = Jury::GetBYId($jury_id);
         $this->ronda_id = $ronda_id;
-        $this->ronda = $ronda;
+        $this->ronda = Ronda::GetBYId($ronda_id);
         $this->sitzplatz = $sitzplatz;
-        $this->id = $id;
     }
-
 
     /**
      * @return mixed
@@ -199,5 +206,14 @@ class Jury2ronda {
 
 
         return $jury2ronda;
+    }
+
+    public static function deleteByJuryId($id)
+    {
+        $db = DB::connect();
+        $sql = "DELETE FROM jury2Ronda WHERE jury_id = $id";
+        $success = mysqli_query($db, $sql);
+        return $success;
+
     }
 }
