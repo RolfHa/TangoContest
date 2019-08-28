@@ -5,7 +5,7 @@ class Jury {
     private $nachname;
 
 
-    public function __construct($id, $vorname, $nachname)
+    public function __construct($vorname, $nachname,$id)
     {
         $this->id = $id;
         $this->vorname = $vorname;
