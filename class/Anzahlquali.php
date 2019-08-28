@@ -54,16 +54,18 @@ class Anzahlquali {
         $this->anzahlquali = $anzahlquali;
     }
 
+
+    //      !!!!   feld id in der Tabelle nicht vorhanden  !!!!
     public static function getById($id){
         $db = DB::connect();
-        $sql = "SELECT * FROM anzahlquali WHERE ID=$id";
+        $sql = "SELECT * FROM anzahlquali WHERE id=$id";
         $result = mysqli_query($db, $sql);
         $row = mysqli_fetch_assoc($result);
-        
+
         $kategorie = Kategorie.getById($row['kategorie_id']);
         $stufe = Stufe.getById($row['stufe_id']);
-        
-        $anzahlquali = new Anzahlquali( 
+
+        $anzahlquali = new Anzahlquali(
                 $row['kategorie_id'],
                 $kategorie,
                 $row['stufe_id'],
@@ -72,6 +74,34 @@ class Anzahlquali {
         );
         return $anzahlquali;
     }
+
+    public static function gesAll(){
+        $db = DB::connect();
+        $sql = "SELECT anzahlquali.id FROM anzahlquali";
+        $result = mysqli_query($db, $sql);
+        $anzahlquali = array();
+        $i=0;
+        while ($row = mysqli_fetch_assoc($result)) {
+            //  *** Versuch Datenbankabfragen innerhalb einer Schleife zu vermeiden***
+
+            //$kategorie = Kategorie.getById($row['kategorie_id']);
+            $kategorie = new Kategorie($row['kategorie'], $row['kategorie_id']);
+
+            //$stufe = Stufe.getById($row['stufe_id']);
+            $stufe =new Stufe( $row['stufe'], $row['stufe_id']);
+
+            $anzahlquali = new Anzahlquali(
+                $row['kategorie_id'],
+                $kategorie,
+                $row['stufe_id'],
+                $stufe,
+                $row['anzahlquali']
+            );
+            $i++;
+        }
+        return $anzahlquali;
+    }
+
     public static function delete()
     {
         //Wird nicht benötigt

@@ -15,7 +15,7 @@ class Jury2ronda {
      * @param $ronda
      * @param $sitzplatz
      */
-    public function __construct($jury_id, $ronda_id, $sitzplatz, $id = null)
+    public function __construct($jury_id, $jury, $ronda_id, $ronda, $sitzplatz, $id = null)
     {
         if (isset($id)){
             $this->id = $id;
