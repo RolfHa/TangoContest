@@ -48,4 +48,9 @@ class Optionen {
         return $optionen;
     }
 
+    public static function delete()
+    {
+        //Wird nicht benötigt
+    }
+
 }

@@ -31,11 +31,31 @@ class Bezahlart {
         $sql = "SELECT * FROM bezahlart WHERE ID=$id";
         $result = mysqli_query($db, $sql);
         $row = mysqli_fetch_assoc($result);
-        
-        $bezahlart = new Bezahlart( 
-                $row['bezahlart'], 
+
+        $bezahlart = new Bezahlart(
+                $row['bezahlart'],
                 $row['id']
         );
+        return $bezahlart;
+    }
+    public static function delete()
+    {
+        //Wird nicht benötigt
+    }
+
+    public static function getAll(){
+        $db = DB::connect();
+        $sql = "SELECT * FROM bezahlart WHERE ID=$id";
+        $result = mysqli_query($db, $sql);
+        $bezahlart = array();
+        $i=0;
+        while ($row = mysqli_fetch_assoc($result)) {
+            $bezahlart[$i] = new Bezahlart(
+                $row['bezahlart'],
+                $row['id']
+            );
+
+        }
         return $bezahlart;
     }
 

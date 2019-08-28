@@ -99,7 +99,7 @@ class Teilnehmer {
 
    public static function getById($id){
         $db = DB::connect();
-        $sql = "SELECT * FROM teilnehmer WHERE ID=$id";
+        $sql = "SELECT * FROM teilnehmer WHERE id=$id";
         $result = mysqli_query($db, $sql);
         $row = mysqli_fetch_assoc($result);
         $teilnehmer = new Teilnehmer(
@@ -116,33 +116,38 @@ class Teilnehmer {
         return $teilnehmer;
    }
 
-    function save($member)
-    {
+    public static function getAll(){
         $db = DB::connect();
-        $sql = "INSERT INTO teilnehmer (vorname, nachname, geschlecht, telefonnummer, wohnort,wohnland,kuenstlername, geburtsname)
-                VALUES ('$member->vorname',
-                        '$member->nachname',
-                        '$member->geschlecht',
-                        '$member->telefonnummer',
-                        '$member->wohnort',
-                        '$member->wohnland',
-                        '$member->kuenstlername',
-                        '$member->geburtsname')";
-
-        mysqli_query($db, $sql);
-
-        $memberId = "SELECT  id, vorname, nachname
-                     FROM    jury
-                     WHERE vorname LIKE '$member->vorname'
-                     AND nachname LIKE '$member->nachname'";
-
-        $result = mysqli_query($db, $memberId);
-        $row = mysqli_fetch_assoc($result);
-        $resultID = $row['id'];
-
-        $member->setId($resultID);
-
-        return $member;
+        $sql = "SELECT * FROM teilnehmer ORDER by nachname";
+        $result = mysqli_query($db, $sql);
+        $teilnehmer = array();
+        $i=0;
+        while ($row = mysqli_fetch_assoc($result)) {
+            $teilnehmer[$i] = new Teilnehmer(
+                $row['vorname'],
+                $row['nachname'],
+                $row['geschlecht'],
+                $row['telefonnummer'],
+                $row['wohnort'],
+                $row['wohnland'],
+                $row['kuenstlername'],
+                $row['geburtsname'],
+                $row['id']
+                );
+            $i++;
+        }
+        return $teilnehmer;
     }
 
+    public static function delete($id)
+    {
+        $db = DB::connect();
+        $result = Tanzpaar::getByTeilnehmerId($id);
+        if ($result === 0){
+            $sql = "DELETE FROM teilnehmer WHERE id = $id";
+            $success = mysqli_query($db, $sql);
+            return $success;
+        }
+        return false;
+    }
 }

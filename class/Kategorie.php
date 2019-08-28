@@ -27,7 +27,7 @@ class Kategorie {
     }
     
     public static function getById($id){
-        $db = DB::connect();
+        $db = db::connect();
         $sql = "SELECT * FROM kategorie WHERE ID=$id";
         $result = mysqli_query($db, $sql);
         $row = mysqli_fetch_assoc($result);
@@ -39,24 +39,10 @@ class Kategorie {
         return $kategorie;
     }
 
-    function save ($kategorie)
+    public static function delete()
     {
-        $db = DB::connect();
-        $sql = "INSERT INTO kategorie (kategorie.kategorie)
-                VALUES ('$kategorie->kategorie')";
-        mysqli_query($db,$sql);
-
-        $katId = "SELECT id, kategorie.kategorie
-                  FROM kategorie
-                  WHERE kategorie LIKE '$kategorie->kategorie'";
-
-        $result = mysqli_query($db, $katId);
-        $row = mysqli_fetch_assoc($result);
-        $resultID = $row['id'];
-
-        $kategorie->setId($resultID);
-
-        return $kategorie;
+        //Wird nicht benötigt
     }
+
 
 }

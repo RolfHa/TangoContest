@@ -152,32 +152,20 @@ class Tanzpaar {
         return $tanzpaar;
    }
 
-    function save ($tanzpaar)
+    public static function delete($id)
     {
         $db = DB::connect();
-        $sql = "INSERT INTO tanzpaar (startnummer, teilnehmer1_id, teilnehmer2_id, fuehrungsfolge, anmeldebetrag, bezahlt, bezahldatum, bezahlart_id)
-                VALUES ($tanzpaar->startnummer, 
-                        $tanzpaar->teilnehmer1_id, 
-                        $tanzpaar->teilnehmer2_id, 
-                        $tanzpaar->fuehrungsfolge, 
-                        $tanzpaar->anmeldebetrag, 
-                        $tanzpaar->bezahlt, 
-                        '$tanzpaar->bezahldatum', 
-                        $tanzpaar->bezahlart_id)";
+        $sql = "DELETE FROM tanzpaar WHERE id = $id";
+        $success = mysqli_query($db, $sql);
+        return $success;
+    }
 
-        mysqli_query($db, $sql);
-
-        $tanzpaarId = "SELECT id, startnummer
-                       FROM tanzpaar
-                       WHERE startnummer LIKE '$tanzpaar->startnummer';";
-
-        $result = mysqli_query($db, $tanzpaarId);
-        $row = mysqli_fetch_assoc($result);
-        $resultID = $row['id'];
-
-        $tanzpaar->setId($resultID);
-
-        return $tanzpaar;
+    public static function getByTeilnehmerId($id)
+    {
+        $db = DB::connect();
+        $sql = "SELECT * FROM tanzpaar WHERE teilnehmer1_id = $id or teilnehmer2_id = $id";
+        $result = mysqli_num_rows($db, $sql);
+        return $result;
     }
 
 }
