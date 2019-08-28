@@ -1,5 +1,18 @@
 <?php
 class Punkte {
+
+    private $id;
+
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+
    public static function getById($id){
         $db = DB::connect();
         $sql = "SELECT * FROM punkte WHERE ID=$id";
@@ -19,4 +32,29 @@ class Punkte {
         );
         return $punkte;
     }
+
+    function save ($punkte)
+    {
+        $db = DB::connect();#
+        $sql = "INSERT INTO punkte (jury_id, tanzpaar2ronda_id, punkte)
+                VALUES ('$punkte->jury_id', 
+                        '$punkte->tanzpaar2ronda_id', 
+                        '$punkte->punkte')";
+
+        Mysqli_query($db,$sql);
+
+        $punkteId = "SELECT id, jury_id, tanzpaar2ronda_id, punkte
+                     FROM punkte
+                     WHERE jury_id LIKE '$punkte->jury_id'
+                     AND tanzpaar2ronda_id LIKE '$punkte->tanzpaar2ronda_id'";
+
+        $result = mysqli_query($db, $punkteId);
+        $row = mysqli_fetch_assoc($result);
+        $resultID = $row['id'];
+
+        $punkte->setId($resultID);
+
+        return $punkte;
+    }
+
 }

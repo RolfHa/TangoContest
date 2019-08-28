@@ -5,6 +5,7 @@ class Anzahlquali {
     private $stufe_id;
     private $stufe;
     private $anzahlquali;
+    private $id;
     
     function __construct($kategorie_id, $kategorie, $stufe_id, $stufe, $anzahlquali) {
         $this->kategorie_id = $kategorie_id;
@@ -70,6 +71,17 @@ class Anzahlquali {
                 $stufe,
                 $row['anzahlquali']
         );
+        return $anzahlquali;
+    }
+
+    function save ($anzahlquali)
+    {
+        $db = DB::connect();
+        $sql = "INSERT INTO anzahlquali (kategorie_id, stufe_id, anzahlquali)
+                VALUES ('$anzahlquali->kategorie_id', '$anzahlquali->stufe_id', '$anzahlquali->anzahlquali')";
+
+        Mysqli_query($db, $sql);
+
         return $anzahlquali;
     }
 

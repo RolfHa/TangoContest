@@ -74,4 +74,25 @@ class Tanzpaar2kategorie {
         return $tanzpaar2kategorie;
     }
 
+    function save ($tanzpaar2kategorie)
+    {
+        $db = DB::connect();
+        $sql = "INSERT INTO tanzpaar2kategorie (tanzpaar_id, kategorie_id)
+                VALUES ($tanzpaar2kategorie->tanzpaar_id, $tanzpaar2kategorie->kategorie_id)";
+        mysqli_query($db, $sql);
+
+        $tanzpaar2kategorieId = "SELECT id, tanzpaar_id, kategorie_id
+                                 FROM tanzpaar2kategorie 
+                                 WHERE tanzpaar_id LIKE '$tanzpaar2kategorie->tanzpaar_id'
+                                 AND kategorie_id LIKE '$tanzpaar2kategorie->kategorie_id'";
+
+        $result = mysqli_query($db, $tanzpaar2kategorieId);
+        $row = mysqli_fetch_assoc($result);
+        $resultID = $row['id'];
+
+        $tanzpaar2kategorie->setId($resultID);
+
+        return $tanzpaar2kategorie;
+    }
+
 }
