@@ -46,7 +46,6 @@
 include_once  'config.php';
 //alle andern klassen laden (dateien müssen den klassennamen haben und im Verzeichnis class liegen)
 spl_autoload_register(function ($class_name) {include "class" . DIRECTORY_SEPARATOR . $class_name . '.php';});
-//spl_autoload_register(function ($class_name) {include "class".  DIRECTORY_SEPARATOR .  strtolower ($class_name) . '.php';});
 
 
 
@@ -57,22 +56,24 @@ if  (isset ($_POST["id"]) ){$id=$_POST["id"];}
 
 
 //Teilnehmer
-if     (isset ($_POST["teilnehmerliste"]) ){
+if  (isset ($_POST["teilnehmerliste"]) ){
     //HTML::teilnehmerListe(Teilnehmer::getAll());
     $teilnehmer=Teilnehmer::getAll();
     echo '<pre>';
     print_r($teilnehmer);
     echo '</pre>';
     }
-elseif (isset ($_POST["teilnehmeredit"]) ){
+//elseif (isset ($_POST["teilnehmeredit"]) ){HTML::teilnehmerEdit(Teilnehmer::getById($id));}
+
+elseif (isset ($_POST["teilnehmerneu"]) ){
+    //HTML::teilnehmerNew();
+    echo'test id 10';
     //HTML::teilnehmerEdit(Teilnehmer::getById($id));
     $teilnehmer=Teilnehmer::getById(10);
     echo '<pre>';
     print_r($teilnehmer);
     echo '</pre>';
 }
-
-//elseif (isset ($_POST["teilnehmerneu"]) ){HTML::teilnehmerNew();}
 //elseif (isset ($_POST["teilnehmerspeichern"]) ){   }
 //elseif (isset ($_POST["teilnehmerloeschen"]) ){   }
 
