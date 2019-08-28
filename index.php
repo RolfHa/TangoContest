@@ -29,13 +29,13 @@
                 <td><input type="submit" name="tanzpaarliste" value="Liste Tanzpaare"></td>
                 <td><input type="submit" name="juryliste" value="Liste Jurymitglieder"></td>
                 <td><input type="submit" name="rondaliste" value="Liste Ronda"></td>
-                <td><input type="submit" name="punkteliste" value="Liste punkte"></td>
+                <td><input type="submit" name="punkteliste" value="Liste Punkte"></td>
             </tr><tr>
                 <td><input type="submit" name="teilnehmerneu" value="neuer Teilnehmer"></td>
                 <td><input type="submit" name="tanzpaarneu" value="neues Tanzpaar"></td>
                 <td><input type="submit" name="juryliste" value="neues Jurymitglied"></td>
                 <td><input type="submit" name="rondaneu" value="Ronda anlegen"></td>
-                <td><input type="submit" name="punkeneu" value="Punke eingeben"></td>
+                <td><input type="submit" name="punkeneu" value="Punkte eingeben"></td>
             </tr></table></form></nav>
 
 
