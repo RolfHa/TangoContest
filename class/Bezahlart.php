@@ -38,5 +38,9 @@ class Bezahlart {
         );
         return $bezahlart;
     }
+    public static function delete()
+    {
+        //Wird nicht benötigt
+    }
 
 }
