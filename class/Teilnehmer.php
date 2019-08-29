@@ -150,4 +150,34 @@ class Teilnehmer {
         }
         return false;
     }
+
+    function save($member)
+    {
+        $db = DB::connect();
+        $sql = "INSERT INTO teilnehmer (vorname, nachname, geschlecht, telefonnummer, wohnort,wohnland,kuenstlername, geburtsname)
+                VALUES ('$member->vorname',
+                        '$member->nachname',
+                        '$member->geschlecht',
+                        '$member->telefonnummer',
+                        '$member->wohnort',
+                        '$member->wohnland',
+                        '$member->kuenstlername',
+                        '$member->geburtsname')";
+
+        mysqli_query($db, $sql);
+
+        $memberId = "SELECT  id, vorname, nachname
+                     FROM    jury
+                     WHERE vorname LIKE '$member->vorname'
+                     AND nachname LIKE '$member->nachname'";
+
+        $result = mysqli_query($db, $memberId);
+        $row = mysqli_fetch_assoc($result);
+        $resultID = $row['id'];
+
+        $member->setId($resultID);
+
+        return $member;
+    }
+
 }

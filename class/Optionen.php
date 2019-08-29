@@ -38,6 +38,7 @@ class Optionen {
         return $optionen;
     }
 
+
     public static function getAll(){
         $db = DB::connect();
         $sql = "SELECT * FROM optionen;";
@@ -51,9 +52,15 @@ class Optionen {
         return $optionen;
     }
 
+    function save($optionen)    {
+        $db = DB::connect();
+        $sql = "INSERT INTO optionen ( name, wert)
+                VALUES ('$optionen->name', '$optionen->wert')";
+        mysqli_query($db, $sql);
+        return $optionen;
+    }
 
-    public static function delete()
-    {
+    public static function delete()    {
         //Wird nicht benötigt
     }
 

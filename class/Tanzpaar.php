@@ -198,4 +198,32 @@ class Tanzpaar {
         return $result;
     }
 
+    function save ($tanzpaar)
+    {
+        $db = DB::connect();
+        $sql = "INSERT INTO tanzpaar (startnummer, teilnehmer1_id, teilnehmer2_id, fuehrungsfolge, anmeldebetrag, bezahlt, bezahldatum, bezahlart_id)
+                VALUES ($tanzpaar->startnummer, 
+                        $tanzpaar->teilnehmer1_id, 
+                        $tanzpaar->teilnehmer2_id, 
+                        $tanzpaar->fuehrungsfolge, 
+                        $tanzpaar->anmeldebetrag, 
+                        $tanzpaar->bezahlt, 
+                        '$tanzpaar->bezahldatum', 
+                        $tanzpaar->bezahlart_id)";
+
+        mysqli_query($db, $sql);
+
+        $tanzpaarId = "SELECT id, startnummer
+                       FROM tanzpaar
+                       WHERE startnummer LIKE '$tanzpaar->startnummer';";
+
+        $result = mysqli_query($db, $tanzpaarId);
+        $row = mysqli_fetch_assoc($result);
+        $resultID = $row['id'];
+
+        $tanzpaar->setId($resultID);
+
+        return $tanzpaar;
+    }
+
 }

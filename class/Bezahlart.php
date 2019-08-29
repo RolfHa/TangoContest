@@ -39,7 +39,22 @@ class Bezahlart {
         return $bezahlart;
     }
 
-    public static function getAll(){
+    function save ($bezahlart)    {
+        $db = DB::connect();#
+        $sql = "INSERT INTO bezahlart (bezahlart)
+                VALUES ('$bezahlart->bezahlart')";
+        Mysqli_query($db, $sql);
+        $bezahlartId = "SELECT id, bezahlart
+                        FROM bezahlart
+                        WHERE bezahlart LIKE '$bezahlart->bezahlart'";
+        $result = mysqli_query($db, $bezahlartId);
+        $row = mysqli_fetch_assoc($result);
+        $resultID = $row['id'];
+        $bezahlart->setId($resultID);
+        return $bezahlart;
+    }
+
+        public static function getAll(){
         $db = DB::connect();
         $sql = "SELECT * FROM bezahlart";
         $result = mysqli_query($db, $sql);
@@ -52,8 +67,7 @@ class Bezahlart {
         return $bezahlart;
     }
 
-    public static function delete()
-    {
+    public static function delete()    {
         //Wird nicht benötigt
     }
 

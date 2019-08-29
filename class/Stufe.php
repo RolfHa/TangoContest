@@ -56,8 +56,23 @@ class Stufe {
         return $stufe;
     }
 
-    public static function delete()
-    {
+
+    function save ($stufe)    {
+        $db = DB::connect();
+        $sql = "INSERT INTO stufe (stufe)
+                VALUES ('$stufe->stufe')";
+        mysqli_query($db, $sql);
+        $stufeId = "SELECT id, stufe
+                    FROM stufe
+                    WHERE stufe LIKE '$stufe->stufe'";
+        $result = mysqli_query($db, $stufeId);
+        $row = mysqli_fetch_assoc($result);
+        $resultID = $row['id'];
+        $stufe -> setId($resultID);
+        return $stufe;
+    }
+
+    public static function delete()    {
         //Wird nicht benötigt
     }
 
