@@ -28,7 +28,7 @@ class Bezahlart {
 
     public static function getById($id){
         $db = DB::connect();
-        $sql = "SELECT * FROM bezahlart WHERE ID=$id";
+        $sql = "SELECT * FROM bezahlart WHERE id=$id";
         $result = mysqli_query($db, $sql);
         $row = mysqli_fetch_assoc($result);
 
@@ -38,14 +38,10 @@ class Bezahlart {
         );
         return $bezahlart;
     }
-    public static function delete()
-    {
-        //Wird nicht benötigt
-    }
 
     public static function getAll(){
         $db = DB::connect();
-        $sql = "SELECT * FROM bezahlart WHERE ID=$id";
+        $sql = "SELECT * FROM bezahlart";
         $result = mysqli_query($db, $sql);
         $bezahlart = array();
         $i=0;
@@ -54,9 +50,14 @@ class Bezahlart {
                 $row['bezahlart'],
                 $row['id']
             );
-
+            $i++;
         }
         return $bezahlart;
+    }
+
+    public static function delete()
+    {
+        //Wird nicht benötigt
     }
 
 }
