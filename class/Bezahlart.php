@@ -46,10 +46,7 @@ class Bezahlart {
         $bezahlart = array();
         $i=0;
         while ($row = mysqli_fetch_assoc($result)) {
-            $bezahlart[$i] = new Bezahlart(
-                $row['bezahlart'],
-                $row['id']
-            );
+            $bezahlart[$i] = new Bezahlart($row['bezahlart'], $row['id']);
             $i++;
         }
         return $bezahlart;

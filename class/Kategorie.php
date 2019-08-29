@@ -28,7 +28,7 @@ class Kategorie {
     
     public static function getById($id){
         $db = db::connect();
-        $sql = "SELECT * FROM kategorie WHERE ID=$id";
+        $sql = "SELECT * FROM kategorie WHERE id=$id";
         $result = mysqli_query($db, $sql);
         $row = mysqli_fetch_assoc($result);
         
@@ -36,6 +36,19 @@ class Kategorie {
                 $row['kategorie'], 
                 $row['id']
         );
+        return $kategorie;
+    }
+
+    public static function getAll(){
+        $db = db::connect();
+        $sql = "SELECT * FROM kategorie";
+        $result = mysqli_query($db, $sql);
+        $kategorie = array();
+        $i=0;
+        while ($row = mysqli_fetch_assoc($result)) {
+            $kategorie[$i] = new Kategorie($row['kategorie'], $row['id']);
+            $i++;
+        }
         return $kategorie;
     }
 
