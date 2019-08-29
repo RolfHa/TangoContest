@@ -74,7 +74,7 @@ class Tanzpaar2kategorie {
         return $tanzpaar2kategorie;
     }
 
-    public static function getall(){
+    public static function getAll(){
         $db = DB::connect();
         $sql = "SELECT * FROM tanzpaar2kategorie;";
         $result = mysqli_query($db, $sql);
