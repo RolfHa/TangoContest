@@ -81,26 +81,25 @@ class Jury {
         return $jury;
     }
 
-    public static function getAll(){
+    function save($jury)
+    {
         $db = DB::connect();
-        $sql = "SELECT * FROM jury;";
-        $result = mysqli_query($db, $sql);
-        $jury = array();
-        $i=0;
-        while ($row = mysqli_fetch_assoc($result)) {
-            $jury[$i] = new Jury(
-                $row['vorname'],
-                $row['nachname'],
-                $row['id']
-            );
-            $i++;
-        }
+        $sql = "INSERT INTO jury (vorname, nachname)
+                VALUES ('$jury->vorname', '$jury->nachname')";
+        mysqli_query($db, $sql);
+
+        $memberId = "SELECT  id, vorname, nachname
+                     FROM    jury
+                     WHERE vorname LIKE '$jury->vorname'
+                     AND nachname LIKE '$jury->nachname'";
+        $result = mysqli_query($db, $memberId);
+        $row = mysqli_fetch_assoc($result);
+        $resultID = $row['id'];
+
+        $jury->setId($resultID);
+
         return $jury;
     }
-
-
-
-
 
     public static function delete($id)
     {

@@ -173,4 +173,29 @@ class Ronda {
         }
 
     }
+
+    function save($ronda)
+    {
+        $db = DB::connect();
+        $sql = "INSERT INTO ronda (kategorie_id, stufe_id, ronda)
+                VALUES ('$ronda->kategorie_id', 
+                        '$ronda->stufe_id', 
+                        '$ronda->ronda')";
+
+        mysqli_query($db, $sql);
+
+        $rondaId = "SELECT id, kategorie_id, stufe_id, ronda
+                     FROM ronda
+                     WHERE kategorie_id LIKE '$ronda->kategorie_id'
+                     AND stufe_id LIKE '$ronda->stufe_id'";
+
+        $result = mysqli_query($db, $rondaId);
+        $row = mysqli_fetch_assoc($result);
+        $resultID = $row['id'];
+
+        $ronda->setId($resultID);
+
+        return $ronda;
+    }
+
 }
