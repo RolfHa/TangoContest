@@ -37,6 +37,17 @@ class Optionen {
         return $optionen;
     }
 
+    function save($optionen)
+    {
+        $db = DB::connect();
+        $sql = "INSERT INTO optionen ( name, wert)
+                VALUES ('$optionen->name', '$optionen->wert')";
+
+        mysqli_query($db, $sql);
+
+        return $optionen;
+    }
+
     public static function delete()
     {
         //Wird nicht benötigt
