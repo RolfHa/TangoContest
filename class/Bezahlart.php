@@ -59,25 +59,4 @@ class Bezahlart {
         return $bezahlart;
     }
 
-    function save ($bezahlart)
-    {
-        $db = DB::connect();#
-        $sql = "INSERT INTO bezahlart (bezahlart)
-                VALUES ('$bezahlart->bezahlart')";
-
-        Mysqli_query($db, $sql);
-
-        $bezahlartId = "SELECT id, bezahlart
-                        FROM bezahlart
-                        WHERE bezahlart LIKE '$bezahlart->bezahlart'";
-
-        $result = mysqli_query($db, $bezahlartId);
-        $row = mysqli_fetch_assoc($result);
-        $resultID = $row['id'];
-
-        $bezahlart->setId($resultID);
-
-        return $bezahlart;
-
-    }
 }
