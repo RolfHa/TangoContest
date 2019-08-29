@@ -39,6 +39,23 @@ class Stufe {
         return $stufe;
     }
 
+    public static function getAll(){
+        $db = DB::connect();
+        $sql = "SELECT * FROM stufe ;";
+        $result = mysqli_query($db, $sql);
+        $stufe = array();
+        $i=0;
+        while ($row = mysqli_fetch_assoc($result)) {
+            $stufe[$i] = new Stufe(
+                $row['stufe'],
+                $row['id']
+            );
+
+            $i++;
+        }
+        return $stufe;
+    }
+
     public static function delete()
     {
         //Wird nicht benötigt

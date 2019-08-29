@@ -109,6 +109,29 @@ class Punkte {
         return $punkte;
     }
 
+    public static function getALL(){
+        $db = DB::connect();
+        $sql = "SELECT * from punkte;";
+        $result = mysqli_query($db, $sql);
+        $punkte = array();
+        $i=0;
+        while ($row = mysqli_fetch_assoc($result)) {
+            $jury = Jury.getById($row['jury_id']);
+            $tanzpaar2ronda = Tanzpaar2ronda.getById($row['tanzpaar2ronda_id']);
+
+            $punkte[$i] = new Punkte(
+                $row['jury_id'],
+                $jury,
+                $row['tanzpaar2ronda_id'],
+                $tanzpaar2ronda,
+                $row['punkte'],
+                $row['id']
+            );
+            $i++;
+        }
+        return $punkte;
+    }
+
     public static function getByJuryId($id)
     {
         $db = DB::connect();

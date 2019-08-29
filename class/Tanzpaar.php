@@ -152,6 +152,36 @@ class Tanzpaar {
         return $tanzpaar;
    }
 
+    public static function getAll(){
+        $db = DB::connect();
+        $sql = "SELECT * FROM tanzpaar;";
+        $result = mysqli_query($db, $sql);
+        $tanzpaar = array();
+        $i=0;
+        while ($row = mysqli_fetch_assoc($result)) {
+            $teilnehmer1 = Teilnehmer.getById($row['teilnehmer1_id']);
+            $teilnehmer2 = Teilnehmer.getById($row['teilnehmer2_id']);
+            $bezahlart = Bezahlart.getById($row['bezahlart_id']);
+
+            $tanzpaar[$i] = new Tanzpaar(
+                $row['startnummer'],
+                $row['teilnehmer1_id'],
+                $teilnehmer1,
+                $row['teilnehmer2_id'],
+                $teilnehmer2,
+                $row['fuehrungsreinfolge'],
+                $row['anmeldebetrag'],
+                $row['bezahlt'],
+                $row['bezahldatum'],
+                $row['bezahlart_id'],
+                $bezahlart,
+                $row['id']
+            );
+            $i++;
+        }
+        return $tanzpaar;
+    }
+
     public static function delete($id)
     {
         $db = DB::connect();

@@ -110,6 +110,31 @@ class Tanzpaar2ronda {
         return $tanzpaar2ronda;
     }
 
+    public static function getAll(){
+        $db = DB::connect();
+        $sql = "SELECT * FROM tanzpaar2ronda;";
+        $result = mysqli_query($db, $sql);
+        $tanzpaar2ronda= array();
+        $i=0;
+        while ($row = mysqli_fetch_assoc($result)) {
+            $tanzpaar2kategorie = Tanzpaar2kategorie.getById($row['tanzpaar2kategorie_id']);
+            $ronda = Ronda.getById($row['ronda_id']);
+
+            $tanzpaar2ronda[$i] = new Tanzpaar2ronda(
+                $row['tanzpaar2kategorie_id'],
+                $tanzpaar2kategorie,
+                $row['ronda_id'],
+                $ronda,
+                $row['reihenfolge'],
+                $row['id']
+            );
+            $i++;
+        }
+
+
+        return $tanzpaar2ronda;
+    }
+
     public static function delete($id)
     {
         $db = DB::connect();

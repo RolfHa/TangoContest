@@ -74,6 +74,29 @@ class Tanzpaar2kategorie {
         return $tanzpaar2kategorie;
     }
 
+    public static function getall(){
+        $db = DB::connect();
+        $sql = "SELECT * FROM tanzpaar2kategorie;";
+        $result = mysqli_query($db, $sql);
+        $tanzpaar = array();
+        $i=0;
+        while ($row = mysqli_fetch_assoc($result)) {
+            $tanzpaar = Tanzpaar.getById($row['tanzpaar_id']);
+            $kategorie = Kategorie.getById($row['kategorie_id']);
+            $tanzpaar2kategorie[$i] = new Tanzpaar2kategorie(
+                $row['tanzpaar_id'],
+                $tanzpaar,
+                $row['kategorie_id'],
+                $kategorie,
+                $row['id']
+            );
+            $i++;
+        }
+
+
+        return $tanzpaar2kategorie;
+    }
+
     public static function delete()
     {
         //Wird nicht benötigt
