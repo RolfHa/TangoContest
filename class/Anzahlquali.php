@@ -77,7 +77,11 @@ class Anzahlquali {
 
     public static function gesAll(){
         $db = DB::connect();
-        $sql = "SELECT anzahlquali.id FROM anzahlquali";
+        $sql = "SELECT kategorie_id, stufe_id, anzahlquali, kategorie, stufe 
+                FROM anzahlquali
+                join kategorie on anzahlquali.kategorie_id=kategorie.id
+                join stufe on anzahlquali.stufe_id = stufe.id
+                order by kategorie_id, stufe_id;";
         $result = mysqli_query($db, $sql);
         $anzahlquali = array();
         $i=0;
