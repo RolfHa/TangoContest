@@ -60,7 +60,6 @@ $liste = Teilnehmer::getAll();
     <?php
     }
     ?>
-
     </tbody>
 </table>
 
