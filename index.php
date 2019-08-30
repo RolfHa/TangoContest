@@ -14,13 +14,13 @@ if (isset($_REQUEST['action'])){
 
 $action = 'anzeigen';
 //$area = 'teilnehmer';
-$area = 'jury';
+$area = 'tanzpaar';
 
 switch ($action){
     case 'anzeigen':
-        if ($area === 'teilnehmer' || $area === 'jury'){
+        //if ($area === 'teilnehmer' || $area === 'jury' || $area === 'tanzpaar') {
             $view = $area . 'liste';
-        }
+        //}
 
 }
 
