@@ -4,7 +4,27 @@ include_once  'config.php';
 //alle andern klassen laden (dateien müssen den klassennamen haben und im Verzeichnis class liegen)
 spl_autoload_register(function ($class_name) {include "class" . DIRECTORY_SEPARATOR . $class_name . '.php';});
 
-$view = 'tanzpaarliste';
+$area = '';
+$action = '';
+// beide Werte müssen immer übergeben werden, nur bei Erstaufruf gibt es sie nicht
+if (isset($_REQUEST['action'])){
+    $action = $_REQUEST['action'];
+    $area = $_REQUEST['area'];
+}
+
+$action = 'anzeigen';
+$area = 'teilnehmer';
+
+switch ($action){
+    case 'anzeigen':
+        if ($area === 'teilnehmer'){
+            $view = 'teilnehmerliste';
+        }
+}
+
+
+
+//$view = 'tanzpaarliste';
 
 include 'view/basicview.php';
 

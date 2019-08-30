@@ -24,19 +24,44 @@
 <body>
 
 <!-- Navigationsleiste -->
-<nav><form method="post" ><table border="0"><tr>
-                <td><input type="submit" name="teilnehmerliste" value="Liste Teilnehmer"></td>
-                <td><input type="submit" name="tanzpaarliste" value="Liste Tanzpaare"></td>
-                <td><input type="submit" name="juryliste" value="Liste Jurymitglieder"></td>
-                <td><input type="submit" name="rondaliste" value="Liste Ronda"></td>
-                <td><input type="submit" name="punkteliste" value="Liste Punkte"></td>
-            </tr><tr>
-                <td><input type="submit" name="teilnehmerneu" value="neuer Teilnehmer"></td>
-                <td><input type="submit" name="tanzpaarneu" value="neues Tanzpaar"></td>
-                <td><input type="submit" name="juryneu" value="neues Jurymitglied"></td>
-                <td><input type="submit" name="rondaneu" value="Ronda anlegen"></td>
-                <td><input type="submit" name="punkeneu" value="Punkte eingeben"></td>
-            </tr></table></form></nav>
+<nav>
+    <table border="0">
+        <tr><td>
+                <a href="index.php?action=listeanzeigen&area=teilnehmer">
+                    <button>Liste Teilnehmer</button>
+                </a></td>
+            <td><a href="index.php?action=listeanzeigen&area=tanzpaar">
+                    <button>Liste Tanzpaare</button>
+                </a></td>
+            <td><a href="index.php?action=listeanzeigen&area=jurymitglieder">
+                    <button>Liste Jurymitglieder</button>
+                </a></td>
+            <td><a href="index.php?action=listeanzeigen&area=ronda">
+                    <button>Liste Ronda</button>
+                </a></td>
+            <td><a href="index.php?action=listeanzeigen&area=punkte">
+                    <button>Liste Punkte</button>
+                </a></td>
+        </tr>
+        <tr><td>
+                <a href="index.php?action=viewSave&area=teilnehmer">
+                    <button>neuer Teilnehmer</button>
+                </a></td>
+            <td><a href="index.php?action=viewSave&area=tanzpaar">
+                    <button>neues Tanzpaar</button>
+                </a></td>
+            <td><a href="index.php?action=viewSave&area=jurymitglieder">
+                    <button>neues Jurymitglied</button>
+                </a></td>
+            <td><a href="index.php?action=viewSave&area=ronda">
+                    <button>Ronda anlegen</button>
+                </a></td>
+            <td><a href="index.php?action=viewSave&area=punkte">
+                    <button>Punkte eingeben</button>
+                </a></td>
+        </tr>
+    </table>
+</nav>
 
 
 <?php
