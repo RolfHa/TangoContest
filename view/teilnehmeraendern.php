@@ -1,7 +1,7 @@
 <form action="index.php" method="post">
 <input type="hidden" name="area" value="<?php echo $area; ?>">
 <input type="hidden" name="id" value="<?php echo $id; ?>">
-<input type="hidden" name="action" value="<?php echo $action; ?>">
+<input type="hidden" name="action" value="speichern">
 
 <table>
     <tbody>
@@ -14,7 +14,7 @@
             <td><input type="text" name="nachname" value="<?php echo $t->getNachname(); ?>"></td>
         </tr><tr>
             <td>Geschlecht</td>
-            <td><input type="radio" name="geschlecht" value="d" <?php echo $selected[]; ?>> Divers
+            <td><input type="radio" name="geschlecht" value="d" <?php echo ''; ?>> Divers
                 <input type="radio" name="geschlecht" value="w" > Frau
                 <input type="radio" name="geschlecht" value="m" > Mann</td>
         </tr><tr>
@@ -34,7 +34,7 @@
             <td><input type="text" name="geburtsname" value="<?php echo $t->getGeburtsname(); ?>"></td>
         </tr><tr>
             <td></td>
-            <td><input type="submit" value="aendern"><input type="reset>
+            <td><input type="submit" value="aendern"><input type="reset">
             <td></td>
             <td></td>
         </tr>
