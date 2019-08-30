@@ -151,18 +151,18 @@ class Teilnehmer {
         return false;
     }
 
-    function save($member)
-    {
-        $db = DB::connect();
-        $sql = "INSERT INTO teilnehmer (vorname, nachname, geschlecht, telefonnummer, wohnort,wohnland,kuenstlername, geburtsname)
-                VALUES ('$member->vorname',
-                        '$member->nachname',
-                        '$member->geschlecht',
-                        '$member->telefonnummer',
-                        '$member->wohnort',
-                        '$member->wohnland',
-                        '$member->kuenstlername',
-                        '$member->geburtsname')";
+        function save($member)
+        {
+            $db = DB::connect();
+            $sql = "INSERT INTO teilnehmer (vorname, nachname, geschlecht, telefonnummer, wohnort,wohnland,kuenstlername, geburtsname)
+                    VALUES ('$member->vorname',
+                            '$member->nachname',
+                            '$member->geschlecht',
+                            '$member->telefonnummer',
+                            '$member->wohnort',
+                            '$member->wohnland',
+                            '$member->kuenstlername',
+                            '$member->geburtsname')";
 
         mysqli_query($db, $sql);
 
