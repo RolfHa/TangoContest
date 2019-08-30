@@ -6,22 +6,34 @@ spl_autoload_register(function ($class_name) {include "class" . DIRECTORY_SEPARA
 
 $area = '';
 $action = '';
+//$action = 'anzeigen';
 // beide Werte müssen immer übergeben werden, nur bei Erstaufruf gibt es sie nicht
 if (isset($_REQUEST['action'])){
     $action = $_REQUEST['action'];
     $area = $_REQUEST['area'];
 }
+$id = 0;
+if (isset($_GET['id'])){
+    $id = (int)$_GET['id'];
+}
 
-$action = 'anzeigen';
+//$action = 'anzeigen';
 //$area = 'teilnehmer';
-$area = 'tanzpaar';
+$area = 'teilnehmer';
 
 switch ($action){
     case 'anzeigen':
         //if ($area === 'teilnehmer' || $area === 'jury' || $area === 'tanzpaar') {
             $view = $area . 'liste';
         //}
+            break;
+    case 'aendern':
 
+            $view = $area . 'aendern';
+            $t = Teilnehmer::getById($id);
+            break;
+    default :
+        $view = 'teilnehmerliste';
 }
 
 

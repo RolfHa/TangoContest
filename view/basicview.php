@@ -44,7 +44,7 @@
                 </a></td>
         </tr>
         <tr><td>
-                <a href="index.php?action=viewSave&area=teilnehmer">
+                <a href="index.php?action=anzeigen&area=teilnehmer">
                     <button>neuer Teilnehmer</button>
                 </a></td>
             <td><a href="index.php?action=viewSave&area=tanzpaar">
