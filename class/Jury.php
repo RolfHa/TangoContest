@@ -1,5 +1,5 @@
 <?php
-class Jury {
+class Jury implements Saveable {
 
     private $id;
     private $vorname;
@@ -81,7 +81,7 @@ class Jury {
         return $jury;
     }
 
-    function save($jury)
+    public static function save($jury)
     {
         $db = DB::connect();
         $sql = "INSERT INTO jury (vorname, nachname)
@@ -113,5 +113,27 @@ class Jury {
             return $success1 && $success2;
         }
         return false;
+    }
+
+    public static function getAll()
+    {
+        $db = DB::connect();
+        $sql = "SELECT * FROM jury";
+        $result = mysqli_query($db, $sql);
+        $jurys = [];
+        while($row = mysqli_fetch_assoc($result)){
+            $jury = new Jury(
+                $row['vorname'],
+                $row['nachname'],
+                $row['id']
+            );
+            $jurys[] = $jury;
+        }
+
+        return $jurys;
+    }
+    public static function change($id)
+    {
+        // TODO: Implement change() method.
     }
 }

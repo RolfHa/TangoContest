@@ -37,6 +37,9 @@ class Teilnehmer {
        return $this->nachname;
    }
 
+   public function getName(){
+       return $this->getVorname() . ' ' . $this->getNachname();
+   }
    function getGeschlecht() {
        return $this->geschlecht;
    }

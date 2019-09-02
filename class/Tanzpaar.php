@@ -63,7 +63,11 @@ class Tanzpaar {
     }
 
     function getBezahlt() {
-        return $this->bezahlt;
+        if ($this->bezahlt == 1){
+            return 'ja';
+        } else {
+            return 'nein';
+        }
     }
 
     function getBezahldatum() {
@@ -77,7 +81,31 @@ class Tanzpaar {
     function getBezahlart() {
         return $this->bezahlart;
     }
-
+    /*
+     * wenn Tanzpartner aus verschiedenen Städten kommen, werden beide angezeigt
+     * ansonsten wird die STadt nur einmal angezeigt
+     */
+    public function getWohnort(){
+        $wohnort1 = $this->getTeilnehmer1()->getWohnort();
+        $wohnort2 = $this->getTeilnehmer2()->getWohnort();
+        if (trim($wohnort1) === trim($wohnort2)){
+            return $wohnort1;
+        } else {
+            return $wohnort1 . '/' . $wohnort2;
+        }
+    }
+    /*
+     * siehe getWohnort()
+     */
+    public function getWohnland(){
+        $wohnland1 = $this->getTeilnehmer1()->getWohnland();
+        $wohnland2 = $this->getTeilnehmer2()->getWohnland();
+        if (trim($wohnland1) === trim($wohnland2)){
+            return $wohnland1;
+        } else {
+            return $wohnland1 . '/' . $wohnland2;
+        }
+    }
     function setId($id) {
         $this->id = $id;
     }
@@ -111,7 +139,13 @@ class Tanzpaar {
     }
 
     function setBezahlt($bezahlt) {
-        $this->bezahlt = $bezahlt;
+        if ($bezahlt === 'ja' || $bezahlt == 1){
+            $this->bezahlt = 1;
+        } else if ($bezahlt === 'nein' || $bezahlt == 0){
+            $this->bezahlt = 0;
+        } else {
+            $this->bezahlt = 0;
+        }
     }
 
     function setBezahldatum($bezahldatum) {
@@ -159,9 +193,9 @@ class Tanzpaar {
         $tanzpaar = array();
         $i=0;
         while ($row = mysqli_fetch_assoc($result)) {
-            $teilnehmer1 = Teilnehmer.getById($row['teilnehmer1_id']);
-            $teilnehmer2 = Teilnehmer.getById($row['teilnehmer2_id']);
-            $bezahlart = Bezahlart.getById($row['bezahlart_id']);
+            $teilnehmer1 = Teilnehmer::getById($row['teilnehmer1_id']);
+            $teilnehmer2 = Teilnehmer::getById($row['teilnehmer2_id']);
+            $bezahlart = Bezahlart::getById($row['bezahlart_id']);
 
             $tanzpaar[$i] = new Tanzpaar(
                 $row['startnummer'],
@@ -169,7 +203,7 @@ class Tanzpaar {
                 $teilnehmer1,
                 $row['teilnehmer2_id'],
                 $teilnehmer2,
-                $row['fuehrungsreinfolge'],
+                $row['fuehrungsfolge'],
                 $row['anmeldebetrag'],
                 $row['bezahlt'],
                 $row['bezahldatum'],

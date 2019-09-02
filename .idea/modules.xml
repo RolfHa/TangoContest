@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/TangoContest.iml" filepath="$PROJECT_DIR$/.idea/TangoContest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/tangoContest.iml" filepath="$PROJECT_DIR$/.idea/tangoContest.iml" />
     </modules>
   </component>
 </project>
