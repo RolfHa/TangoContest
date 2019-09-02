@@ -228,8 +228,9 @@ class Tanzpaar {
     {
         $db = DB::connect();
         $sql = "SELECT * FROM tanzpaar WHERE teilnehmer1_id = $id or teilnehmer2_id = $id";
-        $result = mysqli_num_rows($db, $sql);
-        return $result;
+        $result = mysqli_query($db, $sql);
+        $resultNo = mysqli_num_rows($result);
+        return $resultNo;
     }
 
     function save ($tanzpaar)

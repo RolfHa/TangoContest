@@ -51,6 +51,10 @@ switch ($action){
         $tn->setId($id);
         $success = Teilnehmer::change($tn);
         $view = $area . 'liste';
+    case 'loeschen':
+        $id = $_GET['id'];
+        Teilnehmer::delete($id);
+        $view =  $area . 'liste';
     default :
         $view = 'teilnehmerliste';
 }
