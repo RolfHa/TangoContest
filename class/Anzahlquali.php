@@ -5,13 +5,16 @@ class Anzahlquali {
     private $stufe_id;
     private $stufe;
     private $anzahlquali;
+    private $maxpaare;
 
-    function __construct($kategorie_id, $kategorie, $stufe_id, $stufe, $anzahlquali) {
+    function __construct($kategorie_id, $kategorie, $stufe_id, $stufe, $anzahlquali,$maxpaare) {
         $this->kategorie_id = $kategorie_id;
         $this->kategorie = $kategorie;
         $this->stufe_id = $stufe_id;
         $this->stufe = $stufe;
         $this->anzahlquali = $anzahlquali;
+        $this->maxpaare = $maxpaare;
+
     }
     
     function getKategorie_id() {
@@ -55,6 +58,19 @@ class Anzahlquali {
     }
 
 
+    public function getMaxpaare()
+    {
+        return $this->maxpaare;
+    }
+
+    public function setMaxpaare($maxpaare)
+    {
+        $this->maxpaare = $maxpaare;
+    }
+
+
+
+
     //      !!!!   feld id in der Tabelle nicht vorhanden  !!!!
     public static function getById($id){
         $db = DB::connect();
@@ -70,14 +86,15 @@ class Anzahlquali {
                 $kategorie,
                 $row['stufe_id'],
                 $stufe,
-                $row['anzahlquali']
+                $row['anzahlquali'],
+                $row['maxpaare']
         );
         return $anzahlquali;
     }
 
     public static function gesAll(){
         $db = DB::connect();
-        $sql = "SELECT kategorie_id, stufe_id, anzahlquali, kategorie, stufe 
+        $sql = "SELECT kategorie_id, stufe_id, anzahlquali, kategorie, stufe , maxpaare
                 FROM anzahlquali
                 join kategorie on anzahlquali.kategorie_id=kategorie.id
                 join stufe on anzahlquali.stufe_id = stufe.id
@@ -94,12 +111,13 @@ class Anzahlquali {
             //$stufe = Stufe.getById($row['stufe_id']);
             $stufe =new Stufe( $row['stufe'], $row['stufe_id']);
 
-            $anzahlquali = new Anzahlquali(
+            $anzahlquali[$i] = new Anzahlquali(
                 $row['kategorie_id'],
                 $kategorie,
                 $row['stufe_id'],
                 $stufe,
-                $row['anzahlquali']
+                $row['anzahlquali'],
+                $row['maxpaare']
             );
             $i++;
         }
@@ -114,11 +132,9 @@ class Anzahlquali {
     function save ($anzahlquali)
     {
         $db = DB::connect();
-        $sql = "INSERT INTO anzahlquali (kategorie_id, stufe_id, anzahlquali)
-                VALUES ('$anzahlquali->kategorie_id', '$anzahlquali->stufe_id', '$anzahlquali->anzahlquali')";
-
+        $sql = "INSERT INTO anzahlquali (kategorie_id, stufe_id, anzahlquali,maxpaare)
+                VALUES ('$anzahlquali->kategorie_id', '$anzahlquali->stufe_id', '$anzahlquali->anzahlquali', '$anzahlquali->maxpaare')";
         Mysqli_query($db, $sql);
-
         return $anzahlquali;
     }
 

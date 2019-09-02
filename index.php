@@ -1,53 +1,69 @@
-<!DOCTYPE html>
-<html lang="de">
-<head>
-    <meta charset="UTF-16">
-    <title>Berlin Open Tango Contest</title>
-        <style>
-			table {
-					font-family: arial, sans-serif;
-					border-collapse: collapse;
-				 }
-			th {
-				font-weight: bold;
-			}
-			td, th {
-				border: 1px solid #dddddd;
-				text-align: left;
-				padding: 8px;
-			}
-			tr:nth-child(even) {
-				background-color: #dddddd;
-			}
-    </style>
-</head>
-<body>
-
-<!-- Navigationsleiste -->
-<nav><form method="post" ><table border="0"><tr>
-                <td><input type="submit" name="teilnehmerliste" value="Liste Teilnehmer"></td>
-                <td><input type="submit" name="tanzpaarliste" value="Liste Tanzpaare"></td>
-                <td><input type="submit" name="juryliste" value="Liste Jurymitglieder"></td>
-                <td><input type="submit" name="rondaliste" value="Liste Ronda"></td>
-                <td><input type="submit" name="punkteliste" value="Liste Punkte"></td>
-            </tr><tr>
-                <td><input type="submit" name="teilnehmerneu" value="neuer Teilnehmer"></td>
-                <td><input type="submit" name="tanzpaarneu" value="neues Tanzpaar"></td>
-                <td><input type="submit" name="juryneu" value="neues Jurymitglied"></td>
-                <td><input type="submit" name="rondaneu" value="Ronda anlegen"></td>
-                <td><input type="submit" name="punkeneu" value="Punkte eingeben"></td>
-            </tr></table></form></nav>
-
-
-
-
 <?php
 // config datei laden (kann außerhalb des WEB-zugriffs gespeichert werden)
 include_once  'config.php';
 //alle andern klassen laden (dateien müssen den klassennamen haben und im Verzeichnis class liegen)
 spl_autoload_register(function ($class_name) {include "class" . DIRECTORY_SEPARATOR . $class_name . '.php';});
 
+echo '<pre>';
+print_r($_POST);
+echo '</pre>';
 
+$area = '';
+$action = '';
+//$action = 'anzeigen';
+// beide Werte müssen immer übergeben werden, nur bei Erstaufruf gibt es sie nicht
+if (isset($_REQUEST['action'])){
+    $action = $_REQUEST['action'];
+    $area = $_REQUEST['area'];
+}
+$id = 0;
+if (isset($_GET['id'])){
+    $id = (int)$_GET['id'];
+}
+
+//$action = 'anzeigen';
+//$area = 'teilnehmer';
+$area = 'teilnehmer';
+
+switch ($action){
+    case 'anzeigen':
+        //if ($area === 'teilnehmer' || $area === 'jury' || $area === 'tanzpaar') {
+            $view = $area . 'liste';
+        //}
+            break;
+    case 'aendern':
+
+            $view = $area . 'aendern';
+            $t = Teilnehmer::getById($id);
+            break;
+    case 'speichern':
+        // Variablen annehmen und update durchführen
+        $id = $_POST['id'];
+        $vorname = $_POST['vorname'];
+        $nachname = $_POST['nachname'];
+        $geschlecht = $_POST['geschlecht'];
+        $telefonnummer = $_POST['telefonnummer'];
+        $wohnort = $_POST['wohnort'];
+        $wohnland = $_POST['wohnland'];
+        $kuenstlername = $_POST['kuenstlername'];
+        $geburtsname = $_POST['geburtsname'];
+        $tn = new Teilnehmer($vorname, $nachname,$geschlecht,$telefonnummer,$wohnort,$wohnland,$kuenstlername, $geburtsname);
+        $tn->setId($id);
+        $success = Teilnehmer::change($tn);
+        $view = $area . 'liste';
+    case 'loeschen':
+        $id = $_GET['id'];
+        Teilnehmer::delete($id);
+        $view =  $area . 'liste';
+    default :
+        $view = 'teilnehmerliste';
+}
+
+
+
+//$view = 'tanzpaarliste';
+
+include 'view/basicview.php';
 
 // post variablen übergeben
 if  (isset ($_POST["id"]) ){$id=$_POST["id"];}
@@ -140,5 +156,5 @@ elseif (isset ($_POST["punkteloeschen"]) ){   }
 
 
 ?>
-</body></html>
+
 

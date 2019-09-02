@@ -1,5 +1,5 @@
 <?php
-class Teilnehmer {
+class Teilnehmer implements Saveable{
    private $id;
    private $vorname;
    private $nachname;
@@ -37,6 +37,9 @@ class Teilnehmer {
        return $this->nachname;
    }
 
+   public function getName(){
+       return $this->getVorname() . ' ' . $this->getNachname();
+   }
    function getGeschlecht() {
        return $this->geschlecht;
    }
@@ -142,7 +145,7 @@ class Teilnehmer {
     public static function delete($id)
     {
         $db = DB::connect();
-        $result = Tanzpaar::getByTeilnehmerId($id);
+        $result = Tanzpaar::getByTeilnehmerId($id); echo $result;
         if ($result === 0){
             $sql = "DELETE FROM teilnehmer WHERE id = $id";
             $success = mysqli_query($db, $sql);
@@ -151,18 +154,18 @@ class Teilnehmer {
         return false;
     }
 
-        function save($member)
-        {
-            $db = DB::connect();
-            $sql = "INSERT INTO teilnehmer (vorname, nachname, geschlecht, telefonnummer, wohnort,wohnland,kuenstlername, geburtsname)
-                    VALUES ('$member->vorname',
-                            '$member->nachname',
-                            '$member->geschlecht',
-                            '$member->telefonnummer',
-                            '$member->wohnort',
-                            '$member->wohnland',
-                            '$member->kuenstlername',
-                            '$member->geburtsname')";
+    public static function save($member)
+    {
+        $db = DB::connect();
+        $sql = "INSERT INTO teilnehmer (vorname, nachname, geschlecht, telefonnummer, wohnort,wohnland,kuenstlername, geburtsname)
+                VALUES ('$member->vorname',
+                        '$member->nachname',
+                        '$member->geschlecht',
+                        '$member->telefonnummer',
+                        '$member->wohnort',
+                        '$member->wohnland',
+                        '$member->kuenstlername',
+                        '$member->geburtsname')";
 
         mysqli_query($db, $sql);
 
@@ -179,5 +182,21 @@ class Teilnehmer {
 
         return $member;
     }
+    public static function change($teilnehmer){
+        $db = DB::connect();
 
+        $sql = "Update teilnehmer SET 
+        vorname = '". $teilnehmer->getVorname()."' , 
+        nachname = '". $teilnehmer->getNachname()."',
+        geschlecht = '". $teilnehmer->getGeschlecht()."',
+        telefonnummer = '". $teilnehmer->getTelefonnummer()."',
+        wohnort = '". $teilnehmer->getWohnort()."',
+        wohnland = '". $teilnehmer->getWohnland()."',
+        kuenstlername = '". $teilnehmer->getKuenstlername()."',
+        geburtsname = '". $teilnehmer->getGeburtsname()."'
+        WHERE id = '".$teilnehmer->getId()."'
+        ";
+        $success = mysqli_query($db, $sql);
+        return $success;
+    }
 }

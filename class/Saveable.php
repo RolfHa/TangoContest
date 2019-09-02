@@ -1,11 +1,11 @@
 <?php
 
 interface Saveable {
-    public function save($objk);
-    public function change($id);
-    public function delete($id);
-    public function getAll();
-    public function getById($id);
+    public static function save($objk);
+    public static function change($id);
+    public static function delete($id);
+    public static function getAll();
+    public static function getById($id);
 }
 
 ?>
