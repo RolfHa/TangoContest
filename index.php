@@ -4,6 +4,10 @@ include_once  'config.php';
 //alle andern klassen laden (dateien müssen den klassennamen haben und im Verzeichnis class liegen)
 spl_autoload_register(function ($class_name) {include "class" . DIRECTORY_SEPARATOR . $class_name . '.php';});
 
+echo '<pre>';
+print_r($_POST);
+echo '</pre>';
+
 $area = '';
 $action = '';
 //$action = 'anzeigen';
@@ -32,6 +36,25 @@ switch ($action){
             $view = $area . 'aendern';
             $t = Teilnehmer::getById($id);
             break;
+    case 'speichern':
+        // Variablen annehmen und update durchführen
+        $id = $_POST['id'];
+        $vorname = $_POST['vorname'];
+        $nachname = $_POST['nachname'];
+        $geschlecht = $_POST['geschlecht'];
+        $telefonnummer = $_POST['telefonnummer'];
+        $wohnort = $_POST['wohnort'];
+        $wohnland = $_POST['wohnland'];
+        $kuenstlername = $_POST['kuenstlername'];
+        $geburtsname = $_POST['geburtsname'];
+        $tn = new Teilnehmer($vorname, $nachname,$geschlecht,$telefonnummer,$wohnort,$wohnland,$kuenstlername, $geburtsname);
+        $tn->setId($id);
+        $success = Teilnehmer::change($tn);
+        $view = $area . 'liste';
+    case 'loeschen':
+        $id = $_GET['id'];
+        Teilnehmer::delete($id);
+        $view =  $area . 'liste';
     default :
         $view = 'teilnehmerliste';
 }
