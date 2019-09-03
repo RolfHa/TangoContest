@@ -5,14 +5,8 @@ class Jury implements Saveable {
     private $vorname;
     private $nachname;
 
-    /**
-     * jury constructor.
-     * @param $id
-     * @param $vorname
-     * @param $nachname
-     */
-    public function __construct($vorname, $nachname, $id = null)
-    {
+
+    public function __construct($vorname, $nachname, $id = null)    {
         if (isset($id)){
             $this->id = $id;
         }
@@ -20,53 +14,27 @@ class Jury implements Saveable {
         $this->nachname = $nachname;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getId()
-    {
+    public function getId()    {
         return $this->id;
     }
-
-    /**
-     * @param mixed $id
-     */
-    public function setId($id)
-    {
+    public function setId($id)    {
         $this->id = $id;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getVorname()
-    {
+    public function getVorname()    {
         return $this->vorname;
     }
-
-    /**
-     * @param mixed $vorname
-     */
-    public function setVorname($vorname)
-    {
+    public function setVorname($vorname)    {
         $this->vorname = $vorname;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getNachname()
-    {
+    public function getNachname()    {
         return $this->nachname;
     }
-
-    /**
-     * @param mixed $nachname
-     */
-    public function setNachname($nachname)
-    {
+    public function setNachname($nachname)    {
         $this->nachname = $nachname;
     }
+
     public static function getById($id){
         $db = DB::connect();
         $sql = "SELECT * FROM jury WHERE id=$id";
@@ -81,32 +49,48 @@ class Jury implements Saveable {
         return $jury;
     }
 
-    public static function save($jury)
-    {
+    public static function getAll()    {
+        $db = DB::connect();
+        $sql = "SELECT * FROM jury";
+        $result = mysqli_query($db, $sql);
+        $jury = array();
+        $i=0;
+        while($row = mysqli_fetch_assoc($result)){
+            $jury[$i]= new Jury(
+                $row['vorname'],
+                $row['nachname'],
+                $row['id']
+            );
+            $i++;
+        }
+        return $jury;
+    }
+
+    public static function save($jury)    {
         $db = DB::connect();
         $sql = "INSERT INTO jury (vorname, nachname)
                 VALUES ('$jury->vorname', '$jury->nachname')";
         mysqli_query($db, $sql);
-
-        $memberId = "SELECT  id, vorname, nachname
-                     FROM    jury
-                     WHERE vorname LIKE '$jury->vorname'
-                     AND nachname LIKE '$jury->nachname'";
-        $result = mysqli_query($db, $memberId);
-        $row = mysqli_fetch_assoc($result);
-        $resultID = $row['id'];
-
-        $jury->setId($resultID);
-
+        $id = mysqli_insert_id($db); //gibt die eingetragen ID zurück
+        $jury->setId($id);
         return $jury;
     }
 
-    public static function delete($id)
-    {
+    public static function change($jury)    {
+        $db = DB::connect();
+        $sql = "Update jury SET 
+        vorname = '". $jury->getVorname()."' , 
+        nachname = '". $jury->getNachname()."'
+        WHERE id = '".$jury->getId()."'
+        ";
+        $success = mysqli_query($db, $sql);
+        return $success;
+    }
+
+    public static function delete($id)    {
         $db = DB::connect();
         $result = Punkte::getByJuryId($id);
-        if ($result === 0)
-        {
+        if ($result == 0)        {
             $success1 = Jury2ronda::deleteByJuryId($id);
             $sql = "DELETE FROM jury WHERE id = $id";
             $success2 = mysqli_query($db, $sql);
@@ -115,25 +99,4 @@ class Jury implements Saveable {
         return false;
     }
 
-    public static function getAll()
-    {
-        $db = DB::connect();
-        $sql = "SELECT * FROM jury";
-        $result = mysqli_query($db, $sql);
-        $jurys = [];
-        while($row = mysqli_fetch_assoc($result)){
-            $jury = new Jury(
-                $row['vorname'],
-                $row['nachname'],
-                $row['id']
-            );
-            $jurys[] = $jury;
-        }
-
-        return $jurys;
-    }
-    public static function change($id)
-    {
-        // TODO: Implement change() method.
-    }
 }

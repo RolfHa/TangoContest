@@ -14,6 +14,7 @@ $liste = Tanzpaar::getAll();
     <th>Land</th>
     <th>Anmeldebetrag</th>
     <th>bezahlt</th>
+    <th>Bezahldatum</th>
     <th>Bezahlart</th>
     <th></th>
     <th></th>
@@ -46,6 +47,9 @@ $liste = Tanzpaar::getAll();
             </td>
             <td>
                 <?php echo $liste[$i]->getBezahlt(); ?>
+            </td>
+            <td>
+                <?php echo $liste[$i]->getBezahldatum(); ?>
             </td>
             <td>
                 <?php echo $liste[$i]->getBezahlart()->getBezahlart(); ?>

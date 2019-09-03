@@ -33,7 +33,7 @@
             <td><a href="index.php?action=listeanzeigen&area=tanzpaar">
                     <button>Liste Tanzpaare</button>
                 </a></td>
-            <td><a href="index.php?action=listeanzeigen&area=jurymitglieder">
+            <td><a href="index.php?action=listeanzeigen&area=jury">
                     <button>Liste Jurymitglieder</button>
                 </a></td>
             <td><a href="index.php?action=listeanzeigen&area=ronda">
@@ -44,19 +44,19 @@
                 </a></td>
         </tr>
         <tr><td>
-                <a href="index.php?action=anzeigen&area=teilnehmer">
+                <a href="index.php?action=eingeben&area=teilnehmer">
                     <button>neuer Teilnehmer</button>
                 </a></td>
-            <td><a href="index.php?action=viewSave&area=tanzpaar">
+            <td><a href="index.php?action=eingeben&area=tanzpaar">
                     <button>neues Tanzpaar</button>
                 </a></td>
-            <td><a href="index.php?action=viewSave&area=jurymitglieder">
+            <td><a href="index.php?action=eingeben&area=jury">
                     <button>neues Jurymitglied</button>
                 </a></td>
-            <td><a href="index.php?action=viewSave&area=ronda">
+            <td><a href="index.php?action=eingeben&area=ronda">
                     <button>Ronda anlegen</button>
                 </a></td>
-            <td><a href="index.php?action=viewSave&area=punkte">
+            <td><a href="index.php?action=eingeben&area=punkte">
                     <button>Punkte eingeben</button>
                 </a></td>
         </tr>
@@ -65,8 +65,8 @@
 
 
 <?php
-include 'view/' . $view . '.php';
-
+if ($view !=""){    include 'view/' . $view . '.php';}
+else {echo '<br><br><ul><ul><ul><ul><ul><img src="tango.jpg">';}
 ?>
 
 </body></html>

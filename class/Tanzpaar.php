@@ -139,9 +139,9 @@ class Tanzpaar {
     }
 
     function setBezahlt($bezahlt) {
-        if ($bezahlt === 'ja' || $bezahlt == 1){
+        if ($bezahlt == 'ja' || $bezahlt == 1){
             $this->bezahlt = 1;
-        } else if ($bezahlt === 'nein' || $bezahlt == 0){
+        } else if ($bezahlt == 'nein' || $bezahlt == 0){
             $this->bezahlt = 0;
         } else {
             $this->bezahlt = 0;
@@ -165,9 +165,9 @@ class Tanzpaar {
         $sql = "SELECT * FROM tanzpaar WHERE ID=$id";
         $result = mysqli_query($db, $sql);
         $row = mysqli_fetch_assoc($result);
-        $teilnehmer1 = Teilnehmer.getById($row['teilnehmer1_id']);
-        $teilnehmer2 = Teilnehmer.getById($row['teilnehmer2_id']);
-        $bezahlart = Bezahlart.getById($row['bezahlart_id']);
+        $teilnehmer1 = Teilnehmer::getById($row['teilnehmer1_id']);
+        $teilnehmer2 = Teilnehmer::getById($row['teilnehmer2_id']);
+        $bezahlart = Bezahlart::getById($row['bezahlart_id']);
         
         $tanzpaar = new Tanzpaar( 
                 $row['startnummer'], 
@@ -175,7 +175,7 @@ class Tanzpaar {
                 $teilnehmer1,
                 $row['teilnehmer2_id'], 
                 $teilnehmer2,
-                $row['fuehrungsreinfolge'], 
+                $row['fuehrungsfolge'],
                 $row['anmeldebetrag'], 
                 $row['bezahlt'],
                 $row['bezahldatum'],
@@ -224,6 +224,7 @@ class Tanzpaar {
         return $success;
     }
 
+/*
     public static function getByTeilnehmerId($id)
     {
         $db = DB::connect();
@@ -232,9 +233,9 @@ class Tanzpaar {
         $resultNo = mysqli_num_rows($result);
         return $resultNo;
     }
+*/
 
-    function save ($tanzpaar)
-    {
+    public static function save ($tanzpaar)    {
         $db = DB::connect();
         $sql = "INSERT INTO tanzpaar (startnummer, teilnehmer1_id, teilnehmer2_id, fuehrungsfolge, anmeldebetrag, bezahlt, bezahldatum, bezahlart_id)
                 VALUES ($tanzpaar->startnummer, 
@@ -245,20 +246,27 @@ class Tanzpaar {
                         $tanzpaar->bezahlt, 
                         '$tanzpaar->bezahldatum', 
                         $tanzpaar->bezahlart_id)";
-
         mysqli_query($db, $sql);
-
-        $tanzpaarId = "SELECT id, startnummer
-                       FROM tanzpaar
-                       WHERE startnummer LIKE '$tanzpaar->startnummer';";
-
-        $result = mysqli_query($db, $tanzpaarId);
-        $row = mysqli_fetch_assoc($result);
-        $resultID = $row['id'];
-
-        $tanzpaar->setId($resultID);
-
+        $id = mysqli_insert_id($db); //gibt die eingetragen ID zurück
+        $tanzpaar->setId($id);
         return $tanzpaar;
+    }
+
+    public static function change ($tanzpaar)    {
+        $db = DB::connect();
+        $sql = "Update tanzpaar set
+                startnummer ='".$tanzpaar->getStartnummer()."', 
+                teilnehmer1_id ='".$tanzpaar->getTeilnehmer1_id()."', 
+                teilnehmer2_id ='".$tanzpaar->getTeilnehmer2_id()."', 
+                fuehrungsfolge ='".$tanzpaar->getFuehrungsfolge()."', 
+                anmeldebetrag ='".$tanzpaar->getAnmeldebetrag()."', 
+                bezahlt ='".$tanzpaar->getBezahlt()."', 
+                bezahldatum ='".$tanzpaar->getBezahldatum()."', 
+                bezahlart_id ='".$tanzpaar->getBezahlart_id()."'
+                WHERE id = '".$tanzpaar->getId()."'
+        ";
+        $success = mysqli_query($db, $sql);
+        return $success;
     }
 
 }

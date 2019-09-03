@@ -8,13 +8,7 @@ class Tanzpaar2ronda {
     private $ronda;
     private $reihenfolge;
 
-    /**
-     * tanzpaar2ronda constructor.
-     * @param $id
-     * @param $tanzpaar2kategorie_id
-     * @param $ronda_id
-     * @param $reihenfolge
-     */
+
     public function __construct( $tanzpaar2kategorie_id, $ronda_id, $reihenfolge, $id = null)
     {
         if (isset($id)){
@@ -27,69 +21,35 @@ class Tanzpaar2ronda {
         $this->reihenfolge = $reihenfolge;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getId()
-    {
+    public function getId()    {
         return $this->id;
     }
-
-    /**
-     * @param mixed $id
-     */
-    public function setId($id)
-    {
+    public function setId($id)    {
         $this->id = $id;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getTanzpaar2kategorieId()
-    {
+    public function getTanzpaar2kategorieId(){
         return $this->tanzpaar2kategorie_id;
     }
-
-    /**
-     * @param mixed $tanzpaar2kategorie_id
-     */
-    public function setTanzpaar2kategorieId($tanzpaar2kategorie_id)
-    {
+    public function setTanzpaar2kategorieId($tanzpaar2kategorie_id)    {
         $this->tanzpaar2kategorie_id = $tanzpaar2kategorie_id;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getRondaId()
-    {
+    public function getRondaId(){
         return $this->ronda_id;
     }
-
-    /**
-     * @param mixed $ronda_id
-     */
-    public function setRondaId($ronda_id)
-    {
+    public function setRondaId($ronda_id)    {
         $this->ronda_id = $ronda_id;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getReihenfolge()
-    {
+    public function getReihenfolge(){
         return $this->reihenfolge;
     }
-
-    /**
-     * @param mixed $reihenfolge
-     */
-    public function setReihenfolge($reihenfolge)
-    {
+    public function setReihenfolge($reihenfolge){
         $this->reihenfolge = $reihenfolge;
     }
+
+
     public static function getById($id){
         $db = DB::connect();
         $sql = "SELECT * FROM tanzpaar2ronda WHERE ID=$id";
@@ -148,35 +108,22 @@ class Tanzpaar2ronda {
         $db = DB::connect();
         $sql = "SELECT id FROM tanzpaar2ronda WHERE ronda_id = $id";
         $result = mysqli_query($db, $sql);
-        $ids = array();
-        while ($row = mysqli_fetch_assoc($result))
-        {
-            $ids[] = $row['id'];
+        $tanzpaar2rondaId = array();
+        while ($row = mysqli_fetch_assoc($result)) {
+            $tanzpaar2rondaId[] = $row['id'];
         }
-        return $ids;
+        return $tanzpaar2rondaId;
     }
 
-    function save ($tanzpaar2ronda)
-    {
+    function save ($tanzpaar2ronda)    {
         $db = DB::connect();#
         $sql = "INSERT INTO tanzpaar2ronda (tanzpaar2kategorie_id, ronda_id, reihenfolge)
                 VALUES ('$tanzpaar2ronda->tanzpaar2kategorie_id', 
                         '$tanzpaar2ronda->ronda_id', 
-                        '$tanzpaar2ronda->reihenfolge')";
-
+                        '$tanzpaar2ronda->reihenfolge');";
         Mysqli_query($db, $sql);
-
-        $tanzpaar2rondaId = "SELECT id, tanzpaar2kategorie_id, ronda_id
-                             FROM tanzpaar2ronda
-                             WHERE tanzpaar2kategorie_id LIKE '$tanzpaar2ronda->tanzpaar2kategorie_id'
-                             AND ronda_id LIKE '$tanzpaar2ronda->ronda_id'";
-
-        $result = mysqli_query($db, $tanzpaar2rondaId);
-        $row = mysqli_fetch_assoc($result);
-        $resultID = $row['id'];
-
-        $tanzpaar2ronda->setId($resultID);
-
+        $id = mysqli_insert_id($db); //gibt die eingetragen ID zurück
+        $tanzpaar2ronda->setId($id);
         return $tanzpaar2ronda;
     }
 

@@ -6,154 +6,85 @@ spl_autoload_register(function ($class_name) {include "class" . DIRECTORY_SEPARA
 
 echo '<pre>';
 print_r($_POST);
+print_r($_REQUEST);
 echo '</pre>';
 
 $area = '';
 $action = '';
-//$action = 'anzeigen';
+$view = '';
+$id = 0;
 // beide Werte müssen immer übergeben werden, nur bei Erstaufruf gibt es sie nicht
 if (isset($_REQUEST['action'])){
     $action = $_REQUEST['action'];
     $area = $_REQUEST['area'];
 }
-$id = 0;
-if (isset($_GET['id'])){
-    $id = (int)$_GET['id'];
+if (isset($_REQUEST['id'])){
+    $id = (int)$_REQUEST['id'];
 }
-
-//$action = 'anzeigen';
-//$area = 'teilnehmer';
-$area = 'teilnehmer';
 
 switch ($action){
-    case 'anzeigen':
-        //if ($area === 'teilnehmer' || $area === 'jury' || $area === 'tanzpaar') {
-            $view = $area . 'liste';
-        //}
-            break;
-    case 'aendern':
-
-            $view = $area . 'aendern';
-            $t = Teilnehmer::getById($id);
-            break;
-    case 'speichern':
-        // Variablen annehmen und update durchführen
-        $id = $_POST['id'];
-        $vorname = $_POST['vorname'];
-        $nachname = $_POST['nachname'];
-        $geschlecht = $_POST['geschlecht'];
-        $telefonnummer = $_POST['telefonnummer'];
-        $wohnort = $_POST['wohnort'];
-        $wohnland = $_POST['wohnland'];
-        $kuenstlername = $_POST['kuenstlername'];
-        $geburtsname = $_POST['geburtsname'];
-        $tn = new Teilnehmer($vorname, $nachname,$geschlecht,$telefonnummer,$wohnort,$wohnland,$kuenstlername, $geburtsname);
-        $tn->setId($id);
-        $success = Teilnehmer::change($tn);
+    case 'listeanzeigen':
         $view = $area . 'liste';
-    case 'loeschen':
-        $id = $_GET['id'];
-        Teilnehmer::delete($id);
+        break;
+    case 'aendern':
+        $view = $area . 'aendern';
+        break;
+    case 'eingeben':
+        $view = $area . 'eingeben';
+        break;
+    case 'speichern':
         $view =  $area . 'liste';
+        switch ($area){
+            case 'teilnehmer':
+                $teinehmer = new Teilnehmer($_POST['vorname'],$_POST['nachname'],$_POST['geschlecht'],$_POST['telefonnummer'],$_POST['wohnort'],$_POST['wohnland'],$_POST['kuenstlername'], $_POST['geburtsname']);
+                $teinehmer->setId($_POST['id']);
+                $success = Teilnehmer::change($teinehmer);
+            case 'tanzpaar':
+                $tanzpaar = new Tanzpaar($_POST['startnummer'],$_POST['teilnehmer1'],'',$_POST['teilnehmer2'],'',$_POST['fuehrungsfolge'],$_POST['anmeldebetrag'],$_POST['bezahlt'],$_POST['bezahldatum'],$_POST['bezahlart'],'');
+                $tanzpaar ->setId($_POST['id']);
+                $success = Tanzpaar::change($tanzpaar);
+            case 'jury':
+                $jury = new Jury($_POST['vorname'],$_POST['nachname']);
+                $jury->setId($_POST['id']);
+                $success = Jury::change($jury);
+            case 'ronda':
+            case 'punke':
+        }
+    case 'neuanlegen':
+        $view =  $area . 'liste';
+        switch ($area){
+            case 'teilnehmer':
+                $teinehmer = new Teilnehmer($_POST['vorname'],$_POST['nachname'],$_POST['geschlecht'],$_POST['telefonnummer'],$_POST['wohnort'],$_POST['wohnland'],$_POST['kuenstlername'], $_POST['geburtsname']);
+                $success = Teilnehmer::save($teinehmer);
+            case 'tanzpaar':
+                $tanzpaar = new Tanzpaar($_POST['startnummer'],$_POST['teilnehmer1'],'',$_POST['teilnehmer2'],'',$_POST['fuehrungsfolge'],$_POST['anmeldebetrag'],$_POST['bezahlt'],$_POST['bezahldatum'],$_POST['bezahlart'],'');
+                $success = Tanzpaar::save($tanzpaar);
+                echo 'angelegt';
+            case 'jury':
+                $jury = new Jury($_POST['vorname'],$_POST['nachname']);
+                $success = Jury::save($jury);
+            case 'ronda':
+            case 'punke':
+        }
+    case 'loeschen':
+        $view =  $area . 'liste';
+        switch ($area){
+            case 'teilnehmer':
+                Teilnehmer::delete($id);
+            case 'tanzpaar':
+                Tanzpaar::delete($id);
+            case 'jury':
+                Jury::delete($id);
+            case 'ronda':
+                Ronda::delete($id);
+            case 'punke':
+                Punkte::delete($id);
+        }
     default :
-        $view = 'teilnehmerliste';
+     //   $view = 'teilnehmerliste';
 }
-
-
-
-//$view = 'tanzpaarliste';
 
 include 'view/basicview.php';
-
-// post variablen übergeben
-if  (isset ($_POST["id"]) ){$id=$_POST["id"];}
-
-
-
-
-//Teilnehmer
-if  (isset ($_POST["teilnehmerliste"]) ){
-    //HTML::teilnehmerListe(Teilnehmer::getAll());
-    $teilnehmer=Teilnehmer::getAll();
-    echo '<pre>';
-    print_r($teilnehmer);
-    echo '</pre>';
-    }
-//elseif (isset ($_POST["teilnehmeredit"]) ){HTML::teilnehmerEdit(Teilnehmer::getById($id));}
-
-elseif (isset ($_POST["teilnehmerneu"]) ){
-    //HTML::teilnehmerNew();
-    echo'test id 10';
-    //HTML::teilnehmerEdit(Teilnehmer::getById($id));
-    $teilnehmer=Teilnehmer::getById(10);
-    echo '<pre>';
-    print_r($teilnehmer);
-    echo '</pre>';
-}
-//elseif (isset ($_POST["teilnehmerspeichern"]) ){   }
-//elseif (isset ($_POST["teilnehmerloeschen"]) ){   }
-
-/*
-//Tanzpaar::
-elseif (isset ($_POST["tanzpaarliste"]) ){HTML::tanzpaarListe(Tanzpaar::getAll());}
-elseif (isset ($_POST["tanzpaaredit"]) ){HTML::tanzpaarEdit(Tanzpaar::getById($id));}
-elseif (isset ($_POST["tanzpaarneu"]) ){HTML::tanzpaarNew(Tanzpaar::getAll());}
-elseif (isset ($_POST["tanzpaarspeichern"]) ){   }
-elseif (isset ($_POST["tanzpaarloeschen"]) ){   }
-*/
-
-//Jury
-elseif (isset ($_POST["juryliste"]) ){
-    //HTML::juryListe(Jury::getAll());}
-    $test=Jury::getAll();
-    echo '<pre>';
-    print_r($test);
-    echo '</pre>';
-    }
-//elseif (isset ($_POST["juryedit"]) ){HTML::juryEdit(Jury::getById($id));}
-elseif (isset ($_POST["juryneu"]) ){
-    //HTML::juryNew();}
-    echo 'test id 5';
-    $test=Jury::getById(5);
-    echo '<pre>';
-    print_r($test);
-    echo '</pre>';
-}
-elseif (isset ($_POST["juryspeichern"]) ){   }
-elseif (isset ($_POST["juryloeschen"]) ){   }
-
-
-//Ronda
-elseif (isset ($_POST["rondaliste"]) ){
-    //HTML::rondaListe(Ronda::getAll());}
-    $test=Ronda::getAll();
-    echo '<pre>';
-    print_r($test);
-    echo '</pre>';
-}
-//elseif (isset ($_POST["rondaedit"]) ){HTML::rondaEdit(Ronda::getById($id));}
-elseif (isset ($_POST["rondaneu"]) ){
-    //HTML::rondaNew();}
-    echo 'test id 5';
-    $test=Ronda::getById(5);
-    echo '<pre>';
-    print_r($test);
-    echo '</pre>';
-}
-elseif (isset ($_POST["rondaspeichern"]) ){   }
-elseif (isset ($_POST["rondaoeschen"]) ){   }
-
-/*
-//Punkte
-elseif (isset ($_POST["punkteliste"]) ){HTML::punkteUebersicht(Ronda::getUebersicht());}
-elseif (isset ($_POST["punktetabelle"]) ){HTML::punkteListe(Tanzpaar::getTanzpaarByRondaId($id),Punkt::getAll());}
-elseif (isset ($_POST["punkteedit"]) ){HTML::punkteEdit(Punkt::getById($id));}
-elseif (isset ($_POST["punkeneu"]) ){HTML::juryNew();}
-elseif (isset ($_POST["punktespeichern"]) ){   }
-elseif (isset ($_POST["punkteloeschen"]) ){   }
-*/
-
-
 
 ?>
 

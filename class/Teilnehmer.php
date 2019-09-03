@@ -145,17 +145,12 @@ class Teilnehmer implements Saveable{
     public static function delete($id)
     {
         $db = DB::connect();
-        $result = Tanzpaar::getByTeilnehmerId($id); echo $result;
-        if ($result === 0){
-            $sql = "DELETE FROM teilnehmer WHERE id = $id";
-            $success = mysqli_query($db, $sql);
-            return $success;
-        }
-        return false;
+        $sql = "DELETE FROM teilnehmer WHERE id = $id";
+        $success = mysqli_query($db, $sql);
+        return $success;
     }
 
-    public static function save($member)
-    {
+    public static function save($member)    {
         $db = DB::connect();
         $sql = "INSERT INTO teilnehmer (vorname, nachname, geschlecht, telefonnummer, wohnort,wohnland,kuenstlername, geburtsname)
                 VALUES ('$member->vorname',
@@ -166,25 +161,13 @@ class Teilnehmer implements Saveable{
                         '$member->wohnland',
                         '$member->kuenstlername',
                         '$member->geburtsname')";
-
         mysqli_query($db, $sql);
-
-        $memberId = "SELECT  id, vorname, nachname
-                     FROM    jury
-                     WHERE vorname LIKE '$member->vorname'
-                     AND nachname LIKE '$member->nachname'";
-
-        $result = mysqli_query($db, $memberId);
-        $row = mysqli_fetch_assoc($result);
-        $resultID = $row['id'];
-
-        $member->setId($resultID);
-
+        $id = mysqli_insert_id($db); //gibt die eingetragen ID zurück
+        $member->setId($id);
         return $member;
     }
     public static function change($teilnehmer){
         $db = DB::connect();
-
         $sql = "Update teilnehmer SET 
         vorname = '". $teilnehmer->getVorname()."' , 
         nachname = '". $teilnehmer->getNachname()."',

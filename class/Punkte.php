@@ -145,7 +145,11 @@ class Punkte {
         $db = DB::connect();
         $sql = "SELECT * FROM punkte WHERE tanzpaar2ronda_id = $id";
         $result = mysqli_num_rows($db, $sql);
-        return $result;
+        $menge=0;
+        while ($row = mysqli_fetch_assoc($result)) {
+            $menge=$menge+$row['punkte'];
+        }
+        return $menge;
     }
 
     function save ($punkte)
