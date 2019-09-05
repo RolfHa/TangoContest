@@ -49,21 +49,34 @@ class Tanzpaar2ronda {
         $this->reihenfolge = $reihenfolge;
     }
 
+    public function getTanzpaar2kategorie()    {
+        return $this->tanzpaar2kategorie;
+    }
+    public function setTanzpaar2kategorie($tanzpaar2kategorie)    {
+        $this->tanzpaar2kategorie = $tanzpaar2kategorie;
+    }
+
+    public function getRonda()    {
+        return $this->ronda;
+    }
+    public function setRonda($ronda)    {
+        $this->ronda = $ronda;
+    }
+
+
 
     public static function getById($id){
         $db = DB::connect();
         $sql = "SELECT * FROM tanzpaar2ronda WHERE ID=$id";
         $result = mysqli_query($db, $sql);
         $row = mysqli_fetch_assoc($result);
-        
-        $tanzpaar2kategorie = Tanzpaar2kategorie.getById($row['tanzpaar2kategorie_id']);
-        $ronda = Ronda.getById($row['ronda_id']);
-        
-        $tanzpaar2ronda = new Tanzpaar2ronda( 
+//        $tanzpaar2kategorie = Tanzpaar2kategorie::getById($row['tanzpaar2kategorie_id']);
+//        $ronda = Ronda::getById($row['ronda_id']);
+        $tanzpaar2ronda = new Tanzpaar2ronda(
             $row['tanzpaar2kategorie_id'],
-            $tanzpaar2kategorie,
+//            $tanzpaar2kategorie,
             $row['ronda_id'],
-            $ronda,
+//            $ronda,
             $row['reihenfolge'],
             $row['id']
         );
@@ -72,47 +85,44 @@ class Tanzpaar2ronda {
 
     public static function getAll(){
         $db = DB::connect();
-        $sql = "SELECT * FROM tanzpaar2ronda;";
+        $sql = "SELECT * FROM tanzpaar2ronda order by reihenfolge;";
         $result = mysqli_query($db, $sql);
         $tanzpaar2ronda= array();
         $i=0;
         while ($row = mysqli_fetch_assoc($result)) {
-            $tanzpaar2kategorie = Tanzpaar2kategorie.getById($row['tanzpaar2kategorie_id']);
-            $ronda = Ronda.getById($row['ronda_id']);
-
+//            $tanzpaar2kategorie = Tanzpaar2kategorie::getById($row['tanzpaar2kategorie_id']);
+//            $ronda = Ronda::getById($row['ronda_id']);
             $tanzpaar2ronda[$i] = new Tanzpaar2ronda(
                 $row['tanzpaar2kategorie_id'],
-                $tanzpaar2kategorie,
+//                $tanzpaar2kategorie,
                 $row['ronda_id'],
-                $ronda,
+//                $ronda,
                 $row['reihenfolge'],
                 $row['id']
             );
             $i++;
         }
-
-
         return $tanzpaar2ronda;
     }
 
-    public static function delete($id)
-    {
+    public static function getByRondaId($id)    {
         $db = DB::connect();
-        $sql = "DELETE FROM tanzpaar2ronda WHERE id = $id";
-        $success = mysqli_query($db, $sql);
-        return $success;
-    }
-
-    public static function getIdByRondaId($id)
-    {
-        $db = DB::connect();
-        $sql = "SELECT id FROM tanzpaar2ronda WHERE ronda_id = $id";
+        $sql = "SELECT * FROM tanzpaar2ronda WHERE ronda_id = $id order by reihenfolge;" ;
         $result = mysqli_query($db, $sql);
-        $tanzpaar2rondaId = array();
+        $tanzpaar2ronda= array();
+        $i=0;
         while ($row = mysqli_fetch_assoc($result)) {
-            $tanzpaar2rondaId[] = $row['id'];
+            $tanzpaar2kategorie = "";//Tanzpaar2kategorie::getById($row['tanzpaar2kategorie_id']);
+            $ronda = "";//Ronda::getById($row['ronda_id']);
+            $tanzpaar2ronda[$i] = new Tanzpaar2ronda(
+                $row['tanzpaar2kategorie_id'],
+                $row['ronda_id'],
+                $row['reihenfolge'],
+                $row['id']
+            );
+            $i++;
         }
-        return $tanzpaar2rondaId;
+        return $tanzpaar2ronda;
     }
 
     function save ($tanzpaar2ronda)    {
@@ -126,5 +136,14 @@ class Tanzpaar2ronda {
         $tanzpaar2ronda->setId($id);
         return $tanzpaar2ronda;
     }
+
+    public static function delete($id)
+    {
+        $db = DB::connect();
+        $sql = "DELETE FROM tanzpaar2ronda WHERE id = $id";
+        $success = mysqli_query($db, $sql);
+        return $success;
+    }
+
 
 }

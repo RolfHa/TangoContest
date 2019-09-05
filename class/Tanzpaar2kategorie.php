@@ -61,9 +61,8 @@ class Tanzpaar2kategorie {
         $sql = "SELECT * FROM tanzpaar2kategorie WHERE ID=$id";
         $result = mysqli_query($db, $sql);
         $row = mysqli_fetch_assoc($result);
-        
-        $tanzpaar = Tanzpaar.getById($row['tanzpaar_id']);
-        $kategorie = Kategorie.getById($row['kategorie_id']);
+        $tanzpaar = Tanzpaar::getById($row['tanzpaar_id']);
+        $kategorie = Kategorie::getById($row['kategorie_id']);
         $tanzpaar2kategorie = new Tanzpaar2kategorie( 
             $row['tanzpaar_id'],
             $tanzpaar,
@@ -81,8 +80,8 @@ class Tanzpaar2kategorie {
         $tanzpaar = array();
         $i=0;
         while ($row = mysqli_fetch_assoc($result)) {
-            $tanzpaar = Tanzpaar.getById($row['tanzpaar_id']);
-            $kategorie = Kategorie.getById($row['kategorie_id']);
+            $tanzpaar = Tanzpaar::getById($row['tanzpaar_id']);
+            $kategorie = Kategorie::getById($row['kategorie_id']);
             $tanzpaar2kategorie[$i] = new Tanzpaar2kategorie(
                 $row['tanzpaar_id'],
                 $tanzpaar,
@@ -92,8 +91,6 @@ class Tanzpaar2kategorie {
             );
             $i++;
         }
-
-
         return $tanzpaar2kategorie;
     }
 
@@ -102,24 +99,13 @@ class Tanzpaar2kategorie {
         //Wird nicht benötigt
     }
 
-    function save ($tanzpaar2kategorie)
-    {
+    function save ($tanzpaar2kategorie){
         $db = DB::connect();
         $sql = "INSERT INTO tanzpaar2kategorie (tanzpaar_id, kategorie_id)
                 VALUES ($tanzpaar2kategorie->tanzpaar_id, $tanzpaar2kategorie->kategorie_id)";
         mysqli_query($db, $sql);
-
-        $tanzpaar2kategorieId = "SELECT id, tanzpaar_id, kategorie_id
-                                 FROM tanzpaar2kategorie 
-                                 WHERE tanzpaar_id LIKE '$tanzpaar2kategorie->tanzpaar_id'
-                                 AND kategorie_id LIKE '$tanzpaar2kategorie->kategorie_id'";
-
-        $result = mysqli_query($db, $tanzpaar2kategorieId);
-        $row = mysqli_fetch_assoc($result);
-        $resultID = $row['id'];
-
-        $tanzpaar2kategorie->setId($resultID);
-
+        $id = mysqli_insert_id($db); //gibt die eingetragen ID zurück
+        $tanzpaar2kategorie->setId($id);
         return $tanzpaar2kategorie;
     }
 

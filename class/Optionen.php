@@ -46,7 +46,7 @@ class Optionen {
         $optionen = array();
         $i=0;
         while ($row = mysqli_fetch_assoc($result)) {
-            $optionen = new Optionen($row['name'], $row['wert']);
+            $optionen[$i] = new Optionen($row['name'], $row['wert']);
             $i++;
         }
         return $optionen;
@@ -58,6 +58,17 @@ class Optionen {
                 VALUES ('$optionen->name', '$optionen->wert')";
         mysqli_query($db, $sql);
         return $optionen;
+    }
+
+
+    public static function change($optionen)    {
+        $db = DB::connect();
+        $sql = "Update optionen SET 
+        wert = '". $optionen->getWert()."'
+        WHERE name = '".$optionen->getName()."'
+        ";
+        $success = mysqli_query($db, $sql);
+        return $success;
     }
 
     public static function delete()    {

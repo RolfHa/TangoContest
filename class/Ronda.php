@@ -21,58 +21,47 @@ class Ronda {
     function getId() {
         return $this->id;
     }
-
     function getKategorie_id() {
         return $this->kategorie_id;
     }
-
     function getKategorie() {
         return $this->kategorie;
     }
-
     function getStufe_id() {
         return $this->stufe_id;
     }
-
     function getStufe() {
         return $this->stufe;
     }
-
     function getRonda() {
         return $this->ronda;
     }
-
     function setId($id) {
         $this->id = $id;
     }
-
     function setKategorie_id($kategorie_id) {
         $this->kategorie_id = $kategorie_id;
     }
-
     function setKategorie($kategorie) {
         $this->kategorie = $kategorie;
     }
-
     function setStufe_id($stufe_id) {
         $this->stufe_id = $stufe_id;
     }
-
     function setStufe($stufe) {
         $this->stufe = $stufe;
     }
-
     function setRonda($ronda) {
         $this->ronda = $ronda;
     }
 
     public static function getById($id){
         $db = DB::connect();
-        $sql = "SELECT * FROM ronda WHERE ID=$id";
+        $sql = "SELECT * FROM ronda WHERE id=$id;";
         $result = mysqli_query($db, $sql);
         $row = mysqli_fetch_assoc($result);
-        $kategorie = Kategorie.getById($row['kategorie_id']);
-        $stufe = Stufe.getById($row['stufe_id']);
+        $kategorie = Kategorie::getById($row['kategorie_id']);
+        $stufe = Stufe::getById($row['stufe_id']);
         $ronda = new Ronda(
             $row['kategorie_id'],
             $kategorie,
@@ -81,6 +70,7 @@ class Ronda {
             $row['ronda'],
             $row['id']
         );
+        //print_r($ronda);
         return $ronda;
     }
 
@@ -98,10 +88,9 @@ class Ronda {
         while ($row = mysqli_fetch_assoc($result)) {
             //  *** Versuch Datenbankabfragen innerhalb einer Schleife zu vermeiden***
             //$kategorie = Kategorie.getById($row['kategorie_id']);
-            $kategorie = new Kategorie($row['kategorie'], $row['kategorie_id']);
             //$stufe = Stufe.getById($row['stufe_id']);
+            $kategorie = new Kategorie($row['kategorie'], $row['kategorie_id']);
             $stufe =new Stufe( $row['stufe'], $row['stufe_id']);
-            //$ronda = Ronda.getById($row['ronda_id']);
             $ronda[$i] = new Ronda($row['kategorie_id'], $kategorie, $row['stufe_id'], $stufe, $row['ronda'], $row['id']);
             $i++;
         }
@@ -126,32 +115,32 @@ class Ronda {
     // Löscht die ronda nur wenn noch keine Punkte in der betreffenden Kategorie und Stufe stattfand
     public static function delete($id)    {
         $db = DB::connect();
-        $ronda=self::getById($id)
-        $rondaId = Ronda::getRondaIdByStufeIdAndKategorieId($ronda->getKategorie_id(), $ronda->getStufe_id()); //  Gibt alle rondas züruck  die die gleiche Kategorie und Stufe haben
-        $tanzpaar2rondaId = array();
+        $ronda=self::getById($id);
+        //  Gibt alle rondas züruck  die die gleiche Kategorie und Stufe haben
+        $rondaId = Ronda::getRondaIdByStufeIdAndKategorieId($ronda->getKategorie_id(), $ronda->getStufe_id());
+        $tanzpaar2ronda = array();
         for ($i=0; $i < count($rondaId); $i++)        {
-            $tanzpaar2rondaId = Tanzpaar2ronda::getIdByRondaId($rondaId[$i]);
+            $tanzpaar2ronda = Tanzpaar2ronda::getByRondaId($rondaId[$i]);
         }
         $num=0;
-        for ($i=0; $i < count($tanzpaar2rondaId); $i++)        {
-            $num = $num+Punkte::getAmountByTanzpaar2RondaId($tanzpaar2rondaId[$i]);
+        for ($i=0; $i < count($tanzpaar2ronda); $i++)        {
+            $num = $num+Punkte::getAmountByTanzpaar2RondaId($tanzpaar2ronda[$i]->getId());
         }
         if($num !=0)  {
-           return false;
+            echo 'kann Ronda nicht löschen da schon punkte vergeben wurden';
+            return false;
         }
         else {
-            for ($i=0; $i < count($tanzpaar2rondaId;$i++){
-                Tanzpaar2ronda::delete($tanzpaar2rondaId[$i]);
+            for ($i=0; $i < count($tanzpaar2ronda); $i++){
+                Tanzpaar2ronda::delete($tanzpaar2ronda[$i]->getId());
             }
-            $jury2rondaId=Jury2ronda::getByRondaId($id);
-            for ($i=0; $i < count($jury2rondaId;$i++){
-                Jury2ronda::delete($jury2rondaId[$i]->getId());
+            $jury2ronda=Jury2ronda::getByRondaId($id);
+            for ($i=0; $i < count($jury2ronda); $i++){
+                Jury2ronda::delete($jury2ronda[$i]->getId());
             }
-
             $sql = "DELETE FROM ronda WHERE id = $id";
             $success = mysqli_query($db, $sql);
             return $success;
-            }
         }
     }
 
@@ -160,7 +149,7 @@ class Ronda {
         $sql = "INSERT INTO ronda (kategorie_id, stufe_id, ronda)
                 VALUES ('$ronda->kategorie_id', 
                         '$ronda->stufe_id', 
-                        '$ronda->ronda')";
+                        '$ronda->ronda');";
         mysqli_query($db, $sql);
         $id = mysqli_insert_id($db); //gibt die eingetragen ID zurück
         $ronda->setId($id);

@@ -89,14 +89,14 @@ class Jury implements Saveable {
 
     public static function delete($id)    {
         $db = DB::connect();
-        $result = Punkte::getByJuryId($id);
-        if ($result == 0)        {
-            $success1 = Jury2ronda::deleteByJuryId($id);
+        //$result = Punkte::getByJuryId($id);
+        //if ($result == 0)        {
+        //    Jury2ronda::deleteByJuryId($id);
             $sql = "DELETE FROM jury WHERE id = $id";
-            $success2 = mysqli_query($db, $sql);
-            return $success1 && $success2;
-        }
-        return false;
+            $success = mysqli_query($db, $sql);
+            return $success;
+        //}
+        //return false;
     }
 
 }

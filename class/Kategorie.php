@@ -31,8 +31,7 @@ class Kategorie {
         $sql = "SELECT * FROM kategorie WHERE id=$id";
         $result = mysqli_query($db, $sql);
         $row = mysqli_fetch_assoc($result);
-        
-        $kategorie = new Kategorie( 
+        $kategorie = new Kategorie(
                 $row['kategorie'], 
                 $row['id']
         );
@@ -44,7 +43,7 @@ class Kategorie {
 
     public static function getAll(){
         $db = db::connect();
-        $sql = "SELECT * FROM kategorie";
+        $sql = "SELECT * FROM kategorie order by id";
         $result = mysqli_query($db, $sql);
         $kategorie = array();
         $i=0;
@@ -62,14 +61,25 @@ class Kategorie {
         $sql = "INSERT INTO kategorie (kategorie.kategorie)
                 VALUES ('$kategorie->kategorie')";
         mysqli_query($db,$sql);
-        $katId = "SELECT id, kategorie.kategorie
-                  FROM kategorie
-                  WHERE kategorie LIKE '$kategorie->kategorie'";
-        $result = mysqli_query($db, $katId);
-        $row = mysqli_fetch_assoc($result);
-        $resultID = $row['id'];
-        $kategorie->setId($resultID);
+        $id = mysqli_insert_id($db); //gibt die eingetragen ID zurück
+        $kategorie->setId($id);
+        // anzalquali anlegen
+        foreach (Stufe::getAll() as $stufe){
+            $anzahlquali=new Anzahlquali($kategorie->getId(),$kategorie->getKategorie(),$stufe->getId(),$stufe->getStufe(),50,10);
+            Anzahlquali::save($anzahlquali);
+        }
         return $kategorie;
+    }
+
+
+    public static function change($kategorie)    {
+        $db = DB::connect();
+        $sql = "Update kategorie SET 
+        kategorie = '". $kategorie->getKategorie()."' 
+        WHERE id = '".$kategorie->getId()."'
+        ";
+        $success = mysqli_query($db, $sql);
+        return $success;
     }
 
     public static function delete() {

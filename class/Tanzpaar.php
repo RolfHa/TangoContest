@@ -188,7 +188,7 @@ class Tanzpaar {
 
     public static function getAll(){
         $db = DB::connect();
-        $sql = "SELECT * FROM tanzpaar;";
+        $sql = "SELECT * FROM tanzpaar order by startnummer;";
         $result = mysqli_query($db, $sql);
         $tanzpaar = array();
         $i=0;
@@ -220,6 +220,7 @@ class Tanzpaar {
     {
         $db = DB::connect();
         $sql = "DELETE FROM tanzpaar WHERE id = $id";
+        echo $sql;
         $success = mysqli_query($db, $sql);
         return $success;
     }
@@ -267,6 +268,53 @@ class Tanzpaar {
         ";
         $success = mysqli_query($db, $sql);
         return $success;
+    }
+
+    public static function getByRondaId($rondaId){
+        //$sql = "SELECT * FROM info_ronda where ronda_id=$rondaId ORDER by reihenfolge ;";
+        $sql = "SELECT
+                tanzpaar2kategorie.tanzpaar_id AS id,
+                tanzpaar.startnummer AS startnummer,
+                tanzpaar.fuehrungsfolge AS fuehrungsfolge,
+                tanzpaar.teilnehmer1_id AS teilnehmer1_id,
+                tanzpaar.teilnehmer2_id AS teilnehmer2_id,
+                tanzpaar.anmeldebetrag,
+                tanzpaar.bezahlt,
+                tanzpaar.bezahldatum,
+                tanzpaar.bezahlart_id,
+                tanzpaar2kategorie.kategorie_id AS kategorie_id,
+                tanzpaar2ronda.ronda_id AS ronda_id,
+                tanzpaar2ronda.reihenfolge AS reihenfolge
+                from tanzpaar2ronda
+                join tanzpaar2kategorie on tanzpaar2kategorie.id = tanzpaar2ronda.tanzpaar2kategorie_id
+                join tanzpaar on tanzpaar.id = tanzpaar2kategorie.tanzpaar_id
+                WHERE ronda_id=$rondaId
+                order by tanzpaar2ronda.reihenfolge;";
+        $result = mysqli_query(DB::connect(), $sql);
+        $tanzpaar = array();
+        $i=0;
+        while ($row = mysqli_fetch_assoc($result)) {
+            $teilnehmer1 = Teilnehmer::getById($row['teilnehmer1_id']);
+            $teilnehmer2 = Teilnehmer::getById($row['teilnehmer2_id']);
+            $bezahlart = Bezahlart::getById($row['bezahlart_id']);
+
+            $tanzpaar[$i] = new Tanzpaar(
+                $row['startnummer'],
+                $row['teilnehmer1_id'],
+                $teilnehmer1,
+                $row['teilnehmer2_id'],
+                $teilnehmer2,
+                $row['fuehrungsfolge'],
+                $row['anmeldebetrag'],
+                $row['bezahlt'],
+                $row['bezahldatum'],
+                $row['bezahlart_id'],
+                $bezahlart,
+                $row['id']
+            );
+            $i++;
+        }
+        return $tanzpaar;
     }
 
 }

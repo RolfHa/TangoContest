@@ -14,57 +14,45 @@ class Anzahlquali {
         $this->stufe = $stufe;
         $this->anzahlquali = $anzahlquali;
         $this->maxpaare = $maxpaare;
-
     }
     
+
     function getKategorie_id() {
         return $this->kategorie_id;
     }
-
     function getKategorie() {
         return $this->kategorie;
     }
-
     function getStufe_id() {
         return $this->stufe_id;
     }
-
     function getStufe() {
         return $this->stufe;
     }
-
     function getAnzahlquali() {
         return $this->anzahlquali;
     }
+    public function getMaxpaare()    {
+        return $this->maxpaare;
+    }
+
 
     function setKategorie_id($kategorie_id) {
         $this->kategorie_id = $kategorie_id;
     }
-
     function setKategorie($kategorie) {
         $this->kategorie = $kategorie;
     }
-
     function setStufe_id($stufe_id) {
         $this->stufe_id = $stufe_id;
     }
-
     function setStufe($stufe) {
         $this->stufe = $stufe;
     }
-
     function setAnzahlquali($anzahlquali) {
         $this->anzahlquali = $anzahlquali;
     }
-
-
-    public function getMaxpaare()
-    {
-        return $this->maxpaare;
-    }
-
-    public function setMaxpaare($maxpaare)
-    {
+    public function setMaxpaare($maxpaare)    {
         $this->maxpaare = $maxpaare;
     }
 
@@ -129,13 +117,24 @@ class Anzahlquali {
         //Wird nicht benötigt
     }
 
-    function save ($anzahlquali)
-    {
+    public static function save ($anzahlquali)    {
         $db = DB::connect();
         $sql = "INSERT INTO anzahlquali (kategorie_id, stufe_id, anzahlquali,maxpaare)
                 VALUES ('$anzahlquali->kategorie_id', '$anzahlquali->stufe_id', '$anzahlquali->anzahlquali', '$anzahlquali->maxpaare')";
         Mysqli_query($db, $sql);
         return $anzahlquali;
+    }
+
+    public static function change($anzahlquali)    {
+        $db = DB::connect();
+        $sql = "Update anzahlquali SET 
+        anzahlquali = '". $anzahlquali->getAnzahlquali()."' , 
+        maxpaare = '". $anzahlquali->getMaxpaare()."'
+        WHERE kategorie_id = '".$anzahlquali->getKategorie_id()."' 
+        and stufe_id = '".$anzahlquali->getstufe_id()."'
+        ;";
+        $success = mysqli_query($db, $sql);
+        return $success;
     }
 
 }

@@ -11,25 +11,13 @@ class Jury2ronda {
 
     public function __construct($jury_id, $jury, $ronda_id, $ronda, $sitzplatz, $id = null)
     {
-        if (isset($id)){
-            $this->id = $id;
-        }
-
+        if (isset($id)){            $this->id = $id;        }
         $this->jury_id = $jury_id;
-        if ($jury==""){
-            $this->jury = Jury::GetBYId($jury_id);
-        }
-        else {
-            $this->jury = $jury;
-            }
-
+        if ($jury==""){            $this->jury = Jury::GetById($jury_id);        }
+        else {            $this->jury = $jury;            }
         $this->ronda_id = $ronda_id;
-        if ($ronda==""){
-            $this->ronda = Ronda::GetBYId($ronda_id);
-        }
-        else {
-            $this->ronda = $ronda;
-        }
+        if ($ronda==""){            $this->ronda = Ronda::GetById($ronda_id);        }
+        else {            $this->ronda = $ronda;        }
         $this->sitzplatz = $sitzplatz;
     }
 
@@ -81,11 +69,9 @@ class Jury2ronda {
         $sql = "SELECT * FROM jury2ronda WHERE id=$id";
         $result = mysqli_query($db, $sql);
         $row = mysqli_fetch_assoc($result);
-        
         $jury = Jury::getById($row['jury_id']);
         $ronda = Ronda::getById($row['ronda_id']);
-        
-        $jury2ronda = new Jury2ronda( 
+        $jury2ronda = new Jury2ronda(
             $row['jury_id'],
             $jury,
             $row['ronda_id'],
@@ -98,14 +84,13 @@ class Jury2ronda {
 
     public static function getAll(){
         $db = DB::connect();
-        //$sql = "SELECT * FROM jury2ronda";
         $sql = "SELECT * FROM jury2ronda order by sitzplatz;";
         $result = mysqli_query($db, $sql);
-
         $jury2ronda = array();
         $i=0;
         while ($row = mysqli_fetch_assoc($result)) {
-            $ronda = Ronda.getById($row['ronda_id']);
+            $jury = Jury::getById($row['jury_id']);
+            $ronda = Ronda::getById($row['ronda_id']);
             $jury2ronda[$i] = new Jury2ronda(
                 $row['jury_id'],
                 $jury,
@@ -122,13 +107,13 @@ class Jury2ronda {
 
     public static function getByRondaId($rondaId){
         $db = DB::connect();
-        //$sql = "SELECT * FROM jury2ronda";
-        $sql = "SELECT * FROM jury2ronda where ronda_id= $rondaId;";
+        $sql = "SELECT * FROM jury2ronda where ronda_id= $rondaId order by sitzplatz;";
         $result = mysqli_query($db, $sql);
         $jury2ronda = array();
         $i=0;
         while ($row = mysqli_fetch_assoc($result)) {
-            $ronda = Ronda.getById($row['ronda_id']);
+            $ronda = Ronda::getById($row['ronda_id']);
+            $jury = Jury::getById($row['jury_id']);
             $jury2ronda[$i] = new Jury2ronda($row['jury_id'],$jury,$row['ronda_id'],$ronda,$row['sitzplatz'],$row['id']);
             $i++;
         }
@@ -153,5 +138,13 @@ class Jury2ronda {
         $id = mysqli_insert_id($db); //gibt die eingetragen ID zurück
         $jury2ronda->setId($id);
         return $jury2ronda;
+    }
+
+    public static function delete($id)    {
+        $db = DB::connect();
+        $sql = "DELETE FROM jury2ronda WHERE id = $id";
+        //echo "test".$sql;
+        $success = mysqli_query($db, $sql);
+        return $success;
     }
 }

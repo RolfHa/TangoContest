@@ -39,6 +39,19 @@ class Bezahlart {
         return $bezahlart;
     }
 
+    public static function getAll(){
+        $db = DB::connect();
+        $sql = "SELECT * FROM bezahlart";
+        $result = mysqli_query($db, $sql);
+        $bezahlart = array();
+        $i=0;
+        while ($row = mysqli_fetch_assoc($result)) {
+            $bezahlart[$i] = new Bezahlart($row['bezahlart'], $row['id']);
+            $i++;
+        }
+        return $bezahlart;
+    }
+
     function save ($bezahlart)    {
         $db = DB::connect();#
         $sql = "INSERT INTO bezahlart (bezahlart)
@@ -54,17 +67,14 @@ class Bezahlart {
         return $bezahlart;
     }
 
-        public static function getAll(){
+    public static function change($bezahlart)    {
         $db = DB::connect();
-        $sql = "SELECT * FROM bezahlart";
-        $result = mysqli_query($db, $sql);
-        $bezahlart = array();
-        $i=0;
-        while ($row = mysqli_fetch_assoc($result)) {
-            $bezahlart[$i] = new Bezahlart($row['bezahlart'], $row['id']);
-            $i++;
-        }
-        return $bezahlart;
+        $sql = "Update bezahlart SET 
+        bezahlart ='". $bezahlart->getBezahlart()."'
+        WHERE id = '".$bezahlart->getId()."'
+        ";
+        $success = mysqli_query($db, $sql);
+        return $success;
     }
 
     public static function delete()    {

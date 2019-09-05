@@ -31,7 +31,7 @@ class Stufe {
         $sql = "SELECT * FROM stufe WHERE ID=$id";
         $result = mysqli_query($db, $sql);
         $row = mysqli_fetch_assoc($result);
-        
+
         $stufe = new Stufe( 
             $row['stufe'],
             $row['id']
@@ -41,7 +41,7 @@ class Stufe {
 
     public static function getAll(){
         $db = DB::connect();
-        $sql = "SELECT * FROM stufe ;";
+        $sql = "SELECT * FROM stufe order by id;";
         $result = mysqli_query($db, $sql);
         $stufe = array();
         $i=0;

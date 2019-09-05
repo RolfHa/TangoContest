@@ -25,40 +25,24 @@
 
 <!-- Navigationsleiste -->
 <nav>
-    <table border="0">
-        <tr><td>
-                <a href="index.php?action=listeanzeigen&area=teilnehmer">
-                    <button>Liste Teilnehmer</button>
-                </a></td>
-            <td><a href="index.php?action=listeanzeigen&area=tanzpaar">
-                    <button>Liste Tanzpaare</button>
-                </a></td>
-            <td><a href="index.php?action=listeanzeigen&area=jury">
-                    <button>Liste Jurymitglieder</button>
-                </a></td>
-            <td><a href="index.php?action=listeanzeigen&area=ronda">
-                    <button>Liste Ronda</button>
-                </a></td>
-            <td><a href="index.php?action=listeanzeigen&area=punkte">
-                    <button>Liste Punkte</button>
-                </a></td>
-        </tr>
-        <tr><td>
-                <a href="index.php?action=eingeben&area=teilnehmer">
-                    <button>neuer Teilnehmer</button>
-                </a></td>
-            <td><a href="index.php?action=eingeben&area=tanzpaar">
-                    <button>neues Tanzpaar</button>
-                </a></td>
-            <td><a href="index.php?action=eingeben&area=jury">
-                    <button>neues Jurymitglied</button>
-                </a></td>
-            <td><a href="index.php?action=eingeben&area=ronda">
-                    <button>Ronda anlegen</button>
-                </a></td>
-            <td><a href="index.php?action=eingeben&area=punkte">
-                    <button>Punkte eingeben</button>
-                </a></td>
+    <table>
+        <thead>
+            <td style="border: 0px"><a href="index.php?action=listeanzeigen&area=teilnehmer"><button>Liste Teilnehmer</button></a></td>
+            <td style="border: 0px"><a href="index.php?action=listeanzeigen&area=tanzpaar"><button>Liste Tanzpaare</button></a></td>
+            <td style="border: 0px"><a href="index.php?action=listeanzeigen&area=jury"><button>Liste Jurymitglieder</button></a></td>
+            <td style="border: 0px"><a href="index.php?action=listeanzeigen&area=ronda"><button>Ronda Teilnehmer</button></a></td>
+            <td style="border: 0px"><a href="index.php?action=listeanzeigen&area=punkte"><button>Ronda Punkte</button></a></td>
+            <td style="border: 0px" width="150" ></td>
+            <td style="border: 0px"><a href="index.php?action=listeanzeigen&area=optionen"><button>Optionen</button></a></td>
+        </thead>
+        <tr>
+            <td style="border: 0px"><a href="index.php?action=eingeben&area=teilnehmer"><button>neuer Teilnehmer</button></a></td>
+            <td style="border: 0px"><a href="index.php?action=eingeben&area=tanzpaar"><button>neues Tanzpaar</button></a></td>
+            <td style="border: 0px"><a href="index.php?action=eingeben&area=jury"><button>neues Jurymitglied</button></a></td>
+            <td style="border: 0px"><a href="index.php?action=''&area=''"><button>Ronda anlegen</button></a></td>
+            <td style="border: 0px"><a href="index.php?action=''&area=''"><button>Auswertung</button></a></td>
+            <td style="border: 0px"></td>
+            <td style="border: 0px"></td>
         </tr>
     </table>
 </nav>
@@ -69,4 +53,5 @@ if ($view !=""){    include 'view/' . $view . '.php';}
 else {echo '<br><br><ul><ul><ul><ul><ul><img src="tango.jpg">';}
 ?>
 
-</body></html>
+</body>
+</html>
