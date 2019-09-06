@@ -58,8 +58,9 @@ class Tanzpaar2kategorie {
 
     public static function getById($id){
         $db = DB::connect();
-        $sql = "SELECT * FROM tanzpaar2kategorie WHERE ID=$id";
+        $sql = "SELECT * FROM tanzpaar2kategorie WHERE id=$id";
         $result = mysqli_query($db, $sql);
+        //echo "<br>".$sql;
         $row = mysqli_fetch_assoc($result);
         $tanzpaar = Tanzpaar::getById($row['tanzpaar_id']);
         $kategorie = Kategorie::getById($row['kategorie_id']);
@@ -77,11 +78,32 @@ class Tanzpaar2kategorie {
         $db = DB::connect();
         $sql = "SELECT * FROM tanzpaar2kategorie;";
         $result = mysqli_query($db, $sql);
-        $tanzpaar = array();
+        $tanzpaar2kategorie = array();
         $i=0;
         while ($row = mysqli_fetch_assoc($result)) {
             $tanzpaar = Tanzpaar::getById($row['tanzpaar_id']);
             $kategorie = Kategorie::getById($row['kategorie_id']);
+            $tanzpaar2kategorie[$i] = new Tanzpaar2kategorie(
+                $row['tanzpaar_id'],
+                $tanzpaar,
+                $row['kategorie_id'],
+                $kategorie,
+                $row['id']
+            );
+            $i++;
+        }
+        return $tanzpaar2kategorie;
+    }
+
+    public static function getByKategorieId($id){
+        $db = DB::connect();
+        $sql = "SELECT * FROM tanzpaar2kategorie WHERE kategorie_id=$id;";
+        $result = mysqli_query($db, $sql);
+        $tanzpaar2kategorie = array();
+        $i=0;
+        $kategorie = Kategorie::getById($id); //ist ja immer die selbe
+        while ($row = mysqli_fetch_assoc($result)) {
+            $tanzpaar = Tanzpaar::getById($row['tanzpaar_id']);
             $tanzpaar2kategorie[$i] = new Tanzpaar2kategorie(
                 $row['tanzpaar_id'],
                 $tanzpaar,
@@ -101,7 +123,7 @@ class Tanzpaar2kategorie {
         return $success;
     }
 
-    function save ($tanzpaar2kategorie){
+    public static function save ($tanzpaar2kategorie){
         $db = DB::connect();
         $sql = "INSERT INTO tanzpaar2kategorie (tanzpaar_id, kategorie_id)
                 VALUES ($tanzpaar2kategorie->tanzpaar_id, $tanzpaar2kategorie->kategorie_id)";

@@ -79,19 +79,29 @@ switch ($action){
             case 'ronda':
                 break;
             case 'punkte':
-                foreach ($_REQUEST['punkte'] as $punkteNeu){
-                    $wert=$punkteNeu['wert'];
-                    if ($wert==''){$wert='null';}
-                    else {$wert=number_format($wert, 2, '.', '');}
-                    if ($punkteNeu['punkte_id']!=''){
-                        // echo "update";
-                        $punkte=new Punkte($punkteNeu['jury_id'],'dummy',$_REQUEST['tanzpaar2ronda'],'dummy',$wert,$punkteNeu['punkte_id']);
-                        $success = Punkte::change($punkte);
-                    }
-                    else {
-                        // echo"neu";
-                        $punkte=new Punkte($punkteNeu['jury_id'],'dummy',$_REQUEST['tanzpaar2ronda'],'dummy',$wert);
-                        $success = Punkte::save($punkte);
+                if (!isset ($_REQUEST['punkte'])){
+                    echo "<h1>!!!es wurden keine Punkte übergeben !!!</h1>";
+                }
+                else {
+                    foreach ($_REQUEST['punkte'] as $punkteNeu){
+                        // leer soll null sein und Komma soll Punkt sein
+                        $wert=$punkteNeu['wert'];
+                        if ($wert==''){$wert='null';}
+                        else {
+                            $wert = str_replace(",",".", $wert);
+                            $wert = floatval($wert);
+                            $wert=number_format($wert, 2, '.', '');
+                        }
+                        if ($punkteNeu['punkte_id']!=''){
+                            // echo "update";
+                            $punkte=new Punkte($punkteNeu['jury_id'],'dummy',$_REQUEST['tanzpaar2ronda'],'dummy',$wert,$punkteNeu['punkte_id']);
+                            $success = Punkte::change($punkte);
+                        }
+                        else {
+                            // echo"neu";
+                            $punkte=new Punkte($punkteNeu['jury_id'],'dummy',$_REQUEST['tanzpaar2ronda'],'dummy',$wert);
+                            $success = Punkte::save($punkte);
+                        }
                     }
                 }
                 $view =  'rondapunkteaendern';
@@ -150,13 +160,31 @@ switch ($action){
         }
         break;
     case 'generieren':
-        $view =  $area . 'liste';
         switch ($area){
             case 'rondastufe1':
-
+                $tanzpaar2kategorieAll=Tanzpaar2kategorie::getByKategorieId($_REQUEST['kategorie_id']);
+                $anzahlquali=Anzahlquali::getById($_REQUEST['kategorie_id'],$_REQUEST['stufe_id']);
+                $reihenfolge=1;
+                $rondaNr=1;
+                $ronda=new Ronda($_REQUEST['kategorie_id'],'dummy',$_REQUEST['stufe_id'],'dummy',$rondaNr);
+                Ronda::save($ronda);
+                foreach ($tanzpaar2kategorieAll as $tanzpaar2kategorie) {
+                    if ($reihenfolge>$anzahlquali->getMaxpaare()){
+                        $rondaNr++;
+                        $reihenfolge=1;
+                        $ronda=new Ronda($_REQUEST['kategorie_id'],'dummy',$_REQUEST['stufe_id'],'dummy',$rondaNr);
+                        Ronda::save($ronda);
+                    }
+                    $tanzpaar2ronda= new Tanzpaar2ronda($tanzpaar2kategorie->getId(),'dummy',$ronda->getId(),'dummy',$reihenfolge,);
+                    Tanzpaar2ronda::save($tanzpaar2ronda);
+                    $reihenfolge++;
+                    //echo "<pre>";
+                    //print_r($tanzpaar2ronda);
+                }
                 $view = 'rondaliste';
                 break;
             case 'ronda':
+                $view = 'rondaliste';
                 break;
             case 'gewinner':
                 $view = 'gewinner';

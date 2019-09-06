@@ -24,7 +24,7 @@
                 </tr>
                 <?php
                 // db abfragen ausserhalb der schleifen
-                $anzahlqualiAll=Anzahlquali::gesAll();
+                $anzahlqualiAll=Anzahlquali::getAll();
                 $kategorieAll=Kategorie::getAll();
                 $stufeAll=Stufe::getAll();
                 foreach ($kategorieAll as $kategorie){

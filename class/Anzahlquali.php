@@ -59,28 +59,27 @@ class Anzahlquali {
 
 
 
-    //      !!!!   feld id in der Tabelle nicht vorhanden  !!!!
-    public static function getById($id){
+    public static function getById($kategorie_id,$stufe_id){
         $db = DB::connect();
-        $sql = "SELECT * FROM anzahlquali WHERE id=$id";
+        $sql = "SELECT * FROM anzahlquali WHERE kategorie_id=$kategorie_id and stufe_id=$stufe_id";
         $result = mysqli_query($db, $sql);
         $row = mysqli_fetch_assoc($result);
 
-        $kategorie = Kategorie.getById($row['kategorie_id']);
-        $stufe = Stufe.getById($row['stufe_id']);
+        $kategorie = Kategorie::getById($row['kategorie_id']);
+        $stufe = Stufe::getById($row['stufe_id']);
 
         $anzahlquali = new Anzahlquali(
-                $row['kategorie_id'],
-                $kategorie,
-                $row['stufe_id'],
-                $stufe,
-                $row['anzahlquali'],
-                $row['maxpaare']
+            $row['kategorie_id'],
+            $kategorie,
+            $row['stufe_id'],
+            $stufe,
+            $row['anzahlquali'],
+            $row['maxpaare']
         );
         return $anzahlquali;
     }
 
-    public static function gesAll(){
+    public static function getAll(){
         $db = DB::connect();
         $sql = "SELECT kategorie_id, stufe_id, anzahlquali, kategorie, stufe , maxpaare
                 FROM anzahlquali

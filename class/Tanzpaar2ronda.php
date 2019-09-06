@@ -8,18 +8,18 @@ class Tanzpaar2ronda {
     private $ronda;
     private $reihenfolge;
 
-
-    public function __construct( $tanzpaar2kategorie_id, $ronda_id, $reihenfolge, $id = null)
+    public function __construct($tanzpaar2kategorie_id, $tanzpaar2kategorie, $ronda_id, $ronda, $reihenfolge, $id = null)
     {
-        if (isset($id)){
-            $this->id = $id;
-        }
+        if (isset($id)){$this->id = $id;}
         $this->tanzpaar2kategorie_id = $tanzpaar2kategorie_id;
-        $this->tanzpaar2kategorie = Tanzpaar2kategorie::GetById($tanzpaar2kategorie_id);
+        if ($tanzpaar2kategorie==''){$this->tanzpaar2kategorie = Tanzpaar2kategorie::GetById($tanzpaar2kategorie_id);}
+        else {$this->tanzpaar2kategorie = $tanzpaar2kategorie;}
         $this->ronda_id = $ronda_id;
-        $this->ronda = Ronda::GetById($ronda_id);
+        if ($ronda==''){ $this->ronda = Ronda::GetById($ronda_id);}
+        else {$this->ronda = $ronda;}
         $this->reihenfolge = $reihenfolge;
     }
+
 
     public function getId()    {
         return $this->id;
@@ -70,16 +70,9 @@ class Tanzpaar2ronda {
         $sql = "SELECT * FROM tanzpaar2ronda WHERE ID=$id";
         $result = mysqli_query($db, $sql);
         $row = mysqli_fetch_assoc($result);
-//        $tanzpaar2kategorie = Tanzpaar2kategorie::getById($row['tanzpaar2kategorie_id']);
-//        $ronda = Ronda::getById($row['ronda_id']);
-        $tanzpaar2ronda = new Tanzpaar2ronda(
-            $row['tanzpaar2kategorie_id'],
-//            $tanzpaar2kategorie,
-            $row['ronda_id'],
-//            $ronda,
-            $row['reihenfolge'],
-            $row['id']
-        );
+        $tanzpaar2kategorie = Tanzpaar2kategorie::getById($row['tanzpaar2kategorie_id']);
+        $ronda = Ronda::getById($row['ronda_id']);
+        $tanzpaar2ronda = new Tanzpaar2ronda($row['tanzpaar2kategorie_id'],$tanzpaar2kategorie,$row['ronda_id'],$ronda,$row['reihenfolge'],$row['id']);
         return $tanzpaar2ronda;
     }
 
@@ -90,13 +83,13 @@ class Tanzpaar2ronda {
         $tanzpaar2ronda= array();
         $i=0;
         while ($row = mysqli_fetch_assoc($result)) {
-//            $tanzpaar2kategorie = Tanzpaar2kategorie::getById($row['tanzpaar2kategorie_id']);
-//            $ronda = Ronda::getById($row['ronda_id']);
+            $tanzpaar2kategorie = Tanzpaar2kategorie::getById($row['tanzpaar2kategorie_id']);
+            $ronda = Ronda::getById($row['ronda_id']);
             $tanzpaar2ronda[$i] = new Tanzpaar2ronda(
                 $row['tanzpaar2kategorie_id'],
-//                $tanzpaar2kategorie,
+                $tanzpaar2kategorie,
                 $row['ronda_id'],
-//                $ronda,
+                $ronda,
                 $row['reihenfolge'],
                 $row['id']
             );
@@ -112,11 +105,13 @@ class Tanzpaar2ronda {
         $tanzpaar2ronda= array();
         $i=0;
         while ($row = mysqli_fetch_assoc($result)) {
-            $tanzpaar2kategorie = "";//Tanzpaar2kategorie::getById($row['tanzpaar2kategorie_id']);
-            $ronda = "";//Ronda::getById($row['ronda_id']);
+            $tanzpaar2kategorie = Tanzpaar2kategorie::getById($row['tanzpaar2kategorie_id']);
+            $ronda = Ronda::getById($row['ronda_id']);
             $tanzpaar2ronda[$i] = new Tanzpaar2ronda(
                 $row['tanzpaar2kategorie_id'],
+                $tanzpaar2kategorie,
                 $row['ronda_id'],
+                $ronda,
                 $row['reihenfolge'],
                 $row['id']
             );
@@ -125,13 +120,14 @@ class Tanzpaar2ronda {
         return $tanzpaar2ronda;
     }
 
-    function save ($tanzpaar2ronda)    {
+    public static function save ($tanzpaar2ronda)    {
         $db = DB::connect();#
         $sql = "INSERT INTO tanzpaar2ronda (tanzpaar2kategorie_id, ronda_id, reihenfolge)
                 VALUES ('$tanzpaar2ronda->tanzpaar2kategorie_id', 
                         '$tanzpaar2ronda->ronda_id', 
                         '$tanzpaar2ronda->reihenfolge');";
         Mysqli_query($db, $sql);
+        //echo "<br>".$sql;
         $id = mysqli_insert_id($db); //gibt die eingetragen ID zurück
         $tanzpaar2ronda->setId($id);
         return $tanzpaar2ronda;

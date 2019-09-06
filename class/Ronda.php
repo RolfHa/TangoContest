@@ -144,13 +144,14 @@ class Ronda {
         }
     }
 
-    function save($ronda){
+    public static function save($ronda){
         $db = DB::connect();
         $sql = "INSERT INTO ronda (kategorie_id, stufe_id, ronda)
                 VALUES ('$ronda->kategorie_id', 
                         '$ronda->stufe_id', 
                         '$ronda->ronda');";
         mysqli_query($db, $sql);
+        //echo "<br>".$sql;
         $id = mysqli_insert_id($db); //gibt die eingetragen ID zurück
         $ronda->setId($id);
         return $ronda;
