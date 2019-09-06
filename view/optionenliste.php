@@ -1,21 +1,26 @@
-<table border="0" width="80%">
+<table border="0" width="90%">
     <tr>
         <td colspan="2 " style='text-align: center'>
             <h1 >Optionen </h1>
         </td>
     </tr>
     <tr>
-        <td width="70%"><h2>Werte für Ronda</h2></td>
-        <td><h4>Kategorien, Bezahlarten und weitere Einstellungen</h4></td>
+        <td width="60%"><h2>Werte für Ronda</h2>
+            Legen fest wieviele Paare maximal in einer Ronda sind und wieviele Paare in die nächste Stufe weiter kommen.
+        </td>
+        <td><h4>Kategorien, Bezahlarten und weitere Einstellungen</h4>
+            Das Löschen funktioniert nur wenn der Wert nicht benutzt wird,
+             gegebenenfalls werden die Rondawerte(Tabelle links)auf Standard gesetzt.
+        </td>
     </tr>
     <tr>
         <td valign="top">
             <table>
                 <tr>
-                    <th>Kategorie</th>
-                    <th>Stufen</th>
-                    <th>max Paare pro Ronda</th>
-                    <th colspan="2">Paare die weiter kommen</th>
+                    <th><b>Kategorie</b></th>
+                    <th><b>Stufen</b></th>
+                    <th><b>max Paare</b></th>
+                    <th colspan="2"><b>kommen weiter</b></th>
                 </tr>
                 <?php
                 // db abfragen ausserhalb der schleifen
@@ -64,7 +69,7 @@
                     <th valign="top">
                         <table>
                             <tr>
-                            <td colspan="2">Kategorien</td>
+                            <td colspan="3"><b>Kategorien<b></td>
                             </tr>
                             <?php
                             // db abfragen ausserhalb der schleifen
@@ -74,15 +79,44 @@
                                 echo "<input type='hidden' name='action' value='speichern'>";
                                 echo "<input type='hidden' name='id' value='".$kategorie->getId()."'>";
                                 echo "<tr><td><input type='text' name='kategorie' value='".$kategorie->getKategorie()."'></td>";
-                                echo "<td><input type='submit' value='ändern'></td></tr></form>";
+                                echo "<td><input type='submit' value='ändern'></td></form>";
+                                echo "<td><a href='index.php?action=loeschen&area=kategorie&id=".$kategorie->getId()."'><button>löschen</button></a></td>";
+                                echo "</tr>";
                             }
                             ?>
                             <form action='index.php' method='post'>
-                                <input type='hidden' name='area' value='kategorie''>
+                                <input type='hidden' name='area' value='kategorie'>
                                 <input type='hidden' name='action' value='neuanlegen'>
                                 <tr>
                                     <td><input type='text' name='kategorie' value=''></td>
-                                    <td><input type='submit' value='neu'></td>
+                                    <td colspan="2"><input type='submit' value='neu'></td>
+                                </tr>
+                            </form>
+                        </table>
+                        <table>
+                            <tr>
+                                <td colspan="3"><b>Stufen</b></td>
+                            </tr>
+                            <?php
+                            // db abfragen ausserhalb der schleifen
+                            foreach ($stufeAll as $stufe){
+                                echo "<form action='index.php' method='post'>";
+                                echo "<input type='hidden' name='area' value='stufe'>";
+                                echo "<input type='hidden' name='action' value='speichern'>";
+                                echo "<input type='hidden' name='id' value='".$stufe->getId()."'>";
+                                echo "<tr><td><input type='text' name='stufe' value='".$stufe->getStufe()."'></td>";
+                                echo "<td><input type='submit' value='ändern'></td></form>";
+                                echo "<td><a href='index.php?action=loeschen&area=stufe&id=".$stufe->getId()."'><button>löschen</button></a></td>";
+                                echo "</tr>";
+
+                            }
+                            ?>
+                            <form action='index.php' method='post'>
+                                <input type='hidden' name='area' value='stufe'>
+                                <input type='hidden' name='action' value='neuanlegen'>
+                                <tr>
+                                    <td><input type='text' name='stufe' value=''></td>
+                                    <td colspan="2"><input type='submit' value='neu'></td>
                                 </tr>
                             </form>
                         </table>
@@ -90,7 +124,7 @@
                     <th valign="top">
                         <table>
                             <tr>
-                            <td colspan="2">Bezahlarten</td>
+                            <td colspan="3"><b>Bezahlarten</b></td>
                             </tr>
                             <?php
                             // db abfragen ausserhalb der schleifen
@@ -101,7 +135,9 @@
                                 echo "<input type='hidden' name='action' value='speichern'>";
                                 echo "<input type='hidden' name='id' value='".$bezahlart->getId()."'>";
                                 echo "<tr><td><input type='text' name='bezahlart' value='".$bezahlart->getBezahlart()."'></td>";
-                                echo "<td><input type='submit' value='ändern'></td></tr></form>";
+                                echo "<td><input type='submit' value='ändern'></td></form>";
+                                echo "<td><a href='index.php?action=loeschen&area=bezahlart&id=".$bezahlart->getId()."'><button>löschen</button></a></td>";
+                                echo "</tr>";
                             }
                             ?>
                             <form action='index.php' method='post'>
@@ -109,19 +145,19 @@
                                 <input type='hidden' name='action' value='neuanlegen'>
                                 <tr>
                                     <td><input type='text' name='bezahlart' value=''></td>
-                                    <td><input type='submit' value='neu'></td>
+                                    <td colspan="2"><input type='submit' value='neu'></td>
                                 </tr>
                             </form>
                         </table>
 
                     </th>
                 </thead>
-                <tr>
-                    <td colspan="2">
+                <thead>
+                    <th colspan="2">
                         <table>
                             <tr>
-                                <td>optionen</td>
-                                <td colspan="2">wert</td>
+                                <td><b>optionen</b></td>
+                                <td colspan="3" ><b>wert</b></td>
                             </tr>
                             <?php
                                 // db abfragen ausserhalb der schleifen
@@ -133,7 +169,9 @@
                                     echo "<input type='hidden' name='name' value='".$optionen->getName()."'>";
                                     echo "<tr><td style='text-align: right'>".$optionen->getName()."</td>";
                                     echo "<td><input type='number' name='wert' value='".$optionen->getWert()."'></td>";
-                                    echo "<td><input type='submit' value='ändern'></td></tr></form>";
+                                    echo "<td><input type='submit' value='ändern'></td></form>";
+                                    echo "<td><a href='index.php?action=loeschen&area=optionen&id=".$optionen->getName()."'><button>löschen</button></a></td>";
+                                    echo "</tr>";
                                 }
                             ?>
                             <form action='index.php' method='post'>
@@ -142,12 +180,12 @@
                                 <tr>
                                     <td><input type='text' name='name' value=''></td>
                                     <td><input type='number' name='wert' value=''></td>
-                                    <td><input type='submit' value='neu'></td>
+                                    <td colspan="2"><input type='submit' value='neu'></td>
                                 </tr>
                             </form>
                         </table>
-                    </td>
-                </tr>
+                    </th>
+                </thead>
             </table>
         </td>
     </tr>

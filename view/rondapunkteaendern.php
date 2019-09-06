@@ -66,6 +66,7 @@
                     }
                     echo "\n\t\t\t<td><input type='submit' value='ändern'></td>";
                     echo "\n\t\t</form>";
+
                 }
                 ?>
             </table>

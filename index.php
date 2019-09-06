@@ -45,9 +45,19 @@ switch ($action){
                 $tanzpaar ->setId($_POST['id']);
                 $success = Tanzpaar::change($tanzpaar);
                 break;
+            case 'tanzpaar2kategorie':
+                $tanzpaar2kategorie = new Tanzpaar2kategorie($_REQUEST['id'],'dummy',$_REQUEST['kategorie_id'],'dummy');
+                $success = Tanzpaar2kategorie::save($tanzpaar2kategorie);
+                $view =  'tanzpaaraendern';
+                break;
             case 'kategorie':
                 $kategorie = new Kategorie($_POST['kategorie'],$_POST['id']);
                 $success = Kategorie::change($kategorie);
+                $view =  'optionenliste';
+                break;
+            case 'stufe':
+                $stufe = new Stufe($_POST['stufe'],$_POST['id']);
+                $success = Stufe::change($stufe);
                 $view =  'optionenliste';
                 break;
             case 'bezahlart':
@@ -71,8 +81,8 @@ switch ($action){
             case 'punkte':
                 foreach ($_REQUEST['punkte'] as $punkteNeu){
                     $wert=$punkteNeu['wert'];
-                    if ($wert==''){$wert=0;}
-                    $wert=number_format($wert, 2, '.', '');
+                    if ($wert==''){$wert='null';}
+                    else {$wert=number_format($wert, 2, '.', '');}
                     if ($punkteNeu['punkte_id']!=''){
                         // echo "update";
                         $punkte=new Punkte($punkteNeu['jury_id'],'dummy',$_REQUEST['tanzpaar2ronda'],'dummy',$wert,$punkteNeu['punkte_id']);
@@ -114,6 +124,11 @@ switch ($action){
                 $success = Kategorie::save($kategorie);
                 $view =  'optionenliste';
                 break;
+            case 'stufe':
+                $stufe = new Stufe($_POST['stufe']);
+                $success = Stufe::save($stufe);
+                $view =  'optionenliste';
+                break;
             case 'bezahlart':
                 $bezahlart = new Bezahlart($_POST['bezahlart']);
                 $success = Bezahlart::save($bezahlart);
@@ -126,10 +141,25 @@ switch ($action){
             case 'ronda':
                 break;
             case 'punkte':
+                //siehe Punke speichern
                 break;
             case 'optionen':
                 $optionen =new Optionen($_POST['name'],$_POST['wert']);
                 $success = Optionen::save($optionen);
+                break;
+        }
+        break;
+    case 'generieren':
+        $view =  $area . 'liste';
+        switch ($area){
+            case 'rondastufe1':
+
+                $view = 'rondaliste';
+                break;
+            case 'ronda':
+                break;
+            case 'gewinner':
+                $view = 'gewinner';
                 break;
         }
         break;
@@ -142,6 +172,22 @@ switch ($action){
             case 'tanzpaar':
                 Tanzpaar::delete($id);
                 break;
+            case 'tanzpaar2kategorie':
+                $success = Tanzpaar2kategorie::delete($_REQUEST['tanzpaar2kategorie_id']);
+                $view =  'tanzpaaraendern';
+                break;
+            case 'kategorie':
+                Kategorie::delete($id);
+                $view =  'optionenliste';
+                break;
+            case 'stufe':
+                Stufe::delete($id);
+                $view =  'optionenliste';
+                break;
+            case 'bezahlart':
+                Bezahlart::delete($id);
+                $view =  'optionenliste';
+                break;
             case 'jury':
                 Jury::delete($id);
                 break;
@@ -151,10 +197,14 @@ switch ($action){
                 $view =  'rondateilnehmeraendern';
                 break;
             case 'ronda':
-                Ronda::delete($id);
+                //Ronda::delete($id);
                 break;
             case 'punke':
-                Punkte::delete($id);
+                //Punkte::delete($id);
+                break;
+            case 'optionen':
+                Optionen::delete($_REQUEST['id']); //$id ist ein int !
+                $view =  'optionenliste';
                 break;
         }
         break;

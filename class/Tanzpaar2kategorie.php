@@ -94,9 +94,11 @@ class Tanzpaar2kategorie {
         return $tanzpaar2kategorie;
     }
 
-    public static function delete()
-    {
-        //Wird nicht benötigt
+    public static function delete($id) {
+        $db = DB::connect();
+        $sql = "DELETE FROM tanzpaar2kategorie WHERE id = $id";
+        $success = mysqli_query($db, $sql);
+        return $success;
     }
 
     function save ($tanzpaar2kategorie){

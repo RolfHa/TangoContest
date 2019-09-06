@@ -82,8 +82,19 @@ class Kategorie {
         return $success;
     }
 
-    public static function delete() {
-        //Wird nicht benötigt
+    public static function delete($id) {
+        $db = DB::connect();
+        $sql = "DELETE FROM anzahlquali WHERE kategorie_id = $id";
+        mysqli_query($db, $sql);
+        $sql = "DELETE FROM kategorie WHERE id = $id";
+        $success = mysqli_query($db, $sql);
+        if ($success!=1){
+            foreach (Stufe::getAll() as $stufe){
+                $anzahlquali=new Anzahlquali($id,'dummy',$stufe->getId(),$stufe->getStufe(),50,10);
+                Anzahlquali::save($anzahlquali);
+            }
+        }
+        return $success;
     }
 
 }

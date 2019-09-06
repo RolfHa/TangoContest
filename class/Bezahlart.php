@@ -77,8 +77,12 @@ class Bezahlart {
         return $success;
     }
 
-    public static function delete()    {
-        //Wird nicht benötigt
+    public static function delete($id) {
+        $db = DB::connect();
+        $sql = "DELETE FROM bezahlart WHERE id = $id";
+        $success = mysqli_query($db, $sql);
+        return $success;
     }
+
 
 }

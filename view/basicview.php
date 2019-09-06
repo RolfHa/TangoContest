@@ -39,7 +39,7 @@
             <td style="border: 0px"><a href="index.php?action=eingeben&area=teilnehmer"><button>neuer Teilnehmer</button></a></td>
             <td style="border: 0px"><a href="index.php?action=eingeben&area=tanzpaar"><button>neues Tanzpaar</button></a></td>
             <td style="border: 0px"><a href="index.php?action=eingeben&area=jury"><button>neues Jurymitglied</button></a></td>
-            <td style="border: 0px"><a href="index.php?action=''&area=''"><button>Ronda anlegen</button></a></td>
+            <td style="border: 0px"><a href="index.php?action=''&area=''"><button>test</button></a></td>
             <td style="border: 0px"><a href="index.php?action=''&area=''"><button>Auswertung</button></a></td>
             <td style="border: 0px"></td>
             <td style="border: 0px"></td>

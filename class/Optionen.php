@@ -71,8 +71,13 @@ class Optionen {
         return $success;
     }
 
-    public static function delete()    {
-        //Wird nicht benötigt
+    public static function delete($id) {
+        echo $id;
+        $db = DB::connect();
+        $sql = "DELETE FROM optionen WHERE name ='$id'";
+        echo $sql;
+        $success = mysqli_query($db, $sql);
+        return $success;
     }
 
 }

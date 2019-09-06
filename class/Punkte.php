@@ -156,7 +156,7 @@ class Punkte {
         $sql = "Update punkte SET 
         jury_id= '". $punkte->getJuryId()."' , 
         tanzpaar2ronda_id = '". $punkte->getTanzpaar2rondaId()."',
-        punkte = '". $punkte->getPunkte()."'
+        punkte = ". $punkte->getPunkte()."
         WHERE id = '".$punkte->getId()."'
         ";
         //echo "<br>".$sql;
@@ -169,7 +169,7 @@ class Punkte {
         $sql = "INSERT INTO punkte (jury_id, tanzpaar2ronda_id, punkte)
                 VALUES ('$punkte->jury_id', 
                         '$punkte->tanzpaar2ronda_id', 
-                        '$punkte->punkte')";
+                        $punkte->punkte)";
         //echo "<br>".$sql;
         Mysqli_query($db,$sql);
         $id = mysqli_insert_id($db); //gibt die eingetragen ID zurück

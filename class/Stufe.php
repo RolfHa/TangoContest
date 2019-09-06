@@ -61,19 +61,40 @@ class Stufe {
         $db = DB::connect();
         $sql = "INSERT INTO stufe (stufe)
                 VALUES ('$stufe->stufe')";
-        mysqli_query($db, $sql);
-        $stufeId = "SELECT id, stufe
-                    FROM stufe
-                    WHERE stufe LIKE '$stufe->stufe'";
-        $result = mysqli_query($db, $stufeId);
-        $row = mysqli_fetch_assoc($result);
-        $resultID = $row['id'];
-        $stufe -> setId($resultID);
+        mysqli_query($db,$sql);
+        $id = mysqli_insert_id($db); //gibt die eingetragen ID zurück
+        $stufe->setId($id);
+        // anzalquali anlegen
+        foreach (Kategorie::getAll() as $kategorie){
+            $anzahlquali=new Anzahlquali($kategorie->getId(),$kategorie->getKategorie(),$stufe->getId(),$stufe->getStufe(),50,10);
+            Anzahlquali::save($anzahlquali);
+        }
         return $stufe;
     }
 
-    public static function delete()    {
-        //Wird nicht benötigt
+    public static function change($stufe)    {
+        $db = DB::connect();
+        $sql = "Update stufe SET 
+        stufe = '". $stufe->getStufe()."' 
+        WHERE id = '".$stufe->getId()."'
+        ";
+        $success = mysqli_query($db, $sql);
+        return $success;
+    }
+
+    public static function delete($id) {
+        $db = DB::connect();
+        $sql = "DELETE FROM anzahlquali WHERE stufe_id = $id";
+        mysqli_query($db, $sql);
+        $sql = "DELETE FROM stufe WHERE id = $id";
+        $success = mysqli_query($db, $sql);
+        if ($success!=1){
+            foreach (Kategorie::getAll() as $kategorie){
+                $anzahlquali=new Anzahlquali($kategorie->getId(),$kategorie->getKategorie(),$id,'dummy',50,10);
+                Anzahlquali::save($anzahlquali);
+            }
+        }
+        return $success;
     }
 
 }
