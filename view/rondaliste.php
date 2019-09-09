@@ -45,13 +45,13 @@ if ($area=='ronda'){$area = 'rondateilnehmer';}
                            $rondaInNextStufe++;
                         }
                     }
-                    // wenn nein kann diese stufe abgeschlossen werden und neues ronders erstellt werdenn
+                    // wenn "0" kann diese stufe abgeschlossen werden und neues ronders erstellt werdenn
                     if ($rondaInNextStufe==0){
                         echo"<a href='index.php?action=generieren&area=ronda&kategorie_id=".$kategorie->getId()."&stufe_id=".$stufe->getId()."'>";
                         echo "<button>Stufe abschließen</button></a>";
                     }
                 }
-                // wenn es die letzte stufe ist kann der gewinner ermittelt werden
+                // wenn es die letzte Stufe ist kann der gewinner ermittelt werden ($stufeCount==Count($stufeAll))
                 else {
                     echo"<a href='index.php?action=generieren&area=gewinner&kategorie_id=".$kategorie->getId()."&stufe_id=".$stufe->getId()."'>";
                     echo "<button>zeige Gewinner</button></a>";

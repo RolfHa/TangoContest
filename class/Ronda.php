@@ -111,6 +111,23 @@ class Ronda {
         return $rondaId;
     }
 
+    public static function  getRondaKategorieId($kategorie_id)
+    {
+        $db = DB::connect();
+        $sql = "SELECT * FROM ronda WHERE kategorie_id=$kategorie_id";
+        $result = mysqli_query($db, $sql);
+        $ronda = array();
+        $i=0;
+        while ($row = mysqli_fetch_assoc($result)) {
+            //$kategorie = Kategorie.getById($row['kategorie_id']);
+            //$stufe = Stufe.getById($row['stufe_id']);
+            //$ronda[$i] = new Ronda($row['kategorie_id'], $kategorie, $row['stufe_id'], $stufe, $row['ronda'], $row['id']);
+            $ronda[$i] = new Ronda($row['kategorie_id'], 'dummykategorie', $row['stufe_id'], 'dummystufe', $row['ronda'], $row['id']);
+            $i++;
+        }
+        return $ronda;
+    }
+
 
     // Löscht die ronda nur wenn noch keine Punkte in der betreffenden Kategorie und Stufe stattfand
     public static function delete($id)    {
@@ -156,5 +173,28 @@ class Ronda {
         $ronda->setId($id);
         return $ronda;
     }
+
+    //prüft ob es Rondas in der nächsten Stufe gibt (wenn ja soll diese nicht änderbar sein)
+    public static function rondaInNextStufe($ronda){
+        $stufeCount=0;
+        $stufeAll=Stufe::getAll();
+        foreach ($stufeAll as $stufe){
+            $stufeCount++;
+            if ($stufeCount<Count($stufeAll)){
+                if ($stufe->getId()>$ronda->getStufe_id()){
+                    // prüf ob es in der nächsten stufe schon rondas gibt
+                    foreach (Ronda::getRondaKategorieId($ronda->getKategorie_id()) as $rondaAll){
+                        if ($rondaAll->getStufe_id()==$stufe->getId()){
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+
+
 
 }

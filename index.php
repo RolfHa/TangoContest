@@ -50,6 +50,12 @@ switch ($action){
                 $success = Tanzpaar2kategorie::save($tanzpaar2kategorie);
                 $view =  'tanzpaaraendern';
                 break;
+            case 'tanzpaar2ronda':
+                $tanzpaar2ronda = new Tanzpaar2ronda($_REQUEST['tanzpaar2kategorie_id'],'dummy',$_REQUEST['ronda_id'],'dummy',$_REQUEST['reihenfolge']);
+                $success = Tanzpaar2ronda::save($tanzpaar2ronda);
+                $id=$_REQUEST['ronda_id'];
+                $view =  'rondateilnehmeraendern';
+                break;
             case 'kategorie':
                 $kategorie = new Kategorie($_POST['kategorie'],$_POST['id']);
                 $success = Kategorie::change($kategorie);
@@ -162,28 +168,13 @@ switch ($action){
     case 'generieren':
         switch ($area){
             case 'rondastufe1':
-                $tanzpaar2kategorieAll=Tanzpaar2kategorie::getByKategorieId($_REQUEST['kategorie_id']);
-                $anzahlquali=Anzahlquali::getById($_REQUEST['kategorie_id'],$_REQUEST['stufe_id']);
-                $reihenfolge=1;
-                $rondaNr=1;
-                $ronda=new Ronda($_REQUEST['kategorie_id'],'dummy',$_REQUEST['stufe_id'],'dummy',$rondaNr);
-                Ronda::save($ronda);
-                foreach ($tanzpaar2kategorieAll as $tanzpaar2kategorie) {
-                    if ($reihenfolge>$anzahlquali->getMaxpaare()){
-                        $rondaNr++;
-                        $reihenfolge=1;
-                        $ronda=new Ronda($_REQUEST['kategorie_id'],'dummy',$_REQUEST['stufe_id'],'dummy',$rondaNr);
-                        Ronda::save($ronda);
-                    }
-                    $tanzpaar2ronda= new Tanzpaar2ronda($tanzpaar2kategorie->getId(),'dummy',$ronda->getId(),'dummy',$reihenfolge,);
-                    Tanzpaar2ronda::save($tanzpaar2ronda);
-                    $reihenfolge++;
-                    //echo "<pre>";
-                    //print_r($tanzpaar2ronda);
-                }
+                Tanzpaar2ronda::generiereQuali($_REQUEST['kategorie_id'],$_REQUEST['stufe_id']);
+                $area = 'ronda';
                 $view = 'rondaliste';
                 break;
             case 'ronda':
+                Tanzpaar2ronda::generiereStufe($_REQUEST['kategorie_id'],$_REQUEST['stufe_id']);
+                $area = 'ronda';
                 $view = 'rondaliste';
                 break;
             case 'gewinner':
@@ -203,6 +194,11 @@ switch ($action){
             case 'tanzpaar2kategorie':
                 $success = Tanzpaar2kategorie::delete($_REQUEST['tanzpaar2kategorie_id']);
                 $view =  'tanzpaaraendern';
+                break;
+            case 'tanzpaar2ronda':
+                tanzpaar2ronda::delete($id);
+                $id=$_REQUEST['ronda_id'];
+                $view =  'rondateilnehmeraendern';
                 break;
             case 'kategorie':
                 Kategorie::delete($id);

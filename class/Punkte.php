@@ -43,6 +43,20 @@ class Punkte {
         $this->tanzpaar2ronda_id = $tanzpaar2ronda_id;
     }
 
+    public function getJury()    {
+        return $this->jury;
+    }
+    public function setJury($jury)    {
+        $this->jury = $jury;
+    }
+
+    public function getTanzpaar2ronda()    {
+        return $this->tanzpaar2ronda;
+    }
+    public function setTanzpaar2ronda($tanzpaar2ronda)    {
+        $this->tanzpaar2ronda = $tanzpaar2ronda;
+    }
+
     public function getPunkte() {
         return $this->punkte;
     }
@@ -126,6 +140,28 @@ class Punkte {
         while ($row = mysqli_fetch_assoc($result)) {
             $jury = new Jury($row['juryvorname'],$row['jurynachname'],$row['jury_id']);
             $tanzpaar2ronda = "dummy";//Tanzpaar2ronda::getById($row['tanzpaar2ronda_id']);
+            $punkte[$i] = new Punkte(
+                $row['jury_id'],
+                $jury,
+                $row['tanzpaar2ronda_id'],
+                $tanzpaar2ronda,
+                $row['punkte'],
+                $row['punkte_id']
+            );
+            $i++;
+        }
+        return $punkte;
+    }
+
+    public static function getByKategorieIdAndStufeId($kategorie_id,$stufe_id)    {
+        $db = DB::connect();
+        $sql = "SELECT * FROM info_punktetabelle WHERE kategorie_id=$kategorie_id and stufe_id=$stufe_id";
+        $result = mysqli_query($db, $sql);
+        $punkte = array();
+        $i=0;
+        while ($row = mysqli_fetch_assoc($result)) {
+            $jury = "dummy";//new Jury($row['juryvorname'],$row['jurynachname'],$row['jury_id']);
+            $tanzpaar2ronda = Tanzpaar2ronda::getById($row['tanzpaar2ronda_id']);
             $punkte[$i] = new Punkte(
                 $row['jury_id'],
                 $jury,

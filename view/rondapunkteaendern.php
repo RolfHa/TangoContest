@@ -5,6 +5,7 @@
             <?php
             $ronda=Ronda::getById($id);
             echo $ronda->getKategorie()->getKategorie()." ".$ronda->getStufe()->getStufe()." Ronda: ".$ronda->getRonda();
+            $rondaInNextStufe=Ronda::rondaInNextStufe($ronda);
             ?>
             </h1>
         </th>
@@ -27,6 +28,7 @@
                     }
                     ?>
                     <th></th>
+                    <th>Druchschnitt</th>
                 </thead>
                 <?php
                 $tanzpaar2rondaAll=Tanzpaar2ronda::getByRondaId($id);
@@ -42,11 +44,10 @@
                     echo "\n\t\t\t\t\t</td>\n\t\t\t\t\t<td>";
                     echo $tanzpaar2ronda->getTanzpaar2kategorie()->getTanzpaar()->getStartnummer();
                     echo "\n\t\t\t\t\t</td>\n\t\t\t\t\t<td>";
-                    echo $tanzpaar2ronda->getTanzpaar2kategorie()->getTanzpaar()->getTeilnehmer1()->getVorname()." ".$tanzpaar2ronda->getTanzpaar2kategorie()->getTanzpaar()->getTeilnehmer1()->getNachname();
-                    echo " & ";
-                    echo $tanzpaar2ronda->getTanzpaar2kategorie()->getTanzpaar()->getTeilnehmer2()->getVorname()." ".$tanzpaar2ronda->getTanzpaar2kategorie()->getTanzpaar()->getTeilnehmer2()->getNachname();
+                    echo $tanzpaar2ronda->getTanzpaar2kategorie()->getTanzpaar()->getTanzpaarnamen();
                     echo "</td>";
                     $i=0;
+                    $durchschnitt=array();
                     foreach ($jury2rondaAll as $jury2ronda){
                         $punkteId=null;
                         echo "<td>";
@@ -56,6 +57,9 @@
                             if($jury2ronda->getJury()->getId()==$punkte->getJuryId()) {
                                 if($tanzpaar2ronda->getId()==$punkte->getTanzpaar2rondaId()  ) {
                                     echo $punkte->getPunkte();
+                                    if ($punkte->getPunkte()!=null){
+                                        $durchschnitt[]=$punkte->getPunkte();
+                                    }
                                     $punkteId=$punkte->getId();
                                 }
                             }
@@ -64,9 +68,27 @@
                         echo "\n\t\t\t<input type='hidden' name='punkte[$i][punkte_id]' value='".$punkteId."'>";
                         $i++;
                     }
-                    echo "\n\t\t\t<td><input type='submit' value='ändern'></td>";
-                    echo "\n\t\t</form>";
-
+                    echo "\n\t\t\t<td>";
+                    // wenn es schon eine nächste stufe gibt sollen die werte nicht mehr verändert werden können
+                    if (!$rondaInNextStufe){
+                        echo "<input type='submit' value='ändern'>";
+                    }
+                    echo "</td>\n\t\t</form>";
+                    echo "\n\t\t<td style='text-align: center'>";
+                    if (count($durchschnitt)>2){
+                        $ergenis=0;
+                        sort($durchschnitt);
+                        //echo "<pre>";
+                        //print_r($durchschnitt);
+                        // nimmt den kleinsten und den größten wert nicht mit in die auswertung
+                        for ($i=1; $i<count($durchschnitt)-1;$i++){
+                            $ergenis=$ergenis+$durchschnitt[$i];
+                            //echo $ergenis."<br>";
+                        }
+                        $ergenis=$ergenis/(count($durchschnitt)-2);
+                        echo number_format($ergenis,3);
+                    }
+                    echo "\n\t\t</td>";
                 }
                 ?>
             </table>

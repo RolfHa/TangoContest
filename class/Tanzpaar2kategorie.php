@@ -5,7 +5,9 @@ class Tanzpaar2kategorie {
     private $tanzpaar;
     private $kategorie_id;
     private $kategorie;
-    
+    private $stufendurchschnitt;
+
+
     function __construct($tanzpaar_id, $tanzpaar, $kategorie_id, $kategorie, $id = null) {
         if(isset($id)){
           $this->id = $id;  
@@ -56,6 +58,19 @@ class Tanzpaar2kategorie {
         $this->kategorie = $kategorie;
     }
 
+    public function getStufendurchschnitt(){
+        return $this->stufendurchschnitt;
+    }
+
+    public function setStufendurchschnitt($stufendurchschnitt)    {
+        $this->stufendurchschnitt = $stufendurchschnitt;
+    }
+
+
+
+
+
+
     public static function getById($id){
         $db = DB::connect();
         $sql = "SELECT * FROM tanzpaar2kategorie WHERE id=$id";
@@ -97,7 +112,7 @@ class Tanzpaar2kategorie {
 
     public static function getByKategorieId($id){
         $db = DB::connect();
-        $sql = "SELECT * FROM tanzpaar2kategorie WHERE kategorie_id=$id;";
+        $sql = "SELECT * FROM tanzpaar2kategorie WHERE kategorie_id=$id order by tanzpaar_id;";
         $result = mysqli_query($db, $sql);
         $tanzpaar2kategorie = array();
         $i=0;

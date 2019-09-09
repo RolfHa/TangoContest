@@ -38,6 +38,10 @@ class Tanzpaar {
         return $this->startnummer;
     }
 
+    function getTanzpaarnamen() {
+         return $this->teilnehmer1->getVorname()." ".$this->teilnehmer1->getNachname()." & ".$this->teilnehmer2->getVorname()." ".$this->teilnehmer2->getNachname();
+     }
+
     function getTeilnehmer1_id() {
         return $this->teilnehmer1_id;
     }
