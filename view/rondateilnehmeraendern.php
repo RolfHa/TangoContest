@@ -13,18 +13,21 @@
         </td>
     </tr>
     <tr>
-        <td><h2>Tanzpaare in dieser Ronda</h2></td>
-        <td><h3>Tanzpaare ohne Ronda</h3></td>
-        <td>
+        <td valign="top"><h2>Tanzpaare in dieser Ronda</h2></td>
+        <td><h4>Tanzpaare ohne Ronda</h4></td>
+        <td valign="top" >
             <table>
                 <thead>
-                <th></th>
-                <th></th>
-                <th></th>
+                <th colspan="3" style="padding: 0px;"><h2>Jury in dieser Ronda</h2></th>
                 </thead>
+                </tr>
+                <th style="padding: 0px;"><a href='index.php?action=generieren&area=vorigejury&id=<?php echo $id; ?>'><button>vorige Jury übernehmen</button></a></th>
+                <th style="padding: 0px;" width="10"></th>
+                <th style="padding: 0px;"><a href='index.php?action=drucken&area=jurybogen&id=<?php echo $id; ?>' target="_blank"><button>Jurybogen drucken</button></a></th>
+                </tr>
             </table>
-            <h2>Jury in dieser Ronda</h2></td>
-        <td><h3>weitere Jurymitglieder</h3></td>
+            </td>
+        <td><h4>weitere Jurymitglieder</h4></td>
     </tr>
     <tr valign="top">
         <td>

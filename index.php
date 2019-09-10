@@ -16,7 +16,7 @@ if (isset($_REQUEST['action'])){
 if (isset($_REQUEST['id'])){
     $id = (int)$_REQUEST['id'];
 }
-
+$basicview=1;
 
 
 
@@ -181,6 +181,21 @@ switch ($action){
                 $tanzpaar2kategorieAll=Tanzpaar2ronda::generiereStufe($_REQUEST['kategorie_id'],$_REQUEST['stufe_id'],'nurAnsicht');
                 $view = 'gewinnerliste';
                 break;
+            case 'vorigejury':
+                echo "noch ohne funktion";
+                $view = 'rondateilnehmeraendern';
+                break;
+        }
+        break;
+    case 'drucken':
+        $basicview=0;
+        switch ($area){
+            case 'jurybogen':
+                include 'view/jurybogen.php';
+                break;
+            case 'einlassbogen':
+                include 'view/einlassbogen.php';
+                break;
         }
         break;
     case 'loeschen':
@@ -238,7 +253,8 @@ switch ($action){
         break;
 }
 
-include 'view/basicview.php';
+if ($basicview==1){include 'view/basicview.php';}
+
 
 
 /*
