@@ -91,10 +91,8 @@ class Anzahlquali {
         $i=0;
         while ($row = mysqli_fetch_assoc($result)) {
             //  *** Versuch Datenbankabfragen innerhalb einer Schleife zu vermeiden***
-
             //$kategorie = Kategorie.getById($row['kategorie_id']);
             $kategorie = new Kategorie($row['kategorie'], $row['kategorie_id']);
-
             //$stufe = Stufe.getById($row['stufe_id']);
             $stufe =new Stufe( $row['stufe'], $row['stufe_id']);
 

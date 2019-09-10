@@ -31,18 +31,16 @@
             <td style="border: 0px"><a href="index.php?action=listeanzeigen&area=tanzpaar"><button>Liste Tanzpaare</button></a></td>
             <td style="border: 0px"><a href="index.php?action=listeanzeigen&area=jury"><button>Liste Jurymitglieder</button></a></td>
             <td style="border: 0px"><a href="index.php?action=listeanzeigen&area=ronda"><button>Ronda Teilnehmer</button></a></td>
-            <td style="border: 0px"><a href="index.php?action=listeanzeigen&area=punkte"><button>Ronda Punkte</button></a></td>
-            <td style="border: 0px" width="150" ></td>
+            <td style="border: 0px" width="100" ></td>
             <td style="border: 0px"><a href="index.php?action=listeanzeigen&area=optionen"><button>Optionen</button></a></td>
         </thead>
         <tr>
             <td style="border: 0px"><a href="index.php?action=eingeben&area=teilnehmer"><button>neuer Teilnehmer</button></a></td>
             <td style="border: 0px"><a href="index.php?action=eingeben&area=tanzpaar"><button>neues Tanzpaar</button></a></td>
             <td style="border: 0px"><a href="index.php?action=eingeben&area=jury"><button>neues Jurymitglied</button></a></td>
-            <td style="border: 0px"><a href="index.php?action=''&area=''"><button>test</button></a></td>
-            <td style="border: 0px"><a href="index.php?action=''&area=''"><button>Auswertung</button></a></td>
+            <td style="border: 0px"><a href="index.php?action=listeanzeigen&area=punkte"><button>Ronda Punkte</button></a></td>
             <td style="border: 0px"></td>
-            <td style="border: 0px"></td>
+            <td style="border: 0px"><a href="index.php?action=listeanzeigen&area=hilfe"><button>Hilfe</button></a></td>
         </tr>
     </table>
 </nav>

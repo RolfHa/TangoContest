@@ -50,6 +50,10 @@ if ($area=='ronda'){$area = 'rondateilnehmer';}
                         echo"<a href='index.php?action=generieren&area=ronda&kategorie_id=".$kategorie->getId()."&stufe_id=".$stufe->getId()."'>";
                         echo "<button>Stufe abschließen</button></a>";
                     }
+                    else {
+                        echo"<a href='index.php?action=generieren&area=gewinner&kategorie_id=".$kategorie->getId()."&stufe_id=".$stufe->getId()."'>";
+                        echo "<button>Bestenliste</button></a>";
+                    }
                 }
                 // wenn es die letzte Stufe ist kann der gewinner ermittelt werden ($stufeCount==Count($stufeAll))
                 else {

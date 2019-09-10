@@ -64,8 +64,15 @@ class Kategorie {
         $id = mysqli_insert_id($db); //gibt die eingetragen ID zurück
         $kategorie->setId($id);
         // anzalquali anlegen
-        foreach (Stufe::getAll() as $stufe){
-            $anzahlquali=new Anzahlquali($kategorie->getId(),$kategorie->getKategorie(),$stufe->getId(),$stufe->getStufe(),50,10);
+        $stufeAll=Stufe::getAll();
+        $anzahl=80;
+        foreach ($stufeAll as $stufe){
+            $anzahl=round($anzahl/2,0);
+            $anzahlquali=new Anzahlquali($kategorie->getId(),$kategorie->getKategorie(),$stufe->getId(),$stufe->getStufe(),$anzahl,10);
+            //bei der letzten stufe soll die qualianzahl immer 1 sein -> es kann nur einen geben!
+            if ($stufe==end($stufeAll)){
+                $anzahlquali=new Anzahlquali($kategorie->getId(),$kategorie->getKategorie(),$stufe->getId(),$stufe->getStufe(),1,10);
+            }
             Anzahlquali::save($anzahlquali);
         }
         return $kategorie;

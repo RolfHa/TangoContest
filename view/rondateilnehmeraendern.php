@@ -15,7 +15,15 @@
     <tr>
         <td><h2>Tanzpaare in dieser Ronda</h2></td>
         <td><h3>Tanzpaare ohne Ronda</h3></td>
-        <td><h2>Jury in dieser Ronda</h2></td>
+        <td>
+            <table>
+                <thead>
+                <th></th>
+                <th></th>
+                <th></th>
+                </thead>
+            </table>
+            <h2>Jury in dieser Ronda</h2></td>
         <td><h3>weitere Jurymitglieder</h3></td>
     </tr>
     <tr valign="top">

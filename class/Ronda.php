@@ -180,7 +180,7 @@ class Ronda {
         $stufeAll=Stufe::getAll();
         foreach ($stufeAll as $stufe){
             $stufeCount++;
-            if ($stufeCount<Count($stufeAll)){
+            if ($stufeCount<=Count($stufeAll)){
                 if ($stufe->getId()>$ronda->getStufe_id()){
                     // prüf ob es in der nächsten stufe schon rondas gibt
                     foreach (Ronda::getRondaKategorieId($ronda->getKategorie_id()) as $rondaAll){

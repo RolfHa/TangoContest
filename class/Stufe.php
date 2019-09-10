@@ -66,7 +66,7 @@ class Stufe {
         $stufe->setId($id);
         // anzalquali anlegen
         foreach (Kategorie::getAll() as $kategorie){
-            $anzahlquali=new Anzahlquali($kategorie->getId(),$kategorie->getKategorie(),$stufe->getId(),$stufe->getStufe(),50,10);
+            $anzahlquali=new Anzahlquali($kategorie->getId(),$kategorie->getKategorie(),$stufe->getId(),$stufe->getStufe(),1,10);
             Anzahlquali::save($anzahlquali);
         }
         return $stufe;

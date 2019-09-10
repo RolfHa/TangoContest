@@ -170,10 +170,23 @@ class Tanzpaar2ronda {
 
     }
 
-    public static function generiereStufe($kategorie_id,$stufe_id){
-        echo "<pre>";
+    public static function generiereStufe($kategorie_id,$stufe_id ,$funktion){
+        //echo "<pre>";
         $fehler="";
-        $tanzpaar2kategorieAll=Tanzpaar2kategorie::getByKategorieId($kategorie_id);
+
+
+        //holt  Tanzpaar2Kategorie aus den rondas
+        $rondaAllId=Ronda::getRondaIdByStufeIdAndKategorieId($kategorie_id,$stufe_id);
+
+        $tanzpaar2rondaALL=array();
+        $tanzpaar2kategorieAll=array();
+        foreach ($rondaAllId as $id){
+            $tanzpaar2rondaALL=Tanzpaar2ronda::getByRondaId($id);
+            foreach ($tanzpaar2rondaALL as $t2r){
+                $tanzpaar2kategorieAll[]=$t2r->getTanzpaar2kategorie();
+            }
+        }
+        //print_r($tanzpaar2kategorieAll);
 
         //berechne Punkte
         $punkteAll=Punkte::getByKategorieIdAndStufeId($kategorie_id,$stufe_id);
@@ -214,48 +227,50 @@ class Tanzpaar2ronda {
 
         /*//test
         foreach ($tanzpaar2kategorieAll as $tanzpaar2kategorie) {
-            echo "<br>";
-            echo $tanzpaar2kategorie->getId();
-            echo " - ";
-            echo $tanzpaar2kategorie->getStufendurchschnitt();
+            echo "<br>".$tanzpaar2kategorie->getId();
+            echo " - ".$tanzpaar2kategorie->getStufendurchschnitt();
         }*/
 
-        //nächste Stufe ermitteln
-        $nextStufe=null;
-        $stufeAll=$stufeAll=Stufe::getAll();
-        for ($i=0; $i<count($stufeAll);$i++){
-            if ($stufeAll[$i]->getId()==$stufe_id){
-                $nextStufe=$stufeAll[$i+1]->getId();
+        if ($funktion=="anlegen") {
+            //nächste Stufe ermitteln
+            $nextStufe = null;
+            $stufeAll = $stufeAll = Stufe::getAll();
+            for ($i = 0; $i < count($stufeAll); $i++) {
+                if ($stufeAll[$i]->getId() == $stufe_id) {
+                    $nextStufe = $stufeAll[$i + 1]->getId();
+                }
             }
-        }
-        if ($nextStufe==null){
-            $fehler="<br><b>Achntung:</b> nächste Stufe konnte nicht ermittelt werden";
-        }
-        /*
-        echo "<br>diese stufe=".$stufe_id;
-        echo "<br>nächste stufe=".$nextStufe;
-        */
+            if ($nextStufe == null) {
+                $fehler = "<br><b>Achntung:</b> nächste Stufe konnte nicht ermittelt werden";
+            }
+            /*
+            echo "<br>diese stufe=".$stufe_id;
+            echo "<br>nächste stufe=".$nextStufe;
+            */
 
-        //anzahl der weiterkommenden
-        $anzahlquali=Anzahlquali::getById($kategorie_id,$stufe_id);
-        $anzahlquali=$anzahlquali->getAnzahlquali();
-        //anzahl der maxpaare für die nächst stufe
-        $maxpaare=Anzahlquali::getById($kategorie_id,$nextStufe);
-        $maxpaare=$maxpaare->getMaxpaare();
-        $anzahlRonda=round($anzahlquali/$maxpaare, 0, PHP_ROUND_HALF_UP);
-        if ($anzahlRonda==0){$anzahlRonda=1;}
-        /*
-        // test $anzahlRonda=2;
-        echo "<br>anzahlquali=".$anzahlquali;
-        echo "<br>maxpaare=".$maxpaare;
-        echo "<br>anzahlronda=".$anzahlRonda;
-        */
-        if (count($tanzpaar2kategorieAll)<$anzahlquali){
-            $fehler="<br><b>Achntung:</b> die Anzahl der teilnehmenden Tanzpaare ist kleiner als die Anzahlquali, d.h. es würden alle weierkommen. Bitte in Optionen anpassen.";
+            //anzahl der weiterkommenden
+            $anzahlquali = Anzahlquali::getById($kategorie_id, $stufe_id);
+            $anzahlquali = $anzahlquali->getAnzahlquali();
+            //anzahl der maxpaare für die nächst stufe
+            $maxpaare = Anzahlquali::getById($kategorie_id, $nextStufe);
+            $maxpaare = $maxpaare->getMaxpaare();
+            $anzahlRonda = round($anzahlquali / $maxpaare, 0, PHP_ROUND_HALF_UP);
+            if ($anzahlRonda == 0) {
+                $anzahlRonda = 1;
+            }
+            /*
+            // test $anzahlRonda=2;
+            echo "<br>anzahlquali=".$anzahlquali;
+            echo "<br>maxpaare=".$maxpaare;
+            echo "<br>anzahlronda=".$anzahlRonda;
+            */
+            if (count($tanzpaar2kategorieAll) < $anzahlquali) {
+                $fehler = "<br><b>Achntung:</b> die Anzahl der teilnehmenden Tanzpaare ist kleiner als die Anzahlquali, d.h. es würden alle weierkommen. Bitte in Optionen anpassen.";
+            }
         }
 
         // bei "nuranzeige" oder fehler abbrechen, ansonsten die rondas und die tanzpaar2kategorie erzeugen
-        if ($fehler!=""){
+        if ($fehler!="" or $funktion!="anlegen"){
             echo $fehler;
         }
         else {
@@ -305,6 +320,7 @@ class Tanzpaar2ronda {
                 }
             }
         }
+        return $tanzpaar2kategorieAll;
     }
 
 

@@ -173,12 +173,13 @@ switch ($action){
                 $view = 'rondaliste';
                 break;
             case 'ronda':
-                Tanzpaar2ronda::generiereStufe($_REQUEST['kategorie_id'],$_REQUEST['stufe_id']);
+                $tanzpaar2kategorieAll=Tanzpaar2ronda::generiereStufe($_REQUEST['kategorie_id'],$_REQUEST['stufe_id'],'anlegen');
                 $area = 'ronda';
-                $view = 'rondaliste';
+                $view = 'gewinnerliste';
                 break;
             case 'gewinner':
-                $view = 'gewinner';
+                $tanzpaar2kategorieAll=Tanzpaar2ronda::generiereStufe($_REQUEST['kategorie_id'],$_REQUEST['stufe_id'],'nurAnsicht');
+                $view = 'gewinnerliste';
                 break;
         }
         break;
