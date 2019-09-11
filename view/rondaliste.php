@@ -6,8 +6,18 @@ if ($area=='ronda'){$area = 'rondateilnehmer';}
     <tr>
         <th >Kategorie</th>
         <th >Stufe</th>
-        <th>Rondas</th>
-        <th></th>
+        <th>
+            <table border="0">
+                <thead>
+                    <th style="border: 0px">Rondas</th>
+                    <th style="border: 0px">
+                        <a href='index.php?action=speichern&area=ronda'><button>Ronda manuell Anlegen</button></a>
+                    </th>
+                </thead>
+            </table>
+        </th>
+        <th>Auswertung</th>
+        <th>Ausdruck</th>
     </tr>
     <?php
     //db abfrage außerhalb der schleifen
@@ -23,7 +33,7 @@ if ($area=='ronda'){$area = 'rondateilnehmer';}
                     echo $kategorie->getKategorie();
                 }
                 echo "</b></td>";
-            echo "\n\t\t<td style='border: 0px'>".$stufe->getStufe()."</td>\n\t\t<td>\n\t\t\t<table border='0' >\n\t\t\t\t<tr>";
+            echo "\n\t\t<td>".$stufe->getStufe()."</td>\n\t\t<td>\n\t\t\t<table border='0' >\n\t\t\t\t<tr>";
             $rondaCount=0;
             foreach ($rondaAll as $ronda){
                 if ($ronda->getKategorie_id()==$kategorie->getId() and $ronda->getStufe_id()==$stufe->getId()){
@@ -66,8 +76,12 @@ if ($area=='ronda'){$area = 'rondateilnehmer';}
                 // das soll aber nur in der ersten Stufe passieren (bei den anderne passiert das beim abschließen)
                 if ($stufeCount==1){
                     echo"<a href='index.php?action=generieren&area=rondastufe1&kategorie_id=".$kategorie->getId()."&stufe_id=".$stufe->getId()."'>";
-                    echo "<button>Rondas erstellen</button></a>";
+                    echo "<button>Rondas autom. erstellen</button></a>";
                 }
+            }
+            echo "</td><td>";
+            if ($rondaCount>0){
+                echo "<a href='index.php?action=drucken&area=einlassbogen&kategorie_id=".$kategorie->getId()."&stufe_id=".$stufe->getId()."' target='_blank'><button>Einlass drucken</button></a></th>";
             }
             echo "</td>\n\t</tr>";
         }

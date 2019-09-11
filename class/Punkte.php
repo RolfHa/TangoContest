@@ -217,4 +217,35 @@ class Punkte {
         return "kommt noch";
     }
 
+
+    public static function punkteVerarbeiten ($punkteArray){
+        if ($punkteArray==null){
+            return "<h1>!!!es wurden keine Punkte übergeben !!!</h1>";
+        }
+        else {
+            foreach ($punkteArray as $punkteNeu){
+                // leer soll null sein und Komma soll Punkt sein
+                $wert=$punkteNeu['wert'];
+                if ($wert==''){$wert='null';}
+                else {
+                    $wert = str_replace(",",".", $wert);
+                    $wert = floatval($wert);
+                    $wert=number_format($wert, 2, '.', '');
+                }
+                // Punktewertung Ändern:
+                if ($punkteNeu['punkte_id']!=''){
+                    // echo "update";
+                    $punkte=new Punkte($punkteNeu['jury_id'],'dummy',$_REQUEST['tanzpaar2ronda'],'dummy',$wert,$punkteNeu['punkte_id']);
+                    $success = Punkte::change($punkte);
+                }
+                // Punktewertung neu anlegen
+                else {
+                    $punkte=new Punkte($punkteNeu['jury_id'],'dummy',$_REQUEST['tanzpaar2ronda'],'dummy',$wert);
+                    $success = Punkte::save($punkte);
+                }
+            }
+        }
+
+    }
+
 }

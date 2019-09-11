@@ -2,26 +2,39 @@
 
 <table border="0" width="80%">
     <tr>
-        <td colspan="4 "  style='text-align: center'>
+        <td colspan="2"  style='border: 0px; text-align: right'>
             <h1>
             <?php
             $ronda=Ronda::getById($id);
-            echo $ronda->getKategorie()->getKategorie()." ".$ronda->getStufe()->getStufe()." Ronda: ".$ronda->getRonda();
+            echo $ronda->getKategorie()->getKategorie()." ".$ronda->getStufe()->getStufe()." Ronda ".$ronda->getRonda();
             $rondaInNextStufe=Ronda::rondaInNextStufe($ronda);
+
             ?>
             </h1>
+        </td>
+        <td style="border: 0px;text-align: center">
+            <a href='index.php?action=aendern&area=rondapunkte&id=<?php echo $id; ?>'><button>zur Punkteeingabe</button></a>
+        </td>
+        <td style="border: 0px;text-align: center">
+            <a href='index.php?action=loeschen&area=ronda&id=<?php echo $id; ?>'><button>Ronda löschen</button></a>
+            <br><div style="font-size: x-small"> (nur möglich wenn Tanzpaare und Jury leer)</div>
         </td>
     </tr>
     <tr>
         <td valign="top"><h2>Tanzpaare in dieser Ronda</h2></td>
-        <td><h4>Tanzpaare ohne Ronda</h4></td>
+        <td ><h4>Tanzpaare ohne Ronda</h4></td>
         <td valign="top" >
             <table>
                 <thead>
                 <th colspan="3" style="padding: 0px;"><h2>Jury in dieser Ronda</h2></th>
                 </thead>
                 </tr>
-                <th style="padding: 0px;"><a href='index.php?action=generieren&area=vorigejury&id=<?php echo $id; ?>'><button>vorige Jury übernehmen</button></a></th>
+                <th style="padding: 0px;">
+                    <?php
+                    if (!$rondaInNextStufe){
+                        echo "<a href='index.php?action=generieren&area=vorigejury&id=".$id."'><button>vorige Jury übernehmen</button></a></th>";
+                    }
+                    ?>
                 <th style="padding: 0px;" width="10"></th>
                 <th style="padding: 0px;"><a href='index.php?action=drucken&area=jurybogen&id=<?php echo $id; ?>' target="_blank"><button>Jurybogen drucken</button></a></th>
                 </tr>

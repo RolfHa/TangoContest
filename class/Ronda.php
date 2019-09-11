@@ -101,7 +101,7 @@ class Ronda {
     public static function  getRondaIdByStufeIdAndKategorieId($kategorie_id, $stufe_id)
     {
         $db = DB::connect();
-        $sql = "SELECT id FROM ronda WHERE kategorie_id=$kategorie_id AND stufe_id = $stufe_id";
+        $sql = "SELECT id FROM ronda WHERE kategorie_id=$kategorie_id AND stufe_id = $stufe_id order by id";
         $result = mysqli_query($db, $sql);
         $rondaId = array();
         while ($row = mysqli_fetch_assoc($result))
@@ -192,6 +192,16 @@ class Ronda {
             }
         }
         return false;
+    }
+
+    public static function neuanlegen($kategorie_id,$stufe_id){
+        $ronda=Ronda::getRondaIdByStufeIdAndKategorieId($kategorie_id,$stufe_id); // id list aller rondas in dem bereich
+        $ronda=end($ronda); // letzte id
+        $ronda=Ronda::getById($ronda); // ronda objekt
+        $ronda=$ronda->getRonda(); // ronda nummer
+        $ronda++; // +1
+        $ronda=new Ronda($kategorie_id,'dummykat',$stufe_id,'dummystufe',$ronda,'');
+        Ronda::save($ronda);
     }
 
 

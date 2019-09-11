@@ -31,4 +31,24 @@ class HTML{
         }
         echo '</select>';
     }
+
+    public static function SelectKategorie ($name,$arr,$select){
+        echo '<select name="'.$name.'">';
+        foreach ($arr as $wert)	{
+            echo '<option value="'.$wert->getId().'"';
+            if ($select==$wert->getId()){echo ' selected ';}
+            echo '>'.$wert->getKategorie().'</option>';
+        }
+        echo '</select>';
+    }
+
+    public static function SelectStufe ($name,$arr,$select){
+        echo '<select name="'.$name.'">';
+        foreach ($arr as $wert)	{
+            echo '<option value="'.$wert->getId().'"';
+            if ($select==$wert->getId()){echo ' selected ';}
+            echo '>'.$wert->getStufe().'</option>';
+        }
+        echo '</select>';
+    }
 }

@@ -16,7 +16,7 @@ if (isset($_REQUEST['action'])){
 if (isset($_REQUEST['id'])){
     $id = (int)$_REQUEST['id'];
 }
-$basicview=1;
+$nobasicview=0;
 
 
 
@@ -77,39 +77,16 @@ switch ($action){
                 $success = Jury::change($jury);
                 break;
             case 'jury2ronda':
-                $jury = new Jury2ronda($_REQUEST['jury_id'],'',$_REQUEST['ronda_id'],'',$_REQUEST['sitzplatz']);
-                $success = Jury2ronda::save($jury);
+                $jury2ronda = new Jury2ronda($_REQUEST['jury_id'],'',$_REQUEST['ronda_id'],'',$_REQUEST['sitzplatz']);
+                $success = Jury2ronda::save($jury2ronda);
                 $id=$_REQUEST['ronda_id'];
                 $view =  'rondateilnehmeraendern';
                 break;
             case 'ronda':
+                $view =  'rondaeingeben';
                 break;
             case 'punkte':
-                if (!isset ($_REQUEST['punkte'])){
-                    echo "<h1>!!!es wurden keine Punkte übergeben !!!</h1>";
-                }
-                else {
-                    foreach ($_REQUEST['punkte'] as $punkteNeu){
-                        // leer soll null sein und Komma soll Punkt sein
-                        $wert=$punkteNeu['wert'];
-                        if ($wert==''){$wert='null';}
-                        else {
-                            $wert = str_replace(",",".", $wert);
-                            $wert = floatval($wert);
-                            $wert=number_format($wert, 2, '.', '');
-                        }
-                        if ($punkteNeu['punkte_id']!=''){
-                            // echo "update";
-                            $punkte=new Punkte($punkteNeu['jury_id'],'dummy',$_REQUEST['tanzpaar2ronda'],'dummy',$wert,$punkteNeu['punkte_id']);
-                            $success = Punkte::change($punkte);
-                        }
-                        else {
-                            // echo"neu";
-                            $punkte=new Punkte($punkteNeu['jury_id'],'dummy',$_REQUEST['tanzpaar2ronda'],'dummy',$wert);
-                            $success = Punkte::save($punkte);
-                        }
-                    }
-                }
+                Punkte::punkteVerarbeiten($_REQUEST['punkte']);
                 $view =  'rondapunkteaendern';
                 break;
             case 'anzahlquali':
@@ -155,6 +132,8 @@ switch ($action){
                 $success = Jury::save($jury);
                 break;
             case 'ronda':
+                Ronda::neuanlegen($_REQUEST['kategorie_id'],$_REQUEST['stufe_id']);
+                $view =  'rondaliste';
                 break;
             case 'punkte':
                 //siehe Punke speichern
@@ -182,13 +161,13 @@ switch ($action){
                 $view = 'gewinnerliste';
                 break;
             case 'vorigejury':
-                echo "noch ohne funktion";
+                Jury2ronda::vorigeJury($id);
                 $view = 'rondateilnehmeraendern';
                 break;
         }
         break;
     case 'drucken':
-        $basicview=0;
+        $nobasicview=1;
         switch ($area){
             case 'jurybogen':
                 include 'view/jurybogen.php';
@@ -237,7 +216,7 @@ switch ($action){
                 $view =  'rondateilnehmeraendern';
                 break;
             case 'ronda':
-                //Ronda::delete($id);
+                Ronda::delete($id);
                 break;
             case 'punke':
                 //Punkte::delete($id);
@@ -253,20 +232,13 @@ switch ($action){
         break;
 }
 
-if ($basicview==1){include 'view/basicview.php';}
+if ($nobasicview!=1){include 'view/basicview.php';}
 
 
 
 /*
-echo "<pre>anfang-";
-        print_r($id);
-        print_r($sql);
-        print_r($result);
-        print_r($row);
-echo "-ende</pre>";
 
-
-
+// werden direkt übergeben
 if (isset($_REQUEST['vorname'])){    $vorname = (int)$_REQUEST['vorname'];}
 if (isset($_REQUEST['nachname'])){   $nachname = (int)$_REQUEST['nachname'];}
 if (isset($_REQUEST['geschlecht'])){    $geschlecht = (int)$_REQUEST['geschlecht'];}
@@ -287,9 +259,21 @@ if (isset($_REQUEST['reihenfolge'])){    $reihenfolge = (int)$_REQUEST['reihenfo
 
 */
 
-
 // Übergabewerte für testzwecke ausgeben
+/*
 echo '<br><br><br><pre>';
 print_r($_REQUEST);
 echo '</pre>';
+*/
+
+// erweiterte Test
+/*
+echo "<pre>anfang-";
+print_r($id);
+print_r($sql);
+print_r($result);
+print_r($row);
+echo "-ende</pre>";
+*/
+
 ?>

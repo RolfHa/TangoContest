@@ -1,17 +1,25 @@
 <table border="0" width="80%">
     <thead>
-        <th style='text-align: center'>
-            <h1>
+    <td colspan="2"  style='border: 0px; text-align: right'>
+        <h1>
             <?php
             $ronda=Ronda::getById($id);
-            echo $ronda->getKategorie()->getKategorie()." ".$ronda->getStufe()->getStufe()." Ronda: ".$ronda->getRonda();
+            echo $ronda->getKategorie()->getKategorie()." ".$ronda->getStufe()->getStufe()." Ronda ".$ronda->getRonda();
             $rondaInNextStufe=Ronda::rondaInNextStufe($ronda);
+
             ?>
-            </h1>
-        </th>
+        </h1>
+    </td>
+    <td style="border: 0px;text-align: center">
+        <a href='index.php?action=aendern&area=ronda&id=<?php echo $id; ?>'><button>zur Tanzpaareingabe</button></a>
+    </td>
+    <td style="border: 0px;text-align: center">
+        <a href='index.php?action=loeschen&area=ronda&id=<?php echo $id; ?>'><button>Ronda löschen</button></a>
+        <br><div style="font-size: x-small"> (nur möglich wenn Tanzpaare und Jury leer)</div>
+    </td>
     </thead>
     <tr>
-        <td>
+        <td colspan="4">
             <table border="0">
                 <thead>
                     <th>Folge</th>
@@ -26,8 +34,8 @@
                         //echo " (".$jury2ronda->getId().")";
                         echo "\n\t\t\t\t\t</th>";
                     }
+                    echo "<th><a href='index.php?action=aendern&area=rondateilnehmer&id=".$id."'><button>Jury ändern</button></a></th>";
                     ?>
-                    <th></th>
                     <th>Druchschnitt</th>
                 </thead>
                 <?php

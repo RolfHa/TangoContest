@@ -147,4 +147,28 @@ class Jury2ronda {
         $success = mysqli_query($db, $sql);
         return $success;
     }
+
+
+    public static function vorigeJury($id)    {
+        $dieseRonda=Ronda::getById($id);
+        $rondaId=Ronda::getRondaIdByStufeIdAndKategorieId($dieseRonda->getKategorie_id(),$dieseRonda->getStufe_id());
+        for($i=0; $i<count($rondaId);$i++){
+            if($rondaId[$i]==$id and $i>0){
+                $success=1;
+                //alte jury löschen
+                foreach (Jury2ronda::getByRondaId($id) as $jury2ronda){
+                    $success=Jury2ronda::delete($jury2ronda->getId());
+                }
+                if ($success==1){
+                    // jury aus vorheriger Runde übernehmen
+                    foreach (Jury2ronda::getByRondaId($rondaId[$i-1]) as $jury2ronda){
+                        $jury2ronda->setRondaId($id);
+                        $success = Jury2ronda::save($jury2ronda);
+                    }
+                }
+                else { echo "alte Jury kann nicht gelöscht werden, wahrscheinlich sind schon Punkte vorhanden"; }
+            }
+        }
+    }
+
 }
