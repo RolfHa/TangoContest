@@ -168,6 +168,11 @@ class Tanzpaar {
         $db = DB::connect();
         $sql = "SELECT * FROM tanzpaar WHERE ID=$id";
         $result = mysqli_query($db, $sql);
+        global $optionZeigeSQL;
+        if ($optionZeigeSQL==1){
+            echo "<br>".$sql;
+        }
+        
         $row = mysqli_fetch_assoc($result);
         $teilnehmer1 = Teilnehmer::getById($row['teilnehmer1_id']);
         $teilnehmer2 = Teilnehmer::getById($row['teilnehmer2_id']);
@@ -194,6 +199,11 @@ class Tanzpaar {
         $db = DB::connect();
         $sql = "SELECT * FROM tanzpaar order by startnummer;";
         $result = mysqli_query($db, $sql);
+        global $optionZeigeSQL;
+        if ($optionZeigeSQL==1){
+            echo "<br>".$sql;
+        }
+        
         $tanzpaar = array();
         $i=0;
         while ($row = mysqli_fetch_assoc($result)) {
@@ -226,6 +236,11 @@ class Tanzpaar {
         $sql = "DELETE FROM tanzpaar WHERE id = $id";
         echo $sql;
         $success = mysqli_query($db, $sql);
+        global $optionZeigeSQL;
+        if ($optionZeigeSQL==1){
+            echo "<br>".$sql;
+        }
+        
         return $success;
     }
 
@@ -235,6 +250,11 @@ class Tanzpaar {
         $db = DB::connect();
         $sql = "SELECT * FROM tanzpaar WHERE teilnehmer1_id = $id or teilnehmer2_id = $id";
         $result = mysqli_query($db, $sql);
+        global $optionZeigeSQL;
+        if ($optionZeigeSQL==1){
+            echo "<br>".$sql;
+        }
+        
         $resultNo = mysqli_num_rows($result);
         return $resultNo;
     }
@@ -252,6 +272,11 @@ class Tanzpaar {
                         '$tanzpaar->bezahldatum', 
                         $tanzpaar->bezahlart_id)";
         mysqli_query($db, $sql);
+        global $optionZeigeSQL;
+        if ($optionZeigeSQL==1){
+            echo "<br>".$sql;
+        }
+        
         $id = mysqli_insert_id($db); //gibt die eingetragen ID zurück
         $tanzpaar->setId($id);
         return $tanzpaar;
@@ -271,6 +296,11 @@ class Tanzpaar {
                 WHERE id = '".$tanzpaar->getId()."'
         ";
         $success = mysqli_query($db, $sql);
+        global $optionZeigeSQL;
+        if ($optionZeigeSQL==1){
+            echo "<br>".$sql;
+        }
+        
         return $success;
     }
 

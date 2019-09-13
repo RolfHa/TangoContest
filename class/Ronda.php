@@ -59,6 +59,11 @@ class Ronda {
         $db = DB::connect();
         $sql = "SELECT * FROM ronda WHERE id=$id;";
         $result = mysqli_query($db, $sql);
+        global $optionZeigeSQL;
+        if ($optionZeigeSQL==1){
+            echo "<br>".$sql;
+        }
+        
         $row = mysqli_fetch_assoc($result);
         $kategorie = Kategorie::getById($row['kategorie_id']);
         $stufe = Stufe::getById($row['stufe_id']);
@@ -83,6 +88,11 @@ class Ronda {
                 order by kategorie_id, stufe_id, ronda
                 ;";
         $result = mysqli_query($db, $sql);
+        global $optionZeigeSQL;
+        if ($optionZeigeSQL==1){
+            echo "<br>".$sql;
+        }
+        
         $ronda = array();
         $i=0;
         while ($row = mysqli_fetch_assoc($result)) {
@@ -103,6 +113,11 @@ class Ronda {
         $db = DB::connect();
         $sql = "SELECT id FROM ronda WHERE kategorie_id=$kategorie_id AND stufe_id = $stufe_id order by id";
         $result = mysqli_query($db, $sql);
+        global $optionZeigeSQL;
+        if ($optionZeigeSQL==1){
+            echo "<br>".$sql;
+        }
+        
         $rondaId = array();
         while ($row = mysqli_fetch_assoc($result))
         {
@@ -116,6 +131,11 @@ class Ronda {
         $db = DB::connect();
         $sql = "SELECT * FROM ronda WHERE kategorie_id=$kategorie_id";
         $result = mysqli_query($db, $sql);
+        global $optionZeigeSQL;
+        if ($optionZeigeSQL==1){
+            echo "<br>".$sql;
+        }
+        
         $ronda = array();
         $i=0;
         while ($row = mysqli_fetch_assoc($result)) {
@@ -157,8 +177,30 @@ class Ronda {
             }
             $sql = "DELETE FROM ronda WHERE id = $id";
             $success = mysqli_query($db, $sql);
+        global $optionZeigeSQL;
+        if ($optionZeigeSQL==1){
+            echo "<br>".$sql;
+        }
+        
             return $success;
         }
+    }
+
+    public static function change($ronda){
+        $db = DB::connect();
+        $sql = "Update ronda SET 
+        kategorie_id = '". $ronda->getKategorie_id()."' , 
+        stufe_id = '". $ronda->getStufe_id()."' ,
+        ronda = '". $ronda->getRonda()."'
+        WHERE id = '".$ronda->getId()."'
+        ";
+        mysqli_query($db, $sql);
+        global $optionZeigeSQL;
+        if ($optionZeigeSQL==1){
+            echo "<br>".$sql;
+        }
+        
+        //echo "<br>".$sql;
     }
 
     public static function save($ronda){
@@ -168,6 +210,11 @@ class Ronda {
                         '$ronda->stufe_id', 
                         '$ronda->ronda');";
         mysqli_query($db, $sql);
+        global $optionZeigeSQL;
+        if ($optionZeigeSQL==1){
+            echo "<br>".$sql;
+        }
+        
         //echo "<br>".$sql;
         $id = mysqli_insert_id($db); //gibt die eingetragen ID zurück
         $ronda->setId($id);
@@ -195,11 +242,16 @@ class Ronda {
     }
 
     public static function neuanlegen($kategorie_id,$stufe_id){
+        //nächste ronda nr ermitteln
         $ronda=Ronda::getRondaIdByStufeIdAndKategorieId($kategorie_id,$stufe_id); // id list aller rondas in dem bereich
         $ronda=end($ronda); // letzte id
-        $ronda=Ronda::getById($ronda); // ronda objekt
-        $ronda=$ronda->getRonda(); // ronda nummer
-        $ronda++; // +1
+        echo "ronda:".$ronda;
+        if($ronda!=null){
+            $ronda=Ronda::getById($ronda); // ronda objekt
+            $ronda=$ronda->getRonda(); // ronda nummer
+            $ronda++; // +1
+        }
+        else {$ronda=1;}
         $ronda=new Ronda($kategorie_id,'dummykat',$stufe_id,'dummystufe',$ronda,'');
         Ronda::save($ronda);
     }

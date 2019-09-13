@@ -1,23 +1,42 @@
 
 
 <table border="0" width="80%">
-    <tr>
-        <td colspan="2"  style='border: 0px; text-align: right'>
+    <thead>
+        <th colspan="4" style='border: 0px; text-align: center'>
             <h1>
             <?php
             $ronda=Ronda::getById($id);
             echo $ronda->getKategorie()->getKategorie()." ".$ronda->getStufe()->getStufe()." Ronda ".$ronda->getRonda();
             $rondaInNextStufe=Ronda::rondaInNextStufe($ronda);
-
             ?>
             </h1>
-        </td>
-        <td style="border: 0px;text-align: center">
-            <a href='index.php?action=aendern&area=rondapunkte&id=<?php echo $id; ?>'><button>zur Punkteeingabe</button></a>
-        </td>
-        <td style="border: 0px;text-align: center">
-            <a href='index.php?action=loeschen&area=ronda&id=<?php echo $id; ?>'><button>Ronda löschen</button></a>
-            <br><div style="font-size: x-small"> (nur möglich wenn Tanzpaare und Jury leer)</div>
+        </th>
+    </thead>
+    <tr>
+        <td colspan="4">
+            <table border="0" width="100%">
+                <thead>
+                    <td width="50%" style="border: 0px">
+                        Rondas:
+                        <?php
+                        foreach (Ronda::getRondaIdByStufeIdAndKategorieId($ronda->getKategorie_id(),$ronda->getStufe_id())as $rondaId){
+                            $rondaliste=Ronda::getById($rondaId);
+                            echo "<a href='index.php?action=aendern&area=rondateilnehmer&id=".$rondaliste->getId()."'>";
+                            echo "<button";
+                            if ($rondaliste->getId()==$ronda->getId()){echo " disabled ";}
+                            echo ">&nbsp;&nbsp;".$rondaliste->getRonda()."&nbsp;&nbsp;</button></a>";
+                        }
+                        ?>
+                    </td>
+                    <td style="border: 0px;text-align: center">
+                        <a href='index.php?action=aendern&area=rondapunkte&id=<?php echo $id; ?>'><button>zur Punkteeingabe</button></a>
+                    </td>
+                    <td style="border: 0px;text-align: right">
+                        <a href='index.php?action=loeschen&area=ronda&id=<?php echo $id; ?>'><button>Ronda löschen</button></a>
+                        <br><div style="font-size: x-small"> (nur möglich wenn keine Punkte vergeben sind)</div>
+                    </td>
+                </tr>
+            </table>
         </td>
     </tr>
     <tr>

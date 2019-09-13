@@ -104,6 +104,11 @@ class Teilnehmer implements Saveable{
         $db = DB::connect();
         $sql = "SELECT * FROM teilnehmer WHERE id=$id";
         $result = mysqli_query($db, $sql);
+        global $optionZeigeSQL;
+        if ($optionZeigeSQL==1){
+            echo "<br>".$sql;
+        }
+        
         $row = mysqli_fetch_assoc($result);
         $teilnehmer = new Teilnehmer(
                 $row['vorname'], 
@@ -123,6 +128,11 @@ class Teilnehmer implements Saveable{
         $db = DB::connect();
         $sql = "SELECT * FROM teilnehmer ORDER by nachname";
         $result = mysqli_query($db, $sql);
+        global $optionZeigeSQL;
+        if ($optionZeigeSQL==1){
+            echo "<br>".$sql;
+        }
+        
         $teilnehmer = array();
         $i=0;
         while ($row = mysqli_fetch_assoc($result)) {
@@ -147,6 +157,11 @@ class Teilnehmer implements Saveable{
         $db = DB::connect();
         $sql = "DELETE FROM teilnehmer WHERE id = $id";
         $success = mysqli_query($db, $sql);
+        global $optionZeigeSQL;
+        if ($optionZeigeSQL==1){
+            echo "<br>".$sql;
+        }
+        
         return $success;
     }
 
@@ -162,6 +177,11 @@ class Teilnehmer implements Saveable{
                         '$member->kuenstlername',
                         '$member->geburtsname')";
         mysqli_query($db, $sql);
+        global $optionZeigeSQL;
+        if ($optionZeigeSQL==1){
+            echo "<br>".$sql;
+        }
+        
         $id = mysqli_insert_id($db); //gibt die eingetragen ID zurück
         $member->setId($id);
         return $member;
@@ -180,6 +200,11 @@ class Teilnehmer implements Saveable{
         WHERE id = '".$teilnehmer->getId()."'
         ";
         $success = mysqli_query($db, $sql);
+        global $optionZeigeSQL;
+        if ($optionZeigeSQL==1){
+            echo "<br>".$sql;
+        }
+        
         return $success;
     }
 }

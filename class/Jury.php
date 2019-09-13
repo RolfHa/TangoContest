@@ -39,6 +39,11 @@ class Jury implements Saveable {
         $db = DB::connect();
         $sql = "SELECT * FROM jury WHERE id=$id";
         $result = mysqli_query($db, $sql);
+        global $optionZeigeSQL;
+        if ($optionZeigeSQL==1){
+            echo "<br>".$sql;
+        }
+        
         $row = mysqli_fetch_assoc($result);
         
         $jury = new Jury( 
@@ -53,6 +58,11 @@ class Jury implements Saveable {
         $db = DB::connect();
         $sql = "SELECT * FROM jury";
         $result = mysqli_query($db, $sql);
+        global $optionZeigeSQL;
+        if ($optionZeigeSQL==1){
+            echo "<br>".$sql;
+        }
+        
         $jury = array();
         $i=0;
         while($row = mysqli_fetch_assoc($result)){
@@ -71,6 +81,11 @@ class Jury implements Saveable {
         $sql = "INSERT INTO jury (vorname, nachname)
                 VALUES ('$jury->vorname', '$jury->nachname')";
         mysqli_query($db, $sql);
+        global $optionZeigeSQL;
+        if ($optionZeigeSQL==1){
+            echo "<br>".$sql;
+        }
+        
         $id = mysqli_insert_id($db); //gibt die eingetragen ID zurück
         $jury->setId($id);
         return $jury;
@@ -84,6 +99,11 @@ class Jury implements Saveable {
         WHERE id = '".$jury->getId()."'
         ";
         $success = mysqli_query($db, $sql);
+        global $optionZeigeSQL;
+        if ($optionZeigeSQL==1){
+            echo "<br>".$sql;
+        }
+        
         return $success;
     }
 
@@ -94,6 +114,11 @@ class Jury implements Saveable {
         //    Jury2ronda::deleteByJuryId($id);
             $sql = "DELETE FROM jury WHERE id = $id";
             $success = mysqli_query($db, $sql);
+        global $optionZeigeSQL;
+        if ($optionZeigeSQL==1){
+            echo "<br>".$sql;
+        }
+        
             return $success;
         //}
         //return false;

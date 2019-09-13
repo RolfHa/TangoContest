@@ -4,6 +4,18 @@ include_once  'config.php';
 //alle andern klassen laden (dateien müssen den klassennamen haben und im Verzeichnis class liegen)
 spl_autoload_register(function ($class_name) {include "class" . DIRECTORY_SEPARATOR . $class_name . '.php';});
 
+// einlesen der optionen
+$nobasicview=0;
+$optionStartbild=Optionen::standard('zeigeStartbild',1);
+$optionLogo=Optionen::standard('zeigeLogo',1);
+$optionZeigeREQUEST=Optionen::standard('zeigeREQUEST',0);
+$optionZeigeSQL=Optionen::standard('zeigeSQL',0);
+$optionStufeUeberspringen=Optionen::standard('StufeUeberspringen',0);
+$optionAlleKommenWeiter=Optionen::standard('alleKommenWeiter',0);
+$optionLeereRondaZulassen=Optionen::standard('leereRondaZulassen',0);
+
+
+// standartübergabe auslesen
 $area = '';
 $action = '';
 $view = '';
@@ -16,11 +28,8 @@ if (isset($_REQUEST['action'])){
 if (isset($_REQUEST['id'])){
     $id = (int)$_REQUEST['id'];
 }
-$nobasicview=0;
 
-
-
-
+// Auswertung von action und area
 switch ($action){
     case 'listeanzeigen':
         $view = $area . 'liste';
@@ -153,16 +162,22 @@ switch ($action){
                 break;
             case 'ronda':
                 $tanzpaar2kategorieAll=Tanzpaar2ronda::generiereStufe($_REQUEST['kategorie_id'],$_REQUEST['stufe_id'],'anlegen');
-                $area = 'ronda';
-                $view = 'gewinnerliste';
+                //$area = 'ronda';
+                if ($tanzpaar2kategorieAll!=null) {$view = 'gewinnerliste';}
+                else {echo "Keine Daten vorhanden"; $view = 'rondaliste';}
                 break;
             case 'gewinner':
                 $tanzpaar2kategorieAll=Tanzpaar2ronda::generiereStufe($_REQUEST['kategorie_id'],$_REQUEST['stufe_id'],'nurAnsicht');
-                $view = 'gewinnerliste';
+                if ($tanzpaar2kategorieAll!=null) {$view = 'gewinnerliste';}
+                else {echo "Keine Daten vorhanden"; $view = 'rondaliste';}
                 break;
             case 'vorigejury':
                 Jury2ronda::vorigeJury($id);
                 $view = 'rondateilnehmeraendern';
+                break;
+            case 'stufeueberspringen':
+                Stufe::ueberspringen($_REQUEST['kategorie_id'],$_REQUEST['stufe_id']);
+                $view = 'rondaliste';
                 break;
         }
         break;
@@ -235,6 +250,30 @@ switch ($action){
 if ($nobasicview!=1){include 'view/basicview.php';}
 
 
+// zur Fehleranalyse
+if ($optionZeigeREQUEST==1){
+    // Übergabewerte für testzwecke ausgeben
+    echo '<br><pre>';
+    print_r($_REQUEST);
+    echo '</pre>';
+}
+
+
+// erweiterte Fehleranalyse
+/*
+if ($optionZeigeSQL==1){
+    // Übergabewerte für testzwecke ausgeben
+    echo "<pre>anfang-";
+    echo "<br>id: ";
+    print_r($id);
+    if (isset($sql)){ echo "<br>sql: ";print_r($sql);}
+    if (isset($result)){ echo "<br>result: ";print_r($result);}
+    if (isset($row)){ echo "<br>row: ";print_r($row);}
+    echo "<br>-ende</pre>";
+}
+*/
+
+
 
 /*
 
@@ -257,23 +296,6 @@ if (isset($_REQUEST['bezahldatum'])){    $bezahldatum = (int)$_REQUEST['bezahlda
 if (isset($_REQUEST['bezahlart'])){      $bezahlart = (int)$_REQUEST['bezahlart'];}
 if (isset($_REQUEST['reihenfolge'])){    $reihenfolge = (int)$_REQUEST['reihenfolge'];}
 
-*/
-
-// Übergabewerte für testzwecke ausgeben
-/*
-echo '<br><br><br><pre>';
-print_r($_REQUEST);
-echo '</pre>';
-*/
-
-// erweiterte Test
-/*
-echo "<pre>anfang-";
-print_r($id);
-print_r($sql);
-print_r($result);
-print_r($row);
-echo "-ende</pre>";
 */
 
 ?>

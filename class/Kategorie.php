@@ -60,7 +60,12 @@ class Kategorie {
         $db = DB::connect();
         $sql = "INSERT INTO kategorie (kategorie.kategorie)
                 VALUES ('$kategorie->kategorie')";
-        mysqli_query($db,$sql);
+        mysqli_query($db, $sql);
+        global $optionZeigeSQL;
+        if ($optionZeigeSQL==1){
+            echo "<br>".$sql;
+        }
+        
         $id = mysqli_insert_id($db); //gibt die eingetragen ID zurück
         $kategorie->setId($id);
         // anzalquali anlegen

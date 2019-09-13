@@ -47,8 +47,7 @@
                     </thead>
                 </table>
             </td>
-            <td style="border: 10px; text-align: right" align="right" valign="top">
-                <img src='botc-logo.png' height='100'>
+            <td style="border: 10px; text-align: right" align="right" valign="top"><a href="index.php"><?php if ($optionLogo==1){echo "<img src='botc-logo.png' height='100'>"; } ?></a>
             </td>
         </tr>
     </table>
@@ -59,7 +58,11 @@
 
 <?php
 if ($view !=""){    include 'view/' . $view . '.php';}
-else {echo '<br><br><ul><ul><ul><ul><ul><img src="tango.jpg">';}
+else {
+    if ($optionStartbild==1){
+        echo '<br><br><ul><ul><ul><ul><ul><img src="tango.jpg">';
+    }
+}
 ?>
 
 </body>

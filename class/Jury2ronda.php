@@ -68,6 +68,11 @@ class Jury2ronda {
         $db = DB::connect();
         $sql = "SELECT * FROM jury2ronda WHERE id=$id";
         $result = mysqli_query($db, $sql);
+        global $optionZeigeSQL;
+        if ($optionZeigeSQL==1){
+            echo "<br>".$sql;
+        }
+        
         $row = mysqli_fetch_assoc($result);
         $jury = Jury::getById($row['jury_id']);
         $ronda = Ronda::getById($row['ronda_id']);
@@ -86,6 +91,11 @@ class Jury2ronda {
         $db = DB::connect();
         $sql = "SELECT * FROM jury2ronda order by sitzplatz;";
         $result = mysqli_query($db, $sql);
+        global $optionZeigeSQL;
+        if ($optionZeigeSQL==1){
+            echo "<br>".$sql;
+        }
+        
         $jury2ronda = array();
         $i=0;
         while ($row = mysqli_fetch_assoc($result)) {
@@ -109,6 +119,11 @@ class Jury2ronda {
         $db = DB::connect();
         $sql = "SELECT * FROM jury2ronda where ronda_id= $rondaId order by sitzplatz;";
         $result = mysqli_query($db, $sql);
+        global $optionZeigeSQL;
+        if ($optionZeigeSQL==1){
+            echo "<br>".$sql;
+        }
+        
         $jury2ronda = array();
         $i=0;
         while ($row = mysqli_fetch_assoc($result)) {
@@ -124,6 +139,11 @@ class Jury2ronda {
         $db = DB::connect();
         $sql = "DELETE FROM jury2Ronda WHERE jury_id = $id";
         $success = mysqli_query($db, $sql);
+        global $optionZeigeSQL;
+        if ($optionZeigeSQL==1){
+            echo "<br>".$sql;
+        }
+        
         return $success;
 
     }
@@ -135,6 +155,11 @@ class Jury2ronda {
                         '$jury2ronda->ronda_id', 
                         '$jury2ronda->sitzplatz')";
         Mysqli_query($db, $sql);
+        global $optionZeigeSQL;
+        if ($optionZeigeSQL==1){
+            echo "<br>".$sql;
+        }
+        
         $id = mysqli_insert_id($db); //gibt die eingetragen ID zurück
         $jury2ronda->setId($id);
         return $jury2ronda;
@@ -145,6 +170,11 @@ class Jury2ronda {
         $sql = "DELETE FROM jury2ronda WHERE id = $id";
         //echo "test".$sql;
         $success = mysqli_query($db, $sql);
+        global $optionZeigeSQL;
+        if ($optionZeigeSQL==1){
+            echo "<br>".$sql;
+        }
+        
         return $success;
     }
 

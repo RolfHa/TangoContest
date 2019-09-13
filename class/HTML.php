@@ -16,7 +16,7 @@ class HTML{
         foreach ($arr as $wert)	{
             echo '<option value="'.$wert->getId().'"';
             if ($select==$wert->getId()){echo ' selected ';}
-            echo '>'.$wert->getVorname().' '.$wert->getNachname().'</option>';
+            echo '>'.$wert->getNachname().', '.$wert->getVorname().'</option>';
         }
         echo '</select>';
     }

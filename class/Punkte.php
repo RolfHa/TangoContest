@@ -69,8 +69,12 @@ class Punkte {
         $db = DB::connect();
         $sql = "SELECT * FROM punkte WHERE ID=$id";
         $result = mysqli_query($db, $sql);
+        global $optionZeigeSQL;
+        if ($optionZeigeSQL==1){
+            echo "<br>".$sql;
+        }
+
         $row = mysqli_fetch_assoc($result);
-        
         $jury = Jury::getById($row['jury_id']);
         $tanzpaar2ronda = Tanzpaar2ronda::getById($row['tanzpaar2ronda_id']);
         
@@ -89,6 +93,11 @@ class Punkte {
         $db = DB::connect();
         $sql = "SELECT * from punkte;";
         $result = mysqli_query($db, $sql);
+        global $optionZeigeSQL;
+        if ($optionZeigeSQL==1){
+            echo "<br>".$sql;
+        }
+
         $punkte = array();
         $i=0;
         while ($row = mysqli_fetch_assoc($result)) {
@@ -112,6 +121,11 @@ class Punkte {
         $db = DB::connect();
         $sql = "SELECT * FROM punkte WHERE jury_id = $id";
         $result = mysqli_query($db, $sql);
+        global $optionZeigeSQL;
+        if ($optionZeigeSQL==1){
+            echo "<br>".$sql;
+        }
+
         $punkte = array();
         $i=0;
         while ($row = mysqli_fetch_assoc($result)) {
@@ -135,6 +149,11 @@ class Punkte {
         $db = DB::connect();
         $sql = "SELECT * FROM info_punktetabelle WHERE ronda_id = $id";
         $result = mysqli_query($db, $sql);
+        global $optionZeigeSQL;
+        if ($optionZeigeSQL==1){
+            echo "<br>".$sql;
+        }
+
         $punkte = array();
         $i=0;
         while ($row = mysqli_fetch_assoc($result)) {
@@ -157,6 +176,11 @@ class Punkte {
         $db = DB::connect();
         $sql = "SELECT * FROM info_punktetabelle WHERE kategorie_id=$kategorie_id and stufe_id=$stufe_id";
         $result = mysqli_query($db, $sql);
+        global $optionZeigeSQL;
+        if ($optionZeigeSQL==1){
+            echo "<br>".$sql;
+        }
+
         $punkte = array();
         $i=0;
         while ($row = mysqli_fetch_assoc($result)) {
@@ -183,6 +207,11 @@ class Punkte {
         while ($row = mysqli_fetch_assoc($result)) {
             $menge=$menge+$row['punkte'];
         }
+        global $optionZeigeSQL;
+        if ($optionZeigeSQL==1){
+            echo "<br>".$sql;
+        }
+
         return $menge;
     }
 
@@ -197,6 +226,11 @@ class Punkte {
         ";
         //echo "<br>".$sql;
         $success = mysqli_query($db, $sql);
+        global $optionZeigeSQL;
+        if ($optionZeigeSQL==1){
+            echo "<br>".$sql;
+        }
+
         return $success;
     }
 
@@ -207,7 +241,12 @@ class Punkte {
                         '$punkte->tanzpaar2ronda_id', 
                         $punkte->punkte)";
         //echo "<br>".$sql;
-        Mysqli_query($db,$sql);
+        Mysqli_query($db, $sql);
+        global $optionZeigeSQL;
+        if ($optionZeigeSQL==1){
+            echo "<br>".$sql;
+        }
+        
         $id = mysqli_insert_id($db); //gibt die eingetragen ID zurück
         $punkte->setId($id);
         return $punkte;
@@ -235,12 +274,12 @@ class Punkte {
                 // Punktewertung Ändern:
                 if ($punkteNeu['punkte_id']!=''){
                     // echo "update";
-                    $punkte=new Punkte($punkteNeu['jury_id'],'dummy',$_REQUEST['tanzpaar2ronda'],'dummy',$wert,$punkteNeu['punkte_id']);
+                    $punkte=new Punkte($punkteNeu['jury_id'],'dummy',$punkteNeu['tanzpaar2ronda'],'dummy',$wert,$punkteNeu['punkte_id']);
                     $success = Punkte::change($punkte);
                 }
                 // Punktewertung neu anlegen
                 else {
-                    $punkte=new Punkte($punkteNeu['jury_id'],'dummy',$_REQUEST['tanzpaar2ronda'],'dummy',$wert);
+                    $punkte=new Punkte($punkteNeu['jury_id'],'dummy',$punkteNeu['tanzpaar2ronda'],'dummy',$wert);
                     $success = Punkte::save($punkte);
                 }
             }

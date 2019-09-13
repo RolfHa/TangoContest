@@ -7,45 +7,69 @@ $rondaAll=Ronda::getRondaIdByStufeIdAndKategorieId($_REQUEST['kategorie_id'],$_R
 
 foreach ($rondaAll as $rondaId) {
     $ronda=Ronda::getById($rondaId);
-    echo"<table width='100%  ' border='0' style='page-break-before:always'><tr><td>";
-    echo"<table width='100%  ' border='0' ><tr><td style='text-align: center'><h1> Einlass- / Ansageliste </h1>";
-    echo "<h3>Berlin Open Tango Contest ".date("Y", time())."</h3> <h4> Category:".$ronda->getKategorie()->getKategorie();
+    echo"<table width='100%' border='0' style='page-break-before:always'>";
+    echo "<tr><td style='text-align: center'><h1> entrancelist </h1>";
+    echo "<h3>Berlin Open Tango Contest ".date("Y", time())."</h3>";
+    echo "<h4> Category:".$ronda->getKategorie()->getKategorie();
     echo "<br>" . $ronda->getStufe()->getStufe() . " Ronda: " . $ronda->getRonda()."</h4></td>";
     echo "<td align='right'><img src='botc-logo.png' height='100'></td></tr>";
     echo "<tr><td><br>";
-    echo "<table border='3' cellpadding='10' style='border-collapse: collapse'>";
+    echo "<table width='100%' border='3' cellpadding='10' style='border-collapse: collapse'>";
     echo "<thead><th>start</th><th>number</th><th>partner 1</th><th>guide</th><th>partner 2</th></thead>";
     $tanzpaar2rondaAll = Tanzpaar2ronda::getByRondaId($rondaId);
     foreach ($tanzpaar2rondaAll as $tanzpaar2ronda) {
+
+        //fülle teilnehmer 1
+        $teilnehmer1=$tanzpaar2ronda->getTanzpaar2kategorie()->getTanzpaar()->getTeilnehmer1()->getVorname();
+        $teilnehmer1.=" ".$tanzpaar2ronda->getTanzpaar2kategorie()->getTanzpaar()->getTeilnehmer1()->getNachname();
+        if ($tanzpaar2ronda->getTanzpaar2kategorie()->getTanzpaar()->getTeilnehmer1()->getKuenstlername()!=""){
+            $teilnehmer1.=" (".$tanzpaar2ronda->getTanzpaar2kategorie()->getTanzpaar()->getTeilnehmer1()->getKuenstlername().")";
+        }
+        if ($tanzpaar2ronda->getTanzpaar2kategorie()->getTanzpaar()->getTeilnehmer1()->getGeburtsname()!=""){
+            $teilnehmer1.=" (".$tanzpaar2ronda->getTanzpaar2kategorie()->getTanzpaar()->getTeilnehmer1()->getGeburtsname().")";
+        }
+        $teilnehmer1.="<br>from: ".$tanzpaar2ronda->getTanzpaar2kategorie()->getTanzpaar()->getTeilnehmer1()->getWohnort();
+        $teilnehmer1.=" / ".$tanzpaar2ronda->getTanzpaar2kategorie()->getTanzpaar()->getTeilnehmer1()->getWohnland();
+
+        //fülle teilnehmer 2
+        $teilnehmer2=$tanzpaar2ronda->getTanzpaar2kategorie()->getTanzpaar()->getTeilnehmer2()->getVorname();
+        $teilnehmer2.=" ".$tanzpaar2ronda->getTanzpaar2kategorie()->getTanzpaar()->getTeilnehmer2()->getNachname();
+        if ($tanzpaar2ronda->getTanzpaar2kategorie()->getTanzpaar()->getTeilnehmer2()->getKuenstlername()!=""){
+            $teilnehmer2.=" (".$tanzpaar2ronda->getTanzpaar2kategorie()->getTanzpaar()->getTeilnehmer2()->getKuenstlername().")";
+        }
+        if ($tanzpaar2ronda->getTanzpaar2kategorie()->getTanzpaar()->getTeilnehmer2()->getGeburtsname()!=""){
+            $teilnehmer2.=" (".$tanzpaar2ronda->getTanzpaar2kategorie()->getTanzpaar()->getTeilnehmer2()->getGeburtsname().")";
+        }
+        $teilnehmer2.="<br>from: ".$tanzpaar2ronda->getTanzpaar2kategorie()->getTanzpaar()->getTeilnehmer2()->getWohnort();
+        $teilnehmer2.=" / ".$tanzpaar2ronda->getTanzpaar2kategorie()->getTanzpaar()->getTeilnehmer2()->getWohnland();
+
+        //fülle Tabelle
         echo "<tr><td>";
         echo $tanzpaar2ronda->getReihenfolge();
         echo "</td><td>";
         echo $tanzpaar2ronda->getTanzpaar2kategorie()->getTanzpaar()->getStartnummer();
         echo "</td><td>";
-        echo $tanzpaar2ronda->getTanzpaar2kategorie()->getTanzpaar()->getTeilnehmer1()->getVorname();
-        echo " ".$tanzpaar2ronda->getTanzpaar2kategorie()->getTanzpaar()->getTeilnehmer1()->getNachname();
-        if ($tanzpaar2ronda->getTanzpaar2kategorie()->getTanzpaar()->getTeilnehmer1()->getKuenstlername()!=""){
-        echo " (".$tanzpaar2ronda->getTanzpaar2kategorie()->getTanzpaar()->getTeilnehmer1()->getKuenstlername().")";
+        // der folgende soll immer zuerst angezeigt werden
+        if ($tanzpaar2ronda->getTanzpaar2kategorie()->getTanzpaar()->getFuehrungsfolge()==2){
+            // der folgende
+            echo $teilnehmer1;
+            echo "</td><td>";
+            echo $tanzpaar2ronda->getTanzpaar2kategorie()->getTanzpaar()->getTeilnehmer1()->getGeschlecht();
+            echo "&nbsp;&rArr;&nbsp;";
+            echo $tanzpaar2ronda->getTanzpaar2kategorie()->getTanzpaar()->getTeilnehmer2()->getGeschlecht();
+            echo "</td><td>";
+            echo $teilnehmer2;
         }
-        if ($tanzpaar2ronda->getTanzpaar2kategorie()->getTanzpaar()->getTeilnehmer1()->getGeburtsname()!=""){
-            echo " (".$tanzpaar2ronda->getTanzpaar2kategorie()->getTanzpaar()->getTeilnehmer1()->getGeburtsname().")";
+        else{
+            // der führende
+            echo $teilnehmer2;
+            echo "</td><td>";
+            echo $tanzpaar2ronda->getTanzpaar2kategorie()->getTanzpaar()->getTeilnehmer2()->getGeschlecht();
+            echo "&nbsp;&rArr;&nbsp;";
+            echo $tanzpaar2ronda->getTanzpaar2kategorie()->getTanzpaar()->getTeilnehmer1()->getGeschlecht();
+            echo "</td><td>";
+            echo $teilnehmer1;
         }
-        echo "<br>from: ".$tanzpaar2ronda->getTanzpaar2kategorie()->getTanzpaar()->getTeilnehmer1()->getWohnort();
-        echo " / ".$tanzpaar2ronda->getTanzpaar2kategorie()->getTanzpaar()->getTeilnehmer1()->getWohnland();
-        echo "</td><td>";
-        if ($tanzpaar2ronda->getTanzpaar2kategorie()->getTanzpaar()->getFuehrungsfolge()==1){echo "<--";}
-        else {echo "-->";}
-        echo "</td><td>";
-        echo $tanzpaar2ronda->getTanzpaar2kategorie()->getTanzpaar()->getTeilnehmer2()->getVorname();
-        echo " ".$tanzpaar2ronda->getTanzpaar2kategorie()->getTanzpaar()->getTeilnehmer2()->getNachname();
-        if ($tanzpaar2ronda->getTanzpaar2kategorie()->getTanzpaar()->getTeilnehmer2()->getKuenstlername()!=""){
-            echo " (".$tanzpaar2ronda->getTanzpaar2kategorie()->getTanzpaar()->getTeilnehmer2()->getKuenstlername().")";
-        }
-        if ($tanzpaar2ronda->getTanzpaar2kategorie()->getTanzpaar()->getTeilnehmer2()->getGeburtsname()!=""){
-            echo " (".$tanzpaar2ronda->getTanzpaar2kategorie()->getTanzpaar()->getTeilnehmer2()->getGeburtsname().")";
-        }
-        echo "<br>from: ".$tanzpaar2ronda->getTanzpaar2kategorie()->getTanzpaar()->getTeilnehmer2()->getWohnort();
-        echo " / ".$tanzpaar2ronda->getTanzpaar2kategorie()->getTanzpaar()->getTeilnehmer2()->getWohnland();
         echo "</td></tr>";
     }
     echo "</table>";

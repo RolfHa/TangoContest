@@ -75,6 +75,11 @@ class Tanzpaar2kategorie {
         $db = DB::connect();
         $sql = "SELECT * FROM tanzpaar2kategorie WHERE id=$id";
         $result = mysqli_query($db, $sql);
+        global $optionZeigeSQL;
+        if ($optionZeigeSQL==1){
+            echo "<br>".$sql;
+        }
+        
         //echo "<br>".$sql;
         $row = mysqli_fetch_assoc($result);
         $tanzpaar = Tanzpaar::getById($row['tanzpaar_id']);
@@ -93,6 +98,11 @@ class Tanzpaar2kategorie {
         $db = DB::connect();
         $sql = "SELECT * FROM tanzpaar2kategorie;";
         $result = mysqli_query($db, $sql);
+        global $optionZeigeSQL;
+        if ($optionZeigeSQL==1){
+            echo "<br>".$sql;
+        }
+        
         $tanzpaar2kategorie = array();
         $i=0;
         while ($row = mysqli_fetch_assoc($result)) {
@@ -114,6 +124,11 @@ class Tanzpaar2kategorie {
         $db = DB::connect();
         $sql = "SELECT * FROM tanzpaar2kategorie WHERE kategorie_id=$id order by tanzpaar_id;";
         $result = mysqli_query($db, $sql);
+        global $optionZeigeSQL;
+        if ($optionZeigeSQL==1){
+            echo "<br>".$sql;
+        }
+        
         $tanzpaar2kategorie = array();
         $i=0;
         $kategorie = Kategorie::getById($id); //ist ja immer die selbe
@@ -135,6 +150,11 @@ class Tanzpaar2kategorie {
         $db = DB::connect();
         $sql = "DELETE FROM tanzpaar2kategorie WHERE id = $id";
         $success = mysqli_query($db, $sql);
+        global $optionZeigeSQL;
+        if ($optionZeigeSQL==1){
+            echo "<br>".$sql;
+        }
+        
         return $success;
     }
 
@@ -143,6 +163,11 @@ class Tanzpaar2kategorie {
         $sql = "INSERT INTO tanzpaar2kategorie (tanzpaar_id, kategorie_id)
                 VALUES ($tanzpaar2kategorie->tanzpaar_id, $tanzpaar2kategorie->kategorie_id)";
         mysqli_query($db, $sql);
+        global $optionZeigeSQL;
+        if ($optionZeigeSQL==1){
+            echo "<br>".$sql;
+        }
+        
         $id = mysqli_insert_id($db); //gibt die eingetragen ID zurück
         $tanzpaar2kategorie->setId($id);
         return $tanzpaar2kategorie;

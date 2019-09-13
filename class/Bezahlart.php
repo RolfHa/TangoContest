@@ -30,6 +30,11 @@ class Bezahlart {
         $db = DB::connect();
         $sql = "SELECT * FROM bezahlart WHERE id=$id";
         $result = mysqli_query($db, $sql);
+        global $optionZeigeSQL;
+        if ($optionZeigeSQL==1){
+            echo "<br>".$sql;
+        }
+        
         $row = mysqli_fetch_assoc($result);
 
         $bezahlart = new Bezahlart(
@@ -43,6 +48,11 @@ class Bezahlart {
         $db = DB::connect();
         $sql = "SELECT * FROM bezahlart";
         $result = mysqli_query($db, $sql);
+        global $optionZeigeSQL;
+        if ($optionZeigeSQL==1){
+            echo "<br>".$sql;
+        }
+        
         $bezahlart = array();
         $i=0;
         while ($row = mysqli_fetch_assoc($result)) {
@@ -57,6 +67,11 @@ class Bezahlart {
         $sql = "INSERT INTO bezahlart (bezahlart)
                 VALUES ('$bezahlart->bezahlart')";
         Mysqli_query($db, $sql);
+        global $optionZeigeSQL;
+        if ($optionZeigeSQL==1){
+            echo "<br>".$sql;
+        }
+        
         $bezahlartId = "SELECT id, bezahlart
                         FROM bezahlart
                         WHERE bezahlart LIKE '$bezahlart->bezahlart'";
@@ -74,6 +89,11 @@ class Bezahlart {
         WHERE id = '".$bezahlart->getId()."'
         ";
         $success = mysqli_query($db, $sql);
+        global $optionZeigeSQL;
+        if ($optionZeigeSQL==1){
+            echo "<br>".$sql;
+        }
+        
         return $success;
     }
 
@@ -81,6 +101,11 @@ class Bezahlart {
         $db = DB::connect();
         $sql = "DELETE FROM bezahlart WHERE id = $id";
         $success = mysqli_query($db, $sql);
+        global $optionZeigeSQL;
+        if ($optionZeigeSQL==1){
+            echo "<br>".$sql;
+        }
+        
         return $success;
     }
 

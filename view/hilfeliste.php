@@ -14,7 +14,7 @@
         <th> 1.</th>
         <td> Optionen einstellen</td>
         <td>
-            Kategorien und Stufen anlegen<br>
+            Kategorien und Stufen anlegen (Stufen solten vor den Kategorien angelegt werden für bessere autowerte der Rondas)<br>
             jeweils die maximalen Paare pro Ronda und die weiterkommen pro Stufe einstellen<br>
             Bezahlarten überprüfen
         </td>

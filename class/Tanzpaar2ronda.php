@@ -71,6 +71,11 @@ class Tanzpaar2ronda {
         $db = DB::connect();
         $sql = "SELECT * FROM tanzpaar2ronda WHERE ID=$id";
         $result = mysqli_query($db, $sql);
+        global $optionZeigeSQL;
+        if ($optionZeigeSQL==1){
+            echo "<br>".$sql;
+        }
+        
         $row = mysqli_fetch_assoc($result);
         $tanzpaar2kategorie = Tanzpaar2kategorie::getById($row['tanzpaar2kategorie_id']);
         $ronda = Ronda::getById($row['ronda_id']);
@@ -82,6 +87,11 @@ class Tanzpaar2ronda {
         $db = DB::connect();
         $sql = "SELECT * FROM tanzpaar2ronda order by reihenfolge;";
         $result = mysqli_query($db, $sql);
+        global $optionZeigeSQL;
+        if ($optionZeigeSQL==1){
+            echo "<br>".$sql;
+        }
+        
         $tanzpaar2ronda= array();
         $i=0;
         while ($row = mysqli_fetch_assoc($result)) {
@@ -104,6 +114,11 @@ class Tanzpaar2ronda {
         $db = DB::connect();
         $sql = "SELECT * FROM tanzpaar2ronda WHERE ronda_id = $id order by reihenfolge;" ;
         $result = mysqli_query($db, $sql);
+        global $optionZeigeSQL;
+        if ($optionZeigeSQL==1){
+            echo "<br>".$sql;
+        }
+        
         $tanzpaar2ronda= array();
         $i=0;
         while ($row = mysqli_fetch_assoc($result)) {
@@ -129,6 +144,11 @@ class Tanzpaar2ronda {
                         '$tanzpaar2ronda->ronda_id', 
                         '$tanzpaar2ronda->reihenfolge');";
         Mysqli_query($db, $sql);
+        global $optionZeigeSQL;
+        if ($optionZeigeSQL==1){
+            echo "<br>".$sql;
+        }
+        
         //echo "<br>".$sql;
         $id = mysqli_insert_id($db); //gibt die eingetragen ID zurück
         $tanzpaar2ronda->setId($id);
@@ -138,8 +158,13 @@ class Tanzpaar2ronda {
     public static function delete($id)    {
         $db = DB::connect();
         $sql = "DELETE FROM tanzpaar2ronda WHERE id = $id";
-        echo $sql;
+        //echo $sql;
         $success = mysqli_query($db, $sql);
+        global $optionZeigeSQL;
+        if ($optionZeigeSQL==1){
+            echo "<br>".$sql;
+        }
+        
         return $success;
     }
 
@@ -148,32 +173,35 @@ class Tanzpaar2ronda {
         $anzahlquali=Anzahlquali::getById($kategorie_id,$stufe_id);
         $reihenfolge=1;
         $rondaNr=1;
-        foreach ($tanzpaar2kategorieAll as $tanzpaar2kategorie) {
-            //erzeuge Ronda beim ersten mal
-            if ($tanzpaar2kategorieAll[0]->getId()==$tanzpaar2kategorie->getId()){
-                $ronda=new Ronda($kategorie_id,'dummy',$stufe_id,'dummy',$rondaNr);
-                Ronda::save($ronda);
+        if ($tanzpaar2kategorieAll != null){
+            foreach ($tanzpaar2kategorieAll as $tanzpaar2kategorie) {
+                //erzeuge Ronda beim ersten mal
+                if ($tanzpaar2kategorieAll[0]->getId()==$tanzpaar2kategorie->getId()){
+                    $ronda=new Ronda($kategorie_id,'dummy',$stufe_id,'dummy',$rondaNr);
+                    Ronda::save($ronda);
+                }
+                //erzeuge Ronda wenn der Maxwert erreicht ist
+                if ($reihenfolge>$anzahlquali->getMaxpaare()){
+                    $rondaNr++;
+                    $reihenfolge=1;
+                    $ronda=new Ronda($kategorie_id,'dummy',$stufe_id,'dummy',$rondaNr);
+                    Ronda::save($ronda);
+                }
+                $tanzpaar2ronda= new Tanzpaar2ronda($tanzpaar2kategorie->getId(),'dummy',$ronda->getId(),'dummy',$reihenfolge,);
+                Tanzpaar2ronda::save($tanzpaar2ronda);
+                $reihenfolge++;
+                //echo "<br><pre>";
+                //print_r($tanzpaar2ronda);
             }
-            //erzeuge Ronda wenn der Maxwert erreicht ist
-            if ($reihenfolge>$anzahlquali->getMaxpaare()){
-                $rondaNr++;
-                $reihenfolge=1;
-                $ronda=new Ronda($kategorie_id,'dummy',$stufe_id,'dummy',$rondaNr);
-                Ronda::save($ronda);
-            }
-            $tanzpaar2ronda= new Tanzpaar2ronda($tanzpaar2kategorie->getId(),'dummy',$ronda->getId(),'dummy',$reihenfolge,);
-            Tanzpaar2ronda::save($tanzpaar2ronda);
-            $reihenfolge++;
-            //echo "<pre>";
-            //print_r($tanzpaar2ronda);
         }
-
     }
 
-    public static function generiereStufe($kategorie_id,$stufe_id ,$funktion){
-        //echo "<pre>";
-        $fehler="";
 
+    public static function generiereStufe($kategorie_id,$stufe_id ,$funktion){
+        global $optionLeereRondaZulassen;
+        global $optionAlleKommenWeiter;
+        $fehler="";
+        //echo "<pre>";
 
         //holt  Tanzpaar2Kategorie aus den rondas
         $rondaAllId=Ronda::getRondaIdByStufeIdAndKategorieId($kategorie_id,$stufe_id);
@@ -196,24 +224,27 @@ class Tanzpaar2ronda {
                 if($tanzpaar2kategorie->getId()==$punkte->getTanzpaar2ronda()->getTanzpaar2kategorieId()) {
                     if ($punkte->getPunkte()!=null){
                         $tanzpaarPunkte[]=$punkte->getPunkte();
+                        //echo $punkte->getPunkte();
                     }
                 }
             }
             //Prüft ob mindes 3 punkte vorhanden sind
-            if (count($tanzpaarPunkte)<3){
+            if ($optionLeereRondaZulassen!=1){
+                if (count($tanzpaarPunkte)<3){
                 $fehler="<br><b>Achntung:</b> weniger als 3 Wertungen bei Tanzpaar: ".$tanzpaar2kategorie->getTanzpaar()->getStartnummer()." ".$tanzpaar2kategorie->getTanzpaar()->getTanzpaarnamen();
-            }
-            else {
-                //errechnet den Durchschnitt
-                $durchschnitt=0;
-                sort($tanzpaarPunkte);
-                // nimmt den kleinsten und den größten wert nicht mit in die auswertung
-                for ($i=1; $i<count($tanzpaarPunkte)-1;$i++){
-                    $durchschnitt=$durchschnitt+$tanzpaarPunkte[$i];
                 }
-                $durchschnitt=$durchschnitt/(count($tanzpaarPunkte)-2);
-                $durchschnitt=number_format($durchschnitt,3);
-                $tanzpaar2kategorie->setStufendurchschnitt($durchschnitt);
+                else {
+                    //errechnet den Durchschnitt
+                    $durchschnitt=0;
+                    sort($tanzpaarPunkte);
+                    // nimmt den kleinsten und den größten wert nicht mit in die auswertung
+                    for ($i=1; $i<count($tanzpaarPunkte)-1;$i++){
+                        $durchschnitt=$durchschnitt+$tanzpaarPunkte[$i];
+                    }
+                    $durchschnitt=$durchschnitt/(count($tanzpaarPunkte)-2);
+                    $durchschnitt=number_format($durchschnitt,3);
+                    $tanzpaar2kategorie->setStufendurchschnitt($durchschnitt);
+                }
             }
         }
 
@@ -224,13 +255,13 @@ class Tanzpaar2ronda {
         }
         // sortiert das Array anhand des Punktedruchschnitt von groß nach klein
         usort($tanzpaar2kategorieAll, "cmp");
-
-        /*//test
+        //test
+        /*
         foreach ($tanzpaar2kategorieAll as $tanzpaar2kategorie) {
             echo "<br>".$tanzpaar2kategorie->getId();
             echo " - ".$tanzpaar2kategorie->getStufendurchschnitt();
-        }*/
-
+        }
+        */
         if ($funktion=="anlegen") {
             //nächste Stufe ermitteln
             $nextStufe = null;
@@ -254,18 +285,24 @@ class Tanzpaar2ronda {
             //anzahl der maxpaare für die nächst stufe
             $maxpaare = Anzahlquali::getById($kategorie_id, $nextStufe);
             $maxpaare = $maxpaare->getMaxpaare();
-            $anzahlRonda = round($anzahlquali / $maxpaare, 0, PHP_ROUND_HALF_UP);
-            if ($anzahlRonda == 0) {
-                $anzahlRonda = 1;
-            }
+            // wenn die anzahl der paare kleiner ist als die möglichen dann rechen damit weiter
+            if (count($tanzpaar2kategorieAll)<$anzahlquali){$anzahlquali=count($tanzpaar2kategorieAll);}
+            //$anzahlRonda = round($anzahlquali / $maxpaare, 0, PHP_ROUND_HALF_UP);
+            //if ($anzahlRonda == 0) {$anzahlRonda = 1;}
+            // runde auf die nächste ganze zahl auf
+            $anzahlRonda=ceil($anzahlquali / $maxpaare);
             /*
             // test $anzahlRonda=2;
             echo "<br>anzahlquali=".$anzahlquali;
             echo "<br>maxpaare=".$maxpaare;
             echo "<br>anzahlronda=".$anzahlRonda;
             */
-            if (count($tanzpaar2kategorieAll) < $anzahlquali) {
-                $fehler = "<br><b>Achntung:</b> die Anzahl der teilnehmenden Tanzpaare ist kleiner als die Anzahlquali, d.h. es würden alle weierkommen. Bitte in Optionen anpassen.";
+            if ($optionLeereRondaZulassen==1 or $optionAlleKommenWeiter==1){}
+                //keine Prüfung!
+            else{
+                if (count($tanzpaar2kategorieAll) < $anzahlquali) {
+                    $fehler = "<br><b>Achntung:</b> die Anzahl der teilnehmenden Tanzpaare ist kleiner als die Anzahlquali, d.h. es würden alle weierkommen. Bitte in Optionen anpassen.";
+                }
             }
         }
 

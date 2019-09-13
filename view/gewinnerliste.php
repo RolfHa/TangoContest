@@ -1,6 +1,3 @@
-<?php
-
-?>
 <table >
     <tr>
         <td style="border: 0px">
@@ -12,7 +9,13 @@
             $letztestufe=end($letztestufe)->getId();
             if ($_REQUEST['stufe_id']==$letztestufe){
                 echo "<br><br><br><h1>Gewinner</h1> <h3>in der Kategorie ".Kategorie::getById($_REQUEST['kategorie_id'])->getKategorie()." sind:</h3>";
-                echo "<h2>".$tanzpaar2kategorieAll[0]->getTanzpaar()->getTanzpaarnamen()."</h2><br><hr>";
+                echo "<h2>".$tanzpaar2kategorieAll[0]->getTanzpaar()->getTanzpaarnamen();
+                for($i=1;$i<count($tanzpaar2kategorieAll);$i++){
+                    if ($tanzpaar2kategorieAll[0]->getStufendurchschnitt()==$tanzpaar2kategorieAll[$i]->getStufendurchschnitt()){
+                        echo "<br>".$tanzpaar2kategorieAll[$i]->getTanzpaar()->getTanzpaarnamen();
+                    }
+                }
+                echo "</h2><br><hr>";
             }
             ?>
             <table>
@@ -33,26 +36,34 @@
                 $anzahlquali=Anzahlquali::getById($_REQUEST['kategorie_id'],$_REQUEST['stufe_id']);
                 $anzahlquali=$anzahlquali->getAnzahlquali();
 
-
-                $platz=0;
-                foreach ($tanzpaar2kategorieAll as $tanzpaar2kategorie){
+                $platz=1;
+                for($i=0;$i<count($tanzpaar2kategorieAll);$i++){
                     //print_r($tanzpaar2kategorie);
-                    $platz++;
                     echo "<tr><td>";
                     echo $platz;
                     echo "</td><td>";
-                    echo $tanzpaar2kategorie->getTanzpaar()->getStartnummer();
+                    echo $tanzpaar2kategorieAll[$i]->getTanzpaar()->getStartnummer();
                     echo "</td><td>";
-                    echo $tanzpaar2kategorie->getTanzpaar()->getTanzpaarnamen();
+                    echo $tanzpaar2kategorieAll[$i]->getTanzpaar()->getTanzpaarnamen();
                     echo "</td><td>";
-                    echo $tanzpaar2kategorie->getStufendurchschnitt();
+                    echo $tanzpaar2kategorieAll[$i]->getStufendurchschnitt();
                     echo "</td></tr>";
-                    if ($platz==$anzahlquali){
-                        echo "<tr><th colspan='4'>Leider nicht weiter sind:</th></tr>";
+                    //wird beim letzten platz nicht geprüft
+                    if ($i+1<count($tanzpaar2kategorieAll)){
+                        if ($tanzpaar2kategorieAll[$i+1]->getStufendurchschnitt()!=$tanzpaar2kategorieAll[$i]->getStufendurchschnitt()) {
+                            $platz++;
+                            if ($i + 1 == $anzahlquali) {
+                                echo "<tr><th colspan='4'>Leider nicht weiter sind:</th></tr>";
+                            }
+                        }
+                        //wenn sie den gleichen werdt haben wird die anzahl der qualifikationen hochgesetzt
+                        else {
+                            if ($i + 1 == $anzahlquali) {
+                                $anzahlquali++;
+                            }
+                        }
                     }
-
                 }
-
                 ?>
             </table>
         </td>
