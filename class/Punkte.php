@@ -147,7 +147,9 @@ class Punkte {
 
     public static function getByRondaId($id)    {
         $db = DB::connect();
-        $sql = "SELECT * FROM info_punktetabelle WHERE ronda_id = $id";
+        $sql = "SELECT punkte.id, jury_id,tanzpaar2ronda_id,punkte,tanzpaar2ronda.id as tanzpaar2ronda_id,  ronda_id,reihenfolge FROM punkte 
+                join tanzpaar2ronda on punkte.tanzpaar2ronda_id=tanzpaar2ronda.id
+                WHERE ronda_id = $id";
         $result = mysqli_query($db, $sql);
         global $optionZeigeSQL;
         if ($optionZeigeSQL==1){
@@ -157,7 +159,7 @@ class Punkte {
         $punkte = array();
         $i=0;
         while ($row = mysqli_fetch_assoc($result)) {
-            $jury = new Jury($row['juryvorname'],$row['jurynachname'],$row['jury_id']);
+            $jury = "dummy"; //Jury::getById($row['jury_id']);
             $tanzpaar2ronda = "dummy";//Tanzpaar2ronda::getById($row['tanzpaar2ronda_id']);
             $punkte[$i] = new Punkte(
                 $row['jury_id'],
@@ -165,7 +167,7 @@ class Punkte {
                 $row['tanzpaar2ronda_id'],
                 $tanzpaar2ronda,
                 $row['punkte'],
-                $row['punkte_id']
+                $row['id']
             );
             $i++;
         }

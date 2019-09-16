@@ -170,7 +170,7 @@ class Tanzpaar2ronda {
 
     public static function generiereQuali($kategorie_id,$stufe_id){
         $tanzpaar2kategorieAll=Tanzpaar2kategorie::getByKategorieId($kategorie_id);
-        $anzahlquali=Anzahlquali::getById($kategorie_id,$stufe_id);
+        $anzahlquali=Kategorie2Stufe::getById($kategorie_id,$stufe_id);
         $reihenfolge=1;
         $rondaNr=1;
         if ($tanzpaar2kategorieAll != null){
@@ -187,7 +187,7 @@ class Tanzpaar2ronda {
                     $ronda=new Ronda($kategorie_id,'dummy',$stufe_id,'dummy',$rondaNr);
                     Ronda::save($ronda);
                 }
-                $tanzpaar2ronda= new Tanzpaar2ronda($tanzpaar2kategorie->getId(),'dummy',$ronda->getId(),'dummy',$reihenfolge,);
+                $tanzpaar2ronda= new Tanzpaar2ronda($tanzpaar2kategorie->getId(),'dummy',$ronda->getId(),'dummy',$reihenfolge,'');
                 Tanzpaar2ronda::save($tanzpaar2ronda);
                 $reihenfolge++;
                 //echo "<br><pre>";
@@ -265,10 +265,10 @@ class Tanzpaar2ronda {
         if ($funktion=="anlegen") {
             //nächste Stufe ermitteln
             $nextStufe = null;
-            $stufeAll = $stufeAll = Stufe::getAll();
-            for ($i = 0; $i < count($stufeAll); $i++) {
-                if ($stufeAll[$i]->getId() == $stufe_id) {
-                    $nextStufe = $stufeAll[$i + 1]->getId();
+            $anzahlqualiKat=Kategorie2Stufe::getByKategorieId($kategorie_id);
+            for ($i = 0; $i < count($anzahlqualiKat); $i++) {
+                if ($anzahlqualiKat[$i]->getStufe()->getId() == $stufe_id) {
+                    $nextStufe = $anzahlqualiKat[$i + 1]->getStufe()->getId();
                 }
             }
             if ($nextStufe == null) {
@@ -280,10 +280,10 @@ class Tanzpaar2ronda {
             */
 
             //anzahl der weiterkommenden
-            $anzahlquali = Anzahlquali::getById($kategorie_id, $stufe_id);
+            $anzahlquali = Kategorie2Stufe::getById($kategorie_id, $stufe_id);
             $anzahlquali = $anzahlquali->getAnzahlquali();
             //anzahl der maxpaare für die nächst stufe
-            $maxpaare = Anzahlquali::getById($kategorie_id, $nextStufe);
+            $maxpaare = Kategorie2Stufe::getById($kategorie_id, $nextStufe);
             $maxpaare = $maxpaare->getMaxpaare();
             // wenn die anzahl der paare kleiner ist als die möglichen dann rechen damit weiter
             if (count($tanzpaar2kategorieAll)<$anzahlquali){$anzahlquali=count($tanzpaar2kategorieAll);}
@@ -351,7 +351,7 @@ class Tanzpaar2ronda {
                     echo "reichenfolge: ".$reihenfolge[$rondaNr];
                     */
 
-                    $tanzpaar2ronda= new Tanzpaar2ronda($tanzpaar2kategorie->getId(),'dummy',$ronda[$rondaNr]->getId(),'dummy',$reihenfolge[$rondaNr],);
+                    $tanzpaar2ronda= new Tanzpaar2ronda($tanzpaar2kategorie->getId(),'dummy',$ronda[$rondaNr]->getId(),'dummy',$reihenfolge[$rondaNr],'');
                     Tanzpaar2ronda::save($tanzpaar2ronda);
                     //print_r($tanzpaar2ronda);
                 }

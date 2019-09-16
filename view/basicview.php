@@ -2,6 +2,10 @@
 <html lang="de">
 <head>
     <meta charset="UTF-16">
+    <!--  Neuladen der Orginal Adresse erzwingen - also Browser und Proxy Caches ignorieren: -->
+    <meta http-equiv="expires" content="0">
+    <meta http-equiv="cache-control" content="no-cache">
+    <meta http-equiv="pragma" content="no-cache">
     <title>Berlin Open Tango Contest</title>
     <style>
         table {

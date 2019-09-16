@@ -1,6 +1,6 @@
 <?php
 // anzahlquali ist auch die zurordnung stufe2kategorie (wurde erst nachtäglich geändert)
-class Anzahlquali {
+class Kategorie2Stufe {
     private $id;
     private $kategorie_id;
     private $kategorie;
@@ -72,7 +72,7 @@ class Anzahlquali {
 
     public static function getByKategorieIdAndStufeId($kategorie_id,$stufe_id){
         $db = DB::connect();
-        $sql = "SELECT * FROM anzahlquali WHERE kategorie_id=$kategorie_id and stufe_id=$stufe_id";
+        $sql = "SELECT * FROM kategorie2stufe WHERE kategorie_id=$kategorie_id and stufe_id=$stufe_id";
         $result = mysqli_query($db, $sql);
         global $optionZeigeSQL;
         if ($optionZeigeSQL==1){
@@ -84,7 +84,7 @@ class Anzahlquali {
         $kategorie = Kategorie::getById($row['kategorie_id']);
         $stufe = Stufe::getById($row['stufe_id']);
 
-        $anzahlquali = new Anzahlquali(
+        $anzahlquali = new Kategorie2Stufe(
             $row['kategorie_id'],
             $kategorie,
             $row['stufe_id'],
@@ -98,7 +98,7 @@ class Anzahlquali {
 
     public static function getById($id){
         $db = DB::connect();
-        $sql = "SELECT * FROM anzahlquali WHERE id=$id";
+        $sql = "SELECT * FROM kategorie2stufe WHERE id=$id";
         $result = mysqli_query($db, $sql);
         global $optionZeigeSQL;
         if ($optionZeigeSQL==1){
@@ -110,7 +110,7 @@ class Anzahlquali {
         $kategorie = Kategorie::getById($row['kategorie_id']);
         $stufe = Stufe::getById($row['stufe_id']);
 
-        $anzahlquali = new Anzahlquali(
+        $anzahlquali = new Kategorie2Stufe(
             $row['kategorie_id'],
             $kategorie,
             $row['stufe_id'],
@@ -121,12 +121,49 @@ class Anzahlquali {
         );
         return $anzahlquali;
     }
+
+
+    public static function getByKategorieId($kategorie_id){
+        $db = DB::connect();
+        $sql = "SELECT kategorie2stufe.id as id, kategorie_id, stufe_id, anzahlquali, kategorie, stufe , maxpaare
+                FROM kategorie2stufe
+                join kategorie on kategorie2stufe.kategorie_id=kategorie.id
+                join stufe on kategorie2stufe.stufe_id = stufe.id
+                WHERE kategorie_id=$kategorie_id 
+                order by kategorie_id, stufe_id;";
+        $result = mysqli_query($db, $sql);
+        global $optionZeigeSQL;
+        if ($optionZeigeSQL==1){
+            echo "<br>".$sql;
+        }
+
+        $anzahlquali = array();
+        $i=0;
+        while ($row = mysqli_fetch_assoc($result)) {
+            $kategorie = new Kategorie($row['kategorie'], $row['kategorie_id']);
+            $stufe =new Stufe( $row['stufe'], $row['stufe_id']);
+
+            $anzahlquali[$i] = new Kategorie2Stufe(
+                $row['kategorie_id'],
+                $kategorie,
+                $row['stufe_id'],
+                $stufe,
+                $row['anzahlquali'],
+                $row['maxpaare'],
+                $row['id']
+            );
+            $i++;
+        }
+        return $anzahlquali;
+    }
+
+
     public static function getAll(){
         $db = DB::connect();
-        $sql = "SELECT anzahlquali.id as id, kategorie_id, stufe_id, anzahlquali, kategorie, stufe , maxpaare
-                FROM anzahlquali
-                join kategorie on anzahlquali.kategorie_id=kategorie.id
-                join stufe on anzahlquali.stufe_id = stufe.id
+        $sql = "SELECT kategorie2stufe.id as id, kategorie_id, stufe_id, anzahlquali, kategorie, stufe , maxpaare
+                FROM kategorie2stufe
+                join kategorie on kategorie2stufe.kategorie_id=kategorie.id
+                join stufe on kategorie2stufe.stufe_id = stufe.id
                 order by kategorie_id, stufe_id;";
         $result = mysqli_query($db, $sql);
         global $optionZeigeSQL;
@@ -143,7 +180,7 @@ class Anzahlquali {
             //$stufe = Stufe.getById($row['stufe_id']);
             $stufe =new Stufe( $row['stufe'], $row['stufe_id']);
 
-            $anzahlquali[$i] = new Anzahlquali(
+            $anzahlquali[$i] = new Kategorie2Stufe(
                 $row['kategorie_id'],
                 $kategorie,
                 $row['stufe_id'],
@@ -157,14 +194,20 @@ class Anzahlquali {
         return $anzahlquali;
     }
 
-    public static function delete()
-    {
-        //Wird nicht benötigt
+    public static function delete($id) {
+        $db = DB::connect();
+        $sql = "DELETE FROM kategorie2stufe WHERE id = $id";
+        $success=mysqli_query($db, $sql);
+        global $optionZeigeSQL;
+        if ($optionZeigeSQL==1){
+            echo "<br>".$sql;
+        }
+        return $success;
     }
 
     public static function save ($anzahlquali)    {
         $db = DB::connect();
-        $sql = "INSERT INTO anzahlquali (kategorie_id, stufe_id, anzahlquali,maxpaare)
+        $sql = "INSERT INTO kategorie2stufe (kategorie_id, stufe_id, anzahlquali,maxpaare)
                 VALUES ('$anzahlquali->kategorie_id', '$anzahlquali->stufe_id', '$anzahlquali->anzahlquali', '$anzahlquali->maxpaare')";
         Mysqli_query($db, $sql);
         global $optionZeigeSQL;
@@ -177,7 +220,7 @@ class Anzahlquali {
 
     public static function change($anzahlquali)    {
         $db = DB::connect();
-        $sql = "Update anzahlquali SET 
+        $sql = "Update kategorie2stufe SET 
         anzahlquali = '". $anzahlquali->getAnzahlquali()."' , 
         maxpaare = '". $anzahlquali->getMaxpaare()."'
         WHERE id = '".$anzahlquali->getId()."' 

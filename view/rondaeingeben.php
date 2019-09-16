@@ -7,18 +7,10 @@
         <th colspan="2"> Neue Ronda erstellen</th>
         </thead>
         <tr>
-            <td>Kategorie</td>
+            <td>Kategorie und stufe</td>
             <td>
                 <?php
-                HTML::SelectKategorie('kategorie_id',Kategorie::getAll(),"");
-                ?>
-            </td>
-        </tr>
-        <tr>
-            <td>Stufe</td>
-            <td>
-                <?php
-                HTML::SelectStufe('stufe_id',Stufe::getAll(),"");
+                HTML::SelectKategorie2stufe('kategorie2stufe_id',Kategorie2Stufe::getAll(),"");
                 ?>
             </td>
         </tr>

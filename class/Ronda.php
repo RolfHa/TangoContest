@@ -6,8 +6,10 @@ class Ronda {
     private $stufe_id;
     private $stufe;
     private $ronda;
+    private $kategorie2stufe_id;
+    private $kategorie2stufe;
     
-    function __construct($kategorie_id, $kategorie, $stufe_id, $stufe, $ronda, $id = null) {
+    function __construct($kategorie_id, $kategorie, $stufe_id, $stufe, $ronda, $kategorie2stufe_id, $kategorie2stufe, $id = null) {
         if(isset($id)){
             $this->id = $id;
         }
@@ -16,6 +18,14 @@ class Ronda {
         $this->stufe_id = $stufe_id;
         $this->stufe = $stufe;
         $this->ronda = $ronda;
+        $this->kategorie2stufe_id = $kategorie2stufe_id;
+        if ($kategorie2stufe !=""){
+            $this->kategorie2stufe = $kategorie2stufe ;
+        }
+        else {
+            $this->kategorie2stufe_id = Kategorie2Stufe::getById($kategorie2stufe_id);
+        }
+
     }
     
     function getId() {
@@ -36,6 +46,14 @@ class Ronda {
     function getRonda() {
         return $this->ronda;
     }
+    public function getKategorie2stufe_id()    {
+        return $this->kategorie2stufe_id;
+    }
+    public function getKategorie2stufe()    {
+        return $this->kategorie2stufe;
+    }
+
+
     function setId($id) {
         $this->id = $id;
     }
@@ -54,6 +72,16 @@ class Ronda {
     function setRonda($ronda) {
         $this->ronda = $ronda;
     }
+    public function setKategorie2stufe_id($kategorie2stufe_id)    {
+        $this->kategorie2stufe_id = $kategorie2stufe_id;
+    }
+    public function setKategorie2stufe($kategorie2stufe)    {
+        $this->kategorie2stufe = $kategorie2stufe;
+    }
+
+
+
+
 
     public static function getById($id){
         $db = DB::connect();
@@ -65,26 +93,27 @@ class Ronda {
         }
         
         $row = mysqli_fetch_assoc($result);
-        $kategorie = Kategorie::getById($row['kategorie_id']);
-        $stufe = Stufe::getById($row['stufe_id']);
+        $kategorie2stufe = Kategorie2Stufe::getById($row['kategorie2stufe_id']);
         $ronda = new Ronda(
-            $row['kategorie_id'],
-            $kategorie,
-            $row['stufe_id'],
-            $stufe,
+            $kategorie2stufe->getKategorie()->getId(),
+            $kategorie2stufe->getKategorie() ,
+            $kategorie2stufe->getStufe()->getId(),
+            $kategorie2stufe->getStufe() ,
             $row['ronda'],
-            $row['id']
-        );
+            $row['kategorie2stufe_id'],
+            $kategorie2stufe,
+            $row['id']);
         //print_r($ronda);
         return $ronda;
     }
 
     public static function getAll(){
         $db = DB::connect();
-        $sql = "SELECT  ronda.id, ronda.ronda, kategorie_id, kategorie, stufe_id, stufe
+        $sql = "SELECT  ronda.id as id, ronda.ronda, kategorie2stufe.kategorie_id, kategorie.kategorie, kategorie2stufe.stufe_id, stufe.stufe, ronda.kategorie2stufe_id, kategorie2stufe.anzahlquali,kategorie2stufe.maxpaare
                 FROM ronda 
-                join kategorie on ronda.kategorie_id=kategorie.id
-                join stufe on ronda.stufe_id=stufe.id
+                join kategorie2stufe on ronda.kategorie2stufe_id=kategorie2stufe.id
+                join kategorie on kategorie2stufe.kategorie_id=kategorie.id
+                join stufe on kategorie2stufe.stufe_id=stufe.id
                 order by kategorie_id, stufe_id, ronda
                 ;";
         $result = mysqli_query($db, $sql);
@@ -96,12 +125,10 @@ class Ronda {
         $ronda = array();
         $i=0;
         while ($row = mysqli_fetch_assoc($result)) {
-            //  *** Versuch Datenbankabfragen innerhalb einer Schleife zu vermeiden***
-            //$kategorie = Kategorie.getById($row['kategorie_id']);
-            //$stufe = Stufe.getById($row['stufe_id']);
             $kategorie = new Kategorie($row['kategorie'], $row['kategorie_id']);
             $stufe =new Stufe( $row['stufe'], $row['stufe_id']);
-            $ronda[$i] = new Ronda($row['kategorie_id'], $kategorie, $row['stufe_id'], $stufe, $row['ronda'], $row['id']);
+            $kategorie2stufe =  new Kategorie2Stufe($row['kategorie_id'],$kategorie,$row['stufe_id'],$stufe,$row['anzahlquali'],$row['maxpaare'], $row['kategorie2stufe_id']);
+            $ronda[$i] = new Ronda($row['kategorie_id'], $kategorie, $row['stufe_id'], $stufe, $row['ronda'],$row['kategorie2stufe_id'],$kategorie2stufe, $row['id']);
             $i++;
         }
         return $ronda;
@@ -111,7 +138,12 @@ class Ronda {
     public static function  getRondaIdByStufeIdAndKategorieId($kategorie_id, $stufe_id)
     {
         $db = DB::connect();
-        $sql = "SELECT id FROM ronda WHERE kategorie_id=$kategorie_id AND stufe_id = $stufe_id order by id";
+        $sql =  "SELECT  ronda.id as id, ronda.ronda, kategorie2stufe.kategorie_id, kategorie.kategorie, kategorie2stufe.stufe_id, stufe.stufe, ronda.kategorie2stufe_id, kategorie2stufe.anzahlquali,kategorie2stufe.maxpaare
+                FROM ronda 
+                join kategorie2stufe on ronda.kategorie2stufe_id=kategorie2stufe.id
+                join kategorie on kategorie2stufe.kategorie_id=kategorie.id
+                join stufe on kategorie2stufe.stufe_id=stufe.id
+                WHERE kategorie_id=$kategorie_id AND stufe_id = $stufe_id order by id";
         $result = mysqli_query($db, $sql);
         global $optionZeigeSQL;
         if ($optionZeigeSQL==1){
@@ -126,10 +158,44 @@ class Ronda {
         return $rondaId;
     }
 
+    public static function  getByKategorie2stufeId($kategorie2stufe_id)
+    {
+        $db = DB::connect();
+        $sql = "SELECT  ronda.id as id, ronda.ronda, kategorie2stufe.kategorie_id, kategorie.kategorie, kategorie2stufe.stufe_id, stufe.stufe, ronda.kategorie2stufe_id, kategorie2stufe.anzahlquali,kategorie2stufe.maxpaare
+                FROM ronda 
+                join kategorie2stufe on ronda.kategorie2stufe_id=kategorie2stufe.id
+                join kategorie on kategorie2stufe.kategorie_id=kategorie.id
+                join stufe on kategorie2stufe.stufe_id=stufe.id
+                WHERE kategorie2stufe_id=$kategorie2stufe_id
+                order by kategorie2stufe.stufe_id, ronda.ronda";
+        $result = mysqli_query($db, $sql);
+        global $optionZeigeSQL;
+        if ($optionZeigeSQL==1){
+            echo "<br>".$sql;
+        }
+
+        $ronda = array();
+        $i=0;
+        while ($row = mysqli_fetch_assoc($result)) {
+            $kategorie = new Kategorie($row['kategorie'], $row['kategorie_id']);
+            $stufe =new Stufe( $row['stufe'], $row['stufe_id']);
+            $kategorie2stufe =  new Kategorie2Stufe($row['kategorie_id'],$kategorie,$row['stufe_id'],$stufe,$row['anzahlquali'],$row['maxpaare'], $row['kategorie2stufe_id']);
+            $ronda[$i] = new Ronda($row['kategorie_id'], $kategorie, $row['stufe_id'], $stufe, $row['ronda'],$row['kategorie2stufe_id'],$kategorie2stufe, $row['id']);
+            $i++;
+        }
+        return $ronda;
+    }
+
     public static function  getRondaKategorieId($kategorie_id)
     {
         $db = DB::connect();
-        $sql = "SELECT * FROM ronda WHERE kategorie_id=$kategorie_id";
+        $sql = "SELECT  ronda.id as id, ronda.ronda, kategorie2stufe.kategorie_id, kategorie.kategorie, kategorie2stufe.stufe_id, stufe.stufe, ronda.kategorie2stufe_id, kategorie2stufe.anzahlquali,kategorie2stufe.maxpaare
+                FROM ronda 
+                join kategorie2stufe on ronda.kategorie2stufe_id=kategorie2stufe.id
+                join kategorie on kategorie2stufe.kategorie_id=kategorie.id
+                join stufe on kategorie2stufe.stufe_id=stufe.id
+                WHERE kategorie_id=$kategorie_id
+                order by kategorie2stufe.stufe_id, ronda.ronda";
         $result = mysqli_query($db, $sql);
         global $optionZeigeSQL;
         if ($optionZeigeSQL==1){
@@ -139,10 +205,10 @@ class Ronda {
         $ronda = array();
         $i=0;
         while ($row = mysqli_fetch_assoc($result)) {
-            //$kategorie = Kategorie.getById($row['kategorie_id']);
-            //$stufe = Stufe.getById($row['stufe_id']);
-            //$ronda[$i] = new Ronda($row['kategorie_id'], $kategorie, $row['stufe_id'], $stufe, $row['ronda'], $row['id']);
-            $ronda[$i] = new Ronda($row['kategorie_id'], 'dummykategorie', $row['stufe_id'], 'dummystufe', $row['ronda'], $row['id']);
+            $kategorie = new Kategorie($row['kategorie'], $row['kategorie_id']);
+            $stufe =new Stufe( $row['stufe'], $row['stufe_id']);
+            $kategorie2stufe =  new Kategorie2Stufe($row['kategorie_id'],$kategorie,$row['stufe_id'],$stufe,$row['anzahlquali'],$row['maxpaare'], $row['kategorie2stufe_id']);
+            $ronda[$i] = new Ronda($row['kategorie_id'], $kategorie, $row['stufe_id'], $stufe, $row['ronda'],$row['kategorie2stufe_id'],$kategorie2stufe, $row['id']);
             $i++;
         }
         return $ronda;
@@ -189,9 +255,8 @@ class Ronda {
     public static function change($ronda){
         $db = DB::connect();
         $sql = "Update ronda SET 
-        kategorie_id = '". $ronda->getKategorie_id()."' , 
-        stufe_id = '". $ronda->getStufe_id()."' ,
-        ronda = '". $ronda->getRonda()."'
+        ronda = '". $ronda->getRonda()."',
+        kategorie2stufe_id = '". $ronda->getKategorie2stufe_id()."'
         WHERE id = '".$ronda->getId()."'
         ";
         mysqli_query($db, $sql);
@@ -205,9 +270,8 @@ class Ronda {
 
     public static function save($ronda){
         $db = DB::connect();
-        $sql = "INSERT INTO ronda (kategorie_id, stufe_id, ronda)
-                VALUES ('$ronda->kategorie_id', 
-                        '$ronda->stufe_id', 
+        $sql = "INSERT INTO ronda (kategorie2stufe_id, ronda)
+                VALUES ('$ronda->kategorie2stufe_id', 
                         '$ronda->ronda');";
         mysqli_query($db, $sql);
         global $optionZeigeSQL;
@@ -215,7 +279,6 @@ class Ronda {
             echo "<br>".$sql;
         }
         
-        //echo "<br>".$sql;
         $id = mysqli_insert_id($db); //gibt die eingetragen ID zurück
         $ronda->setId($id);
         return $ronda;
@@ -224,14 +287,14 @@ class Ronda {
     //prüft ob es Rondas in der nächsten Stufe gibt (wenn ja soll diese nicht änderbar sein)
     public static function rondaInNextStufe($ronda){
         $stufeCount=0;
-        $stufeAll=Stufe::getAll();
-        foreach ($stufeAll as $stufe){
+        $kategorie2stufeAll=Kategorie2Stufe::getAll();
+        foreach ($kategorie2stufeAll as $kategorie2stufe){
             $stufeCount++;
-            if ($stufeCount<=Count($stufeAll)){
-                if ($stufe->getId()>$ronda->getStufe_id()){
+            if ($stufeCount<=Count($kategorie2stufeAll)){
+                if ($kategorie2stufe->getStufe()->getId()>$ronda->getKategorie2stufe()->getStufe_id()){
                     // prüf ob es in der nächsten stufe schon rondas gibt
                     foreach (Ronda::getRondaKategorieId($ronda->getKategorie_id()) as $rondaAll){
-                        if ($rondaAll->getStufe_id()==$stufe->getId()){
+                        if ($rondaAll->getKategorie2stufe()->getStufe_id()==$kategorie2stufe->getStufe_id()){
                             return true;
                         }
                     }
@@ -241,19 +304,20 @@ class Ronda {
         return false;
     }
 
-    public static function neuanlegen($kategorie_id,$stufe_id){
+    public static function neuanlegen($kategorie2stufe_id){
         //nächste ronda nr ermitteln
-        $ronda=Ronda::getRondaIdByStufeIdAndKategorieId($kategorie_id,$stufe_id); // id list aller rondas in dem bereich
-        $ronda=end($ronda); // letzte id
-        echo "ronda:".$ronda;
+        $ronda=Ronda::getByKategorie2stufeId($kategorie2stufe_id); // id list aller rondas in dem bereich
         if($ronda!=null){
-            $ronda=Ronda::getById($ronda); // ronda objekt
+            $ronda=end($ronda); // letzte id
+            //$ronda=Ronda::getById($ronda); // ronda objekt
             $ronda=$ronda->getRonda(); // ronda nummer
             $ronda++; // +1
         }
         else {$ronda=1;}
-        $ronda=new Ronda($kategorie_id,'dummykat',$stufe_id,'dummystufe',$ronda,'');
-        Ronda::save($ronda);
+        $kategorie2stufe=Kategorie2Stufe::getById($kategorie2stufe_id);
+        $ronda=new Ronda($kategorie2stufe->getKategorie_id(),$kategorie2stufe->getKategorie(),$kategorie2stufe->getStufe_id(),$kategorie2stufe->getStufe(),$ronda,$kategorie2stufe->getId(),$kategorie2stufe);
+        $rondaMitId=Ronda::save($ronda);
+        return $rondaMitId;
     }
 
 

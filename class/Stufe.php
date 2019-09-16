@@ -79,8 +79,8 @@ class Stufe {
         $stufe->setId($id);
         // anzalquali anlegen
         foreach (Kategorie::getAll() as $kategorie){
-            $anzahlquali=new Anzahlquali($kategorie->getId(),$kategorie->getKategorie(),$stufe->getId(),$stufe->getStufe(),1,10);
-            Anzahlquali::save($anzahlquali);
+            $anzahlquali=new Kategorie2Stufe($kategorie->getId(),$kategorie->getKategorie(),$stufe->getId(),$stufe->getStufe(),1,10);
+            Kategorie2Stufe::save($anzahlquali);
         }
         return $stufe;
     }
@@ -118,8 +118,8 @@ class Stufe {
         
         if ($success!=1){
             foreach (Kategorie::getAll() as $kategorie){
-                $anzahlquali=new Anzahlquali($kategorie->getId(),$kategorie->getKategorie(),$id,'dummy',50,10);
-                Anzahlquali::save($anzahlquali);
+                $anzahlquali=new Kategorie2Stufe($kategorie->getId(),$kategorie->getKategorie(),$id,'dummy',50,10);
+                Kategorie2Stufe::save($anzahlquali);
             }
         }
         return $success;

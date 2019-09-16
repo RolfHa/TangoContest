@@ -33,7 +33,7 @@
                 </thead>
                 <?php
                 //anzahl der weiterkommenden
-                $anzahlquali=Anzahlquali::getById($_REQUEST['kategorie_id'],$_REQUEST['stufe_id']);
+                $anzahlquali=Kategorie2Stufe::getById($_REQUEST['kategorie_id'],$_REQUEST['stufe_id']);
                 $anzahlquali=$anzahlquali->getAnzahlquali();
 
                 $platz=1;

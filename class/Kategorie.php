@@ -73,12 +73,12 @@ class Kategorie {
         $anzahl=80;
         foreach ($stufeAll as $stufe){
             $anzahl=round($anzahl/2,0);
-            $anzahlquali=new Anzahlquali($kategorie->getId(),$kategorie->getKategorie(),$stufe->getId(),$stufe->getStufe(),$anzahl,10);
+            $anzahlquali=new Kategorie2Stufe($kategorie->getId(),$kategorie->getKategorie(),$stufe->getId(),$stufe->getStufe(),$anzahl,10);
             //bei der letzten stufe soll die qualianzahl immer 1 sein -> es kann nur einen geben!
             if ($stufe==end($stufeAll)){
-                $anzahlquali=new Anzahlquali($kategorie->getId(),$kategorie->getKategorie(),$stufe->getId(),$stufe->getStufe(),1,10);
+                $anzahlquali=new Kategorie2Stufe($kategorie->getId(),$kategorie->getKategorie(),$stufe->getId(),$stufe->getStufe(),1,10);
             }
-            Anzahlquali::save($anzahlquali);
+            Kategorie2Stufe::save($anzahlquali);
         }
         return $kategorie;
     }
@@ -102,8 +102,8 @@ class Kategorie {
         $success = mysqli_query($db, $sql);
         if ($success!=1){
             foreach (Stufe::getAll() as $stufe){
-                $anzahlquali=new Anzahlquali($id,'dummy',$stufe->getId(),$stufe->getStufe(),50,10);
-                Anzahlquali::save($anzahlquali);
+                $anzahlquali=new Kategorie2Stufe($id,'dummy',$stufe->getId(),$stufe->getStufe(),50,10);
+                Kategorie2Stufe::save($anzahlquali);
             }
         }
         return $success;

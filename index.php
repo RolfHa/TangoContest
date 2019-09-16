@@ -1,4 +1,6 @@
 <?php
+
+
 // config datei laden (kann außerhalb des WEB-zugriffs gespeichert werden)
 include_once  'config.php';
 //alle andern klassen laden (dateien müssen den klassennamen haben und im Verzeichnis class liegen)
@@ -28,6 +30,15 @@ if (isset($_REQUEST['action'])){
 if (isset($_REQUEST['id'])){
     $id = (int)$_REQUEST['id'];
 }
+
+// F5 abfrangen
+if (isset($_SERVER['HTTP_CACHE_CONTROL'])){
+    echo "<h1>bitte nicht Refresh(F5)- oder die Vor- und Zurückfunktion des Browsers Benutzen</h1>";
+    $action = "";
+    $area = "";
+}
+
+
 
 // Auswertung von action und area
 switch ($action){
@@ -98,9 +109,9 @@ switch ($action){
                 Punkte::punkteVerarbeiten($_REQUEST['punkte']);
                 $view =  'rondapunkteaendern';
                 break;
-            case 'anzahlquali':
-                $anzahlquali = new Anzahlquali($_REQUEST['kategorie_id'],'',$_REQUEST['stufe_id'],'',$_REQUEST['anzahlquali'],$_REQUEST['maxpaare']);
-                $success = Anzahlquali::change($anzahlquali);
+            case 'Kategorie2Stufe':
+                $anzahlquali = new Kategorie2Stufe($_REQUEST['kategorie_id'],'',$_REQUEST['stufe_id'],'',$_REQUEST['Kategorie2Stufe'],$_REQUEST['maxpaare']);
+                $success = Kategorie2Stufe::change($anzahlquali);
                 $view =  'optionenliste';
                 break;
             case 'optionen':
@@ -131,6 +142,11 @@ switch ($action){
                 $success = Stufe::save($stufe);
                 $view =  'optionenliste';
                 break;
+            case 'kategorie2Stufe':
+                $kategorie2Stufe = new Kategorie2Stufe($_REQUEST['kategorie_id'],'dummykat',$_REQUEST['stufe_id'],'dummystufe','1','10','');
+                $success = Kategorie2Stufe::save($kategorie2Stufe);
+                $view =  'optionenliste';
+            break;
             case 'bezahlart':
                 $bezahlart = new Bezahlart($_POST['bezahlart']);
                 $success = Bezahlart::save($bezahlart);
@@ -141,7 +157,7 @@ switch ($action){
                 $success = Jury::save($jury);
                 break;
             case 'ronda':
-                Ronda::neuanlegen($_REQUEST['kategorie_id'],$_REQUEST['stufe_id']);
+                Ronda::neuanlegen($_REQUEST['kategorie2stufe_id']);
                 $view =  'rondaliste';
                 break;
             case 'punkte':
@@ -162,9 +178,8 @@ switch ($action){
                 break;
             case 'ronda':
                 $tanzpaar2kategorieAll=Tanzpaar2ronda::generiereStufe($_REQUEST['kategorie_id'],$_REQUEST['stufe_id'],'anlegen');
-                //$area = 'ronda';
                 if ($tanzpaar2kategorieAll!=null) {$view = 'gewinnerliste';}
-                else {echo "Keine Daten vorhanden"; $view = 'rondaliste';}
+                else {echo "Keine Daten vorhanden"; $view = 'rondaliste'; $area = 'ronda';}
                 break;
             case 'gewinner':
                 $tanzpaar2kategorieAll=Tanzpaar2ronda::generiereStufe($_REQUEST['kategorie_id'],$_REQUEST['stufe_id'],'nurAnsicht');
@@ -218,6 +233,10 @@ switch ($action){
                 Stufe::delete($id);
                 $view =  'optionenliste';
                 break;
+            case 'kategorie2Stufe':
+                Kategorie2Stufe::delete($id);
+                $view =  'optionenliste';
+                break;
             case 'bezahlart':
                 Bezahlart::delete($id);
                 $view =  'optionenliste';
@@ -250,11 +269,15 @@ switch ($action){
 if ($nobasicview!=1){include 'view/basicview.php';}
 
 
+
+
+
 // zur Fehleranalyse
 if ($optionZeigeREQUEST==1){
     // Übergabewerte für testzwecke ausgeben
     echo '<br><pre>';
     print_r($_REQUEST);
+    print_r($_SERVER);
     echo '</pre>';
 }
 
