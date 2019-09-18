@@ -21,12 +21,13 @@ abstract class DB
     public static function checkDB ($checkID){
         global $action;
         global $area;
+        global $optionCheckIDSpeicher;
 
         //prüfen ob in schon datenbank vorhanden
         $db = DB::connect();
 
         // löscht alle einträge die äler als einen Monat sind
-        $alte=microtime(true)-60*60*24*30;
+        $alte=microtime(true)-60*60*24*$optionCheckIDSpeicher;
         $sql = "delete FROM dbcheck WHERE  id < $alte";
         mysqli_query($db, $sql);
 

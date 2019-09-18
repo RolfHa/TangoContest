@@ -5,8 +5,8 @@
         </td>
         <td style="border: 0px; text-align: center" >
             <?php
-            $letztestufe=Stufe::getAll();
-            $letztestufe=end($letztestufe)->getId();
+            $letztestufe=Kategorie2Stufe::getByKategorieId($_REQUEST['kategorie_id']);
+            $letztestufe=end($letztestufe)->getStufe()->getId();
             if ($_REQUEST['stufe_id']==$letztestufe){
                 echo "<br><br><br><h1>Gewinner</h1> <h3>in der Kategorie ".Kategorie::getById($_REQUEST['kategorie_id'])->getKategorie()." sind:</h3>";
                 echo "<h2>".$tanzpaar2kategorieAll[0]->getTanzpaar()->getTanzpaarnamen();
@@ -33,7 +33,7 @@
                 </thead>
                 <?php
                 //anzahl der weiterkommenden
-                $anzahlquali=Kategorie2Stufe::getById($_REQUEST['kategorie_id'],$_REQUEST['stufe_id']);
+                $anzahlquali=Kategorie2Stufe::getByKategorieIdAndStufeId($_REQUEST['kategorie_id'],$_REQUEST['stufe_id']);
                 $anzahlquali=$anzahlquali->getAnzahlquali();
 
                 $platz=1;

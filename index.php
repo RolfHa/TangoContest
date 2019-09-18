@@ -13,6 +13,7 @@ $optionZeigeSQL=Optionen::standard('zeigeSQL',0);
 $optionStufeUeberspringen=Optionen::standard('StufeUeberspringen',0);
 $optionAlleKommenWeiter=Optionen::standard('alleKommenWeiter',0);
 $optionLeereRondaZulassen=Optionen::standard('leereRondaZulassen',0);
+$optionCheckIDSpeicher=Optionen::standard('checkIDSpeicherInTagen',30);
 
 
 // standartübergabe auslesen

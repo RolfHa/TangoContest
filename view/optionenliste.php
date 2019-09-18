@@ -1,6 +1,6 @@
 <table border="0" width="90%">
     <tr>
-        <td colspan="2 " style='text-align: center'>
+        <td colspan="2 " style='text-align: center; border: 0px'>
             <h1 >Optionen </h1>
         </td>
     </tr>
@@ -93,12 +93,12 @@
                             <?php
                             // db abfragen ausserhalb der schleifen
                             foreach ($kategorieAll as $kategorie){
-                                echo "<form action='index.php' method='post'>";
+                                echo "<tr><td><form action='index.php' method='post'>";
                                 echo "<input type='hidden' name='area' value='kategorie'>";
                                 echo "<input type='hidden' name='action' value='speichern'>";
                                 echo "<input type='hidden' name='id' value='".$kategorie->getId()."'>";
                                 echo "<input name='checkID' type='hidden' value=".$checkID.">";
-                                echo "<tr><td><input type='text' name='kategorie' value='".$kategorie->getKategorie()."'></td>";
+                                echo "<input type='text' name='kategorie' value='".$kategorie->getKategorie()."'></td>";
                                 echo "<td><input type='submit' value='ändern'></td></form>";
                                 echo "<td><a href='index.php?action=loeschen&area=kategorie&id=".$kategorie->getId()."&checkID=".$checkID."'><button>löschen</button></a></td>";
                                 echo "</tr>";
@@ -121,12 +121,12 @@
                             <?php
                             // db abfragen ausserhalb der schleifen
                             foreach ($stufeAll as $stufe){
-                                echo "<form action='index.php' method='post'>";
+                                echo "<tr><td><form action='index.php' method='post'>";
                                 echo "<input type='hidden' name='area' value='stufe'>";
                                 echo "<input type='hidden' name='action' value='speichern'>";
                                 echo "<input name='checkID' type='hidden' value=".$checkID.">";
                                 echo "<input type='hidden' name='id' value='".$stufe->getId()."'>";
-                                echo "<tr><td><input type='text' name='stufe' value='".$stufe->getStufe()."'></td>";
+                                echo "<input type='text' name='stufe' value='".$stufe->getStufe()."'></td>";
                                 echo "<td><input type='submit' value='ändern'></td></form>";
                                 echo "<td><a href='index.php?action=loeschen&area=stufe&id=".$stufe->getId()."&checkID=".$checkID."'><button>löschen</button></a></td>";
                                 echo "</tr>";
@@ -153,12 +153,12 @@
                             // db abfragen ausserhalb der schleifen
                             $bezahlartAll=Bezahlart::getAll();
                             foreach ($bezahlartAll as $bezahlart){
-                                echo "<form action='index.php' method='post'>";
+                                echo "<tr><td><form action='index.php' method='post'>";
                                 echo "<input type='hidden' name='area' value='bezahlart'>";
                                 echo "<input type='hidden' name='action' value='speichern'>";
                                 echo "<input name='checkID' type='hidden' value=".$checkID.">";
                                 echo "<input type='hidden' name='id' value='".$bezahlart->getId()."'>";
-                                echo "<tr><td><input type='text' name='bezahlart' value='".$bezahlart->getBezahlart()."'></td>";
+                                echo "<input type='text' name='bezahlart' value='".$bezahlart->getBezahlart()."'></td>";
                                 echo "<td><input type='submit' value='ändern'></td></form>";
                                 echo "<td><a href='index.php?action=loeschen&area=bezahlart&id=".$bezahlart->getId()."&checkID=".$checkID."'><button>löschen</button></a></td>";
                                 echo "</tr>";
@@ -181,19 +181,18 @@
                     <th colspan="2">
                         <table>
                             <tr>
-                                <td><b>optionen</b></td>
-                                <td colspan="3" ><b>wert</b></td>
+                                <td colspan=" 4"><b>zusätzliche Optionen</b> (wert)</td>
                             </tr>
                             <?php
                                 // db abfragen ausserhalb der schleifen
                                 $optionenAll=Optionen::getAll();
                                 foreach ($optionenAll as $optionen){
-                                    echo "<form action='index.php' method='post'>";
+                                    echo "<tr><td style='text-align: right'><form action='index.php' method='post'>";
                                     echo "<input type='hidden' name='area' value='optionen'>";
                                     echo "<input type='hidden' name='action' value='speichern'>";
                                     echo "<input name='checkID' type='hidden' value=".$checkID.">";
                                     echo "<input type='hidden' name='name' value='".$optionen->getName()."'>";
-                                    echo "<tr><td style='text-align: right'>".$optionen->getName()."</td>";
+                                    echo $optionen->getName()."</td>";
                                     echo "<td><input type='number' name='wert' value='".$optionen->getWert()."'></td>";
                                     echo "<td><input type='submit' value='ändern'></td></form>";
                                     echo "<td><a href='index.php?action=loeschen&area=optionen&id=".$optionen->getName()."&checkID=".$checkID."'><button>löschen</button></a></td>";
