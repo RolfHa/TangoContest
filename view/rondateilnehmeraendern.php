@@ -21,7 +21,7 @@
                         <?php
                         foreach (Ronda::getRondaIdByStufeIdAndKategorieId($ronda->getKategorie_id(),$ronda->getStufe_id())as $rondaId){
                             $rondaliste=Ronda::getById($rondaId);
-                            echo "<a href='index.php?action=aendern&area=rondateilnehmer&id=".$rondaliste->getId()."'>";
+                            echo "<a href='index.php?action=aendern&area=rondateilnehmer&id=".$rondaliste->getId()."&checkID=".$checkID."'>";
                             echo "<button";
                             if ($rondaliste->getId()==$ronda->getId()){echo " disabled ";}
                             echo ">&nbsp;&nbsp;".$rondaliste->getRonda()."&nbsp;&nbsp;</button></a>";
@@ -29,10 +29,10 @@
                         ?>
                     </td>
                     <td style="border: 0px;text-align: center">
-                        <a href='index.php?action=aendern&area=rondapunkte&id=<?php echo $id; ?>'><button>zur Punkteeingabe</button></a>
+                        <a href='index.php?action=aendern&area=rondapunkte&id=<?php echo $id; ?>&checkID=<?php echo $checkID; ?>'><button>zur Punkteeingabe</button></a>
                     </td>
                     <td style="border: 0px;text-align: right">
-                        <a href='index.php?action=loeschen&area=ronda&id=<?php echo $id; ?>'><button>Ronda löschen</button></a>
+                        <a href='index.php?action=loeschen&area=ronda&id=<?php echo $id; ?>&checkID=<?php echo $checkID; ?>'><button>Ronda löschen</button></a>
                         <br><div style="font-size: x-small"> (nur möglich wenn keine Punkte vergeben sind)</div>
                     </td>
                 </tr>
@@ -51,11 +51,11 @@
                 <th style="padding: 0px;">
                     <?php
                     if (!$rondaInNextStufe){
-                        echo "<a href='index.php?action=generieren&area=vorigejury&id=".$id."'><button>vorige Jury übernehmen</button></a></th>";
+                        echo "<a href='index.php?action=generieren&area=vorigejury&id=".$id."&checkID=".$checkID."'><button>vorige Jury übernehmen</button></a></th>";
                     }
                     ?>
                 <th style="padding: 0px;" width="10"></th>
-                <th style="padding: 0px;"><a href='index.php?action=drucken&area=jurybogen&id=<?php echo $id; ?>' target="_blank"><button>Jurybogen drucken</button></a></th>
+                <th style="padding: 0px;"><a href='index.php?action=drucken&area=jurybogen&id=<?php echo $id; ?>&checkID=<?php echo $checkID; ?>' target="_blank"><button>Jurybogen drucken</button></a></th>
                 </tr>
             </table>
             </td>
@@ -84,7 +84,7 @@
                     echo $tanzpaar2ronda->getTanzpaar2kategorie()->getTanzpaar()->getTanzpaarnamen();
                     echo "</td>\n\t\t\t\t\t<td>";
                     if (!$rondaInNextStufe){
-                        echo "<a href='index.php?action=loeschen&area=tanzpaar2ronda&id=".$tanzpaar2ronda->getId()."&ronda_id=".$ronda->getId()."'><button>löschen</button></a>";
+                        echo "<a href='index.php?action=loeschen&area=tanzpaar2ronda&id=".$tanzpaar2ronda->getId()."&ronda_id=".$ronda->getId()."&checkID=".$checkID."'><button>löschen</button></a>";
                     }
                     echo "</td>\n\t\t\t\t</tr>";
                 }
@@ -128,6 +128,7 @@
                         echo "\n\t\t\t\t\t\t\t<input type='hidden' name='ronda_id' value='" . $ronda->getId() . "'>";
                         echo "\n\t\t\t\t\t\t\t<input type='hidden' name='tanzpaar2kategorie_id' value='" . $tanzpaar2kategorie->getId() . "'>";
                         echo "\n\t\t\t\t\t\t\t<input type='hidden' name='reihenfolge' value='" . min($platz) . "'>";
+                        echo "\n\t\t\t\t\t\t\t<input name='checkID' type='hidden' value=".$checkID.">";
                         echo "\n\t\t\t\t\t\t\t<input type='hidden' name='action' value='speichern'>";
                         if (!$rondaInNextStufe) {
                             echo "\n\t\t\t\t\t\t\t<input type='submit' value='hinzufügen'>";
@@ -157,7 +158,7 @@
                     echo $jury2ronda->getJury()->getVorname()." ".$jury2ronda->getJury()->getNachname();
                     echo "\n\t\t\t\t\t</td>\n\t\t\t\t\t<td>";
                     if (!$rondaInNextStufe){
-                        echo "<a href='index.php?action=loeschen&area=jury2ronda&id=".$jury2ronda->getId()."&ronda_id=".$ronda->getId()."'><button>löschen</button></a>";
+                        echo "<a href='index.php?action=loeschen&area=jury2ronda&id=".$jury2ronda->getId()."&ronda_id=".$ronda->getId()."&checkID=".$checkID."'><button>löschen</button></a>";
                     }
                     echo "</td>\n\t\t\t\t</tr>";
                 }
@@ -190,6 +191,7 @@
                         echo "\n\t\t\t\t\t\t\t<input type='hidden' name='ronda_id' value='".$ronda->getId()."'>";
                         echo "\n\t\t\t\t\t\t\t<input type='hidden' name='jury_id' value='".$juryAll->getId()."'>";
                         echo "\n\t\t\t\t\t\t\t<input type='hidden' name='sitzplatz' value='".min($sitz)."'>";
+                        echo "\n\t\t\t\t\t\t\t<input name='checkID' type='hidden' value=".$checkID.">";
                         echo "\n\t\t\t\t\t\t\t<input type='hidden' name='action' value='speichern'>";
                         if (!$rondaInNextStufe){
                             echo "\n\t\t\t\t\t\t\t<input type='submit' value='hinzufügen'>";

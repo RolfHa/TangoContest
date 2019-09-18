@@ -27,10 +27,10 @@ $liste = Jury::getAll();
                 <?php echo $liste[$i]->getNachname(); ?>
             </td>
             <td>
-                <a href="index.php?action=aendern&area=jury&id=<?php echo $liste[$i]->getId(); ?>"><button>ändern</button></a>
+                <a href="index.php?action=aendern&area=jury&id=<?php echo $liste[$i]->getId(); ?>&checkID=<?php echo $checkID; ?>"><button>ändern</button></a>
             </td>
             <td>
-                <a href="index.php?action=loeschen&area=jury&id=<?php echo $liste[$i]->getId(); ?>"><button>löschen</button></a>
+                <a href="index.php?action=loeschen&area=jury&id=<?php echo $liste[$i]->getId(); ?>&checkID=<?php echo $checkID; ?>"><button>löschen</button></a>
             </td>
         </tr>
         <?php

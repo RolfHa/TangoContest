@@ -51,10 +51,10 @@ $liste = Teilnehmer::getAll();
                     <?php echo $liste[$i]->getGeburtsname(); ?>
                 </td>
                 <td>
-                    <a href="index.php?action=aendern&area=teilnehmer&id=<?php echo $liste[$i]->getId(); ?>"><button>ändern</button></a>
+                    <a href="index.php?action=aendern&area=teilnehmer&id=<?php echo $liste[$i]->getId(); ?>&checkID=<?php echo $checkID; ?>"><button>ändern</button></a>
                 </td>
                 <td>
-                    <a href="index.php?action=loeschen&area=teilnehmer&id=<?php echo $liste[$i]->getId(); ?>"><button>löschen</button></a>
+                    <a href="index.php?action=loeschen&area=teilnehmer&id=<?php echo $liste[$i]->getId(); ?>&checkID=<?php echo $checkID; ?>"><button>löschen</button></a>
                 </td>
         </tr>
     <?php

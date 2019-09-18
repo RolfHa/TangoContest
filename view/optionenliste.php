@@ -36,7 +36,7 @@
                         if ($anzahlquali->getKategorie_id()==$kategorie->getId()){
                             echo "\n\t\t<td style='border: 0px'>".$anzahlquali->getStufe()->getStufe()."</td>";
                             echo "\n\t\t<td style='border: 0px'>";
-                            echo "<a href='index.php?action=loeschen&area=kategorie2Stufe&id=".$anzahlquali->getId()."'><button>löschen</button></a></td>";
+                            echo "<a href='index.php?action=loeschen&area=kategorie2Stufe&id=".$anzahlquali->getId()."&checkID=".$checkID."'><button>löschen</button></a></td>";
                             echo "\n\t\t\t\t\t\t<form action='index.php' method='post'>";
                             echo "\n\t\t\t\t\t\t\t<input type='hidden' name='area' value='stufe2kategorie'>";
                             echo "\n\t\t\t\t\t\t\t<input type='hidden' name='action' value='neuanlegen>";
@@ -67,6 +67,7 @@
                         echo "\n\t\t\t\t\t\t<form action='index.php' method='post'>";
                         echo "\n\t\t\t\t\t\t\t<input type='hidden' name='area' value='kategorie2Stufe'>";
                         echo "\n\t\t\t\t\t\t\t<input type='hidden' name='action' value='neuanlegen'>";
+                        echo "\n\t\t\t\t\t\t\t<input name='checkID' type='hidden' value=".$checkID.">";
                         echo "\n\t\t\t\t\t\t\t<input type='hidden' name='kategorie_id' value='".$kategorie->getId()."'>";
                         HTML::SelectStufe('stufe_id',$stufeAuswahl,'');
                         echo "</td><td colspan='4' style='border: 0px;'><input type='submit' value='Stufe hinzufügen'>";
@@ -96,15 +97,17 @@
                                 echo "<input type='hidden' name='area' value='kategorie'>";
                                 echo "<input type='hidden' name='action' value='speichern'>";
                                 echo "<input type='hidden' name='id' value='".$kategorie->getId()."'>";
+                                echo "<input name='checkID' type='hidden' value=".$checkID.">";
                                 echo "<tr><td><input type='text' name='kategorie' value='".$kategorie->getKategorie()."'></td>";
                                 echo "<td><input type='submit' value='ändern'></td></form>";
-                                echo "<td><a href='index.php?action=loeschen&area=kategorie&id=".$kategorie->getId()."'><button>löschen</button></a></td>";
+                                echo "<td><a href='index.php?action=loeschen&area=kategorie&id=".$kategorie->getId()."&checkID=".$checkID."'><button>löschen</button></a></td>";
                                 echo "</tr>";
                             }
                             ?>
                             <form action='index.php' method='post'>
                                 <input type='hidden' name='area' value='kategorie'>
                                 <input type='hidden' name='action' value='neuanlegen'>
+                                <input name='checkID' type='hidden' value="<?php echo $checkID; ?>">
                                 <tr>
                                     <td><input type='text' name='kategorie' value=''></td>
                                     <td colspan="2"><input type='submit' value='neu'></td>
@@ -121,10 +124,11 @@
                                 echo "<form action='index.php' method='post'>";
                                 echo "<input type='hidden' name='area' value='stufe'>";
                                 echo "<input type='hidden' name='action' value='speichern'>";
+                                echo "<input name='checkID' type='hidden' value=".$checkID.">";
                                 echo "<input type='hidden' name='id' value='".$stufe->getId()."'>";
                                 echo "<tr><td><input type='text' name='stufe' value='".$stufe->getStufe()."'></td>";
                                 echo "<td><input type='submit' value='ändern'></td></form>";
-                                echo "<td><a href='index.php?action=loeschen&area=stufe&id=".$stufe->getId()."'><button>löschen</button></a></td>";
+                                echo "<td><a href='index.php?action=loeschen&area=stufe&id=".$stufe->getId()."&checkID=".$checkID."'><button>löschen</button></a></td>";
                                 echo "</tr>";
 
                             }
@@ -132,6 +136,7 @@
                             <form action='index.php' method='post'>
                                 <input type='hidden' name='area' value='stufe'>
                                 <input type='hidden' name='action' value='neuanlegen'>
+                                <input name='checkID' type='hidden' value="<?php echo $checkID; ?>">
                                 <tr>
                                     <td><input type='text' name='stufe' value=''></td>
                                     <td colspan="2"><input type='submit' value='neu'></td>
@@ -151,16 +156,18 @@
                                 echo "<form action='index.php' method='post'>";
                                 echo "<input type='hidden' name='area' value='bezahlart'>";
                                 echo "<input type='hidden' name='action' value='speichern'>";
+                                echo "<input name='checkID' type='hidden' value=".$checkID.">";
                                 echo "<input type='hidden' name='id' value='".$bezahlart->getId()."'>";
                                 echo "<tr><td><input type='text' name='bezahlart' value='".$bezahlart->getBezahlart()."'></td>";
                                 echo "<td><input type='submit' value='ändern'></td></form>";
-                                echo "<td><a href='index.php?action=loeschen&area=bezahlart&id=".$bezahlart->getId()."'><button>löschen</button></a></td>";
+                                echo "<td><a href='index.php?action=loeschen&area=bezahlart&id=".$bezahlart->getId()."&checkID=".$checkID."'><button>löschen</button></a></td>";
                                 echo "</tr>";
                             }
                             ?>
                             <form action='index.php' method='post'>
                                 <input type='hidden' name='area' value='bezahlart'>
                                 <input type='hidden' name='action' value='neuanlegen'>
+                                <input name='checkID' type='hidden' value="<?php echo $checkID; ?>">
                                 <tr>
                                     <td><input type='text' name='bezahlart' value=''></td>
                                     <td colspan="2"><input type='submit' value='neu'></td>
@@ -184,17 +191,19 @@
                                     echo "<form action='index.php' method='post'>";
                                     echo "<input type='hidden' name='area' value='optionen'>";
                                     echo "<input type='hidden' name='action' value='speichern'>";
+                                    echo "<input name='checkID' type='hidden' value=".$checkID.">";
                                     echo "<input type='hidden' name='name' value='".$optionen->getName()."'>";
                                     echo "<tr><td style='text-align: right'>".$optionen->getName()."</td>";
                                     echo "<td><input type='number' name='wert' value='".$optionen->getWert()."'></td>";
                                     echo "<td><input type='submit' value='ändern'></td></form>";
-                                    echo "<td><a href='index.php?action=loeschen&area=optionen&id=".$optionen->getName()."'><button>löschen</button></a></td>";
+                                    echo "<td><a href='index.php?action=loeschen&area=optionen&id=".$optionen->getName()."&checkID=".$checkID."'><button>löschen</button></a></td>";
                                     echo "</tr>";
                                 }
                             ?>
                             <form action='index.php' method='post'>
                                 <input type='hidden' name='area' value='optionen'>
                                 <input type='hidden' name='action' value='neuanlegen'>
+                                <input name='checkID' type='hidden' value="<?php echo $checkID; ?>">
                                 <tr>
                                     <td><input type='text' name='name' value=''></td>
                                     <td><input type='number' name='wert' value=''></td>

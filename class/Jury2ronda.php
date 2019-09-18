@@ -183,7 +183,22 @@ class Jury2ronda {
         $dieseRonda=Ronda::getById($id);
         $rondaId=Ronda::getRondaIdByStufeIdAndKategorieId($dieseRonda->getKategorie_id(),$dieseRonda->getStufe_id());
         for($i=0; $i<count($rondaId);$i++){
-            if($rondaId[$i]==$id and $i>0){
+            if($rondaId[$i]==$id){
+                if ($i>0){
+                    $jury2rondaAll=Jury2ronda::getByRondaId($rondaId[$i-1]);
+                }
+                else{
+                    //wenn es die erste Ronda ist wird die Jury aus der letzten stufe genommen
+                    $kategorie2Stufe=Kategorie2Stufe::getByKategorieId($dieseRonda->getKategorie_id());
+                    for ($j=0;$j<count($kategorie2Stufe);$j++){
+                        if ($kategorie2Stufe[$j]->getStufe_id()==$dieseRonda->getStufe_id() and $j>0){
+                            $lezteStufeRondaIdAll=Ronda::getRondaIdByStufeIdAndKategorieId($dieseRonda->getKategorie_id(),$kategorie2Stufe[$j-1]->getStufe_id());
+                            foreach ($lezteStufeRondaIdAll as $lezteStufeRondaId){
+                                $jury2rondaAll=Jury2ronda::getByRondaId($lezteStufeRondaId);
+                            }
+                        }
+                    }
+                }
                 $success=1;
                 //alte jury löschen
                 foreach (Jury2ronda::getByRondaId($id) as $jury2ronda){
@@ -191,7 +206,7 @@ class Jury2ronda {
                 }
                 if ($success==1){
                     // jury aus vorheriger Runde übernehmen
-                    foreach (Jury2ronda::getByRondaId($rondaId[$i-1]) as $jury2ronda){
+                    foreach ($jury2rondaAll as $jury2ronda){
                         $jury2ronda->setRondaId($id);
                         $success = Jury2ronda::save($jury2ronda);
                     }

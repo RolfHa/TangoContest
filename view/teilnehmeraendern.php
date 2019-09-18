@@ -4,6 +4,7 @@
     <input type="hidden" name="area" value="<?php echo $area; ?>">
     <input type="hidden" name="id" value="<?php echo $id; ?>">
     <input type="hidden" name="action" value="speichern">
+    <input name='checkID' type='hidden' value="<?php echo $checkID; ?>">
 
     <table>
         <tbody>

@@ -8,6 +8,7 @@
                 <input type="hidden" name="area" value="<?php echo $area; ?>">
                 <input type="hidden" name="id" value="<?php echo $id; ?>">
                 <input type="hidden" name="action" value="speichern">
+                <input name='checkID' type='hidden' value="<?php echo $checkID; ?>">
 
                 <table>
                     <tbody>
@@ -61,15 +62,13 @@
                     <th colspan="2">Ausgewählte Kategorien</th>
                 </thead>
                 <?php
-                $tanzpaar2kategorieAll=Tanzpaar2kategorie::getAll();
+                $tanzpaar2kategorieAll=Tanzpaar2kategorie::getByTanzpaarId($id);
                 foreach ($tanzpaar2kategorieAll as $tanzpaar2kategorie){
-                    if ($tanzpaar2kategorie->getTanzpaar_id()==$id){
-                        echo "\n\t\t\t\t<tr>\n\t\t\t\t\t<td>";
-                        echo $tanzpaar2kategorie->getKategorie()->getKategorie();
-                        echo "</td>\n\t\t\t\t\t<td>";
-                        echo "<a href='index.php?action=loeschen&area=tanzpaar2kategorie&id=".$id."&tanzpaar2kategorie_id=".$tanzpaar2kategorie->getId()."'><button>löschen</button></a>";
-                        echo "</td>\n\t\t\t\t</tr>";
-                    }
+                    echo "\n\t\t\t\t<tr>\n\t\t\t\t\t<td>";
+                    echo $tanzpaar2kategorie->getKategorie()->getKategorie();
+                    echo "</td>\n\t\t\t\t\t<td>";
+                    echo "<a href='index.php?action=loeschen&area=tanzpaar2kategorie&id=".$id."&tanzpaar2kategorie_id=".$tanzpaar2kategorie->getId()."&checkID=".$checkID."'><button>löschen</button></a>";
+                    echo "</td>\n\t\t\t\t</tr>";
                 }
                 ?>
             </table>
@@ -93,7 +92,7 @@
                         echo "\n\t\t\t\t<tr>\n\t\t\t\t\t<td>";
                         echo $kategorie->getKategorie();
                         echo "</td>\n\t\t\t\t\t<td>";
-                        echo "<a href='index.php?action=speichern&area=tanzpaar2kategorie&id=".$id."&kategorie_id=".$kategorie->getId()."'><button>hinzufügen</button></a>";
+                        echo "<a href='index.php?action=speichern&area=tanzpaar2kategorie&id=".$id."&kategorie_id=".$kategorie->getId()."&checkID=".$checkID."'><button>hinzufügen</button></a>";
                         echo "</td>\n\t\t\t\t</tr>";
                     }
                 }

@@ -55,10 +55,10 @@ $liste = Tanzpaar::getAll();
                 <?php echo $liste[$i]->getBezahlart()->getBezahlart(); ?>
             </td>
             <td>
-                <a href="index.php?action=aendern&area=tanzpaar&id=<?php echo $liste[$i]->getId(); ?>"><button>ändern</button></a>
+                <a href="index.php?action=aendern&area=tanzpaar&id=<?php echo $liste[$i]->getId(); ?>&checkID=<?php echo $checkID; ?>"><button>ändern</button></a>
             </td>
             <td>
-                <a href="index.php?action=loeschen&area=tanzpaar&id=<?php echo $liste[$i]->getId(); ?>"><button>löschen</button></a>
+                <a href="index.php?action=loeschen&area=tanzpaar&id=<?php echo $liste[$i]->getId(); ?>&checkID=<?php echo $checkID; ?>"><button>löschen</button></a>
             </td>
         </tr>
         <?php

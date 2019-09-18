@@ -19,7 +19,7 @@
                     <?php
                     foreach (Ronda::getRondaIdByStufeIdAndKategorieId($ronda->getKategorie_id(),$ronda->getStufe_id())as $rondaId){
                         $rondaliste=Ronda::getById($rondaId);
-                        echo "<a href='index.php?action=aendern&area=rondapunkte&id=".$rondaliste->getId()."'>";
+                        echo "<a href='index.php?action=aendern&area=rondapunkte&id=".$rondaliste->getId()."&checkID=".$checkID."'>";
                         echo "<button";
                         if ($rondaliste->getId()==$ronda->getId()){echo " disabled ";}
                         echo ">&nbsp;&nbsp;".$rondaliste->getRonda()."&nbsp;&nbsp;</button></a>";
@@ -27,10 +27,10 @@
                     ?>
                 </td>
                 <td style="border: 0px;text-align: center">
-                    <a href='index.php?action=aendern&area=rondateilnehmer&id=<?php echo $id; ?>'><button>Jury / Teilnehmer einstellen</button></a>
+                    <a href='index.php?action=aendern&area=rondateilnehmer&id=<?php echo $id; ?>&checkID=<?php echo $checkID; ?>'><button>Jury / Teilnehmer einstellen</button></a>
                 </td>
                 <td style="border: 0px;text-align: right">
-                    <a href='index.php?action=loeschen&area=ronda&id=<?php echo $id; ?>'><button <?php if ($rondaInNextStufe) {echo " disabled ";} ?>>Ronda löschen</button></a>
+                    <a href='index.php?action=loeschen&area=ronda&id=<?php echo $id; ?>&checkID=<?php echo $checkID; ?>'><button <?php if ($rondaInNextStufe) {echo " disabled ";} ?>>Ronda löschen</button></a>
                     <br><div style="font-size: x-small"> (nur möglich wenn keine Punkte vergeben sind)</div>
                 </td>
                 </tr>
@@ -43,6 +43,7 @@
                 <input type='hidden' name='area' value='punkte'>
                 <input type='hidden' name='action' value='speichern'>
                 <input type='hidden' name='id' value='<?php echo $id; ?>'>
+                <input name='checkID' type='hidden' value="<?php echo $checkID; ?>">
             <table border="0">
                 <tr>
                     <td style="border: 0px">

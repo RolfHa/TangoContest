@@ -83,8 +83,6 @@ class Optionen {
         if ($optionZeigeSQL==1){
             echo "<br>".$sql;
         }
-        
-        //echo $sql;
         return $success;
     }
 
@@ -98,7 +96,6 @@ class Optionen {
         if ($optionZeigeSQL==1){
             echo "<br>".$sql;
         }
-        
         return $success;
     }
 

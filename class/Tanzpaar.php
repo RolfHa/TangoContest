@@ -233,14 +233,18 @@ class Tanzpaar {
     public static function delete($id)
     {
         $db = DB::connect();
+        foreach (Tanzpaar2kategorie::getByTanzpaarId($id) as $tanzpaar2kategorie){
+            Tanzpaar2kategorie::delete($tanzpaar2kategorie->getId());
+        }
         $sql = "DELETE FROM tanzpaar WHERE id = $id";
-        echo $sql;
         $success = mysqli_query($db, $sql);
         global $optionZeigeSQL;
         if ($optionZeigeSQL==1){
             echo "<br>".$sql;
         }
-        
+        if ($success!=1){
+            echo "kann Tanzpaar nicht löschen, event. ist es schon einer ronda zugeteil";
+        }
         return $success;
     }
 
@@ -263,7 +267,7 @@ class Tanzpaar {
     public static function save ($tanzpaar)    {
         $db = DB::connect();
         $sql = "INSERT INTO tanzpaar (startnummer, teilnehmer1_id, teilnehmer2_id, fuehrungsfolge, anmeldebetrag, bezahlt, bezahldatum, bezahlart_id)
-                VALUES ($tanzpaar->startnummer, 
+                VALUES ('$tanzpaar->startnummer', 
                         $tanzpaar->teilnehmer1_id, 
                         $tanzpaar->teilnehmer2_id, 
                         $tanzpaar->fuehrungsfolge, 

@@ -1,6 +1,7 @@
 <form action="index.php" method="post">
     <input type="hidden" name="area" value="ronda">
     <input type="hidden" name="action" value="neuanlegen">
+    <input name='checkID' type='hidden' value="<?php echo $checkID; ?>">
 
     <table>
         <thead>

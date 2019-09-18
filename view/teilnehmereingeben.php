@@ -1,6 +1,7 @@
 <form action="index.php" method="post">
     <input type="hidden" name="area" value="<?php echo $area; ?>">
     <input type="hidden" name="action" value="neuanlegen">
+    <input name='checkID' type='hidden' value="<?php echo $checkID; ?>">
 
     <table>
         <tbody>
@@ -16,7 +17,7 @@
             <td>Geschlecht</td>
             <td><input name="geschlecht" value="m" type="radio"  >männlich
                 <input name="geschlecht" value="w" type="radio"  >weiblich
-                <input name="geschlecht" value="d" type="radio"  >divers
+                <input name="geschlecht" value="d" type="radio" required >divers
             </td>
         </tr>
         <tr>

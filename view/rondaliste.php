@@ -20,7 +20,7 @@ if ($area=='ronda'){$area = 'rondateilnehmer';}
                 <thead>
                     <th style="border: 0px">Rondas</th>
                     <th style="border: 0px">
-                        <a href='index.php?action=speichern&area=ronda'><button>Ronda manuell Anlegen</button></a>
+                        <a href='index.php?action=speichern&area=ronda&checkID=<?php echo $checkID; ?>'><button>Ronda manuell Anlegen</button></a>
                     </th>
                 </thead>
             </table>
@@ -47,7 +47,7 @@ if ($area=='ronda'){$area = 'rondateilnehmer';}
             foreach ($rondaAll as $ronda){
                 if ($ronda->getKategorie_id()==$kategorie->getId() and $ronda->getStufe_id()==$anzahlqualiStufe->getStufe()->getId()){
                     $rondaCount++;
-                    echo "\n\t\t\t\t\t<td style='border: 0px'><a href='index.php?action=aendern&area=".$area."&id=".$ronda->getId()."'>";
+                    echo "\n\t\t\t\t\t<td style='border: 0px'><a href='index.php?action=aendern&area=".$area."&id=".$ronda->getId()."&checkID=".$checkID."'>";
                     echo "<button>&nbsp;&nbsp;".$ronda->getRonda()."&nbsp;&nbsp;</button></a>";
                     //echo "(id=".$ronda->getId().")"; // zeigt id an
                     echo "</td>";
@@ -67,23 +67,23 @@ if ($area=='ronda'){$area = 'rondateilnehmer';}
                     // wenn "0" kann diese stufe abgeschlossen werden und neues ronders erstellt werdenn
                     if ($rondaInNextStufe==0){
                         if ($optionStufeUeberspringen==1){
-                            echo"<a href='index.php?action=generieren&area=stufeueberspringen&kategorie_id=".$kategorie->getId()."&stufe_id=".$anzahlqualiStufe->getStufe()->getId()."'>";
+                            echo"<a href='index.php?action=generieren&area=stufeueberspringen&kategorie_id=".$kategorie->getId()."&stufe_id=".$anzahlqualiStufe->getStufe()->getId()."&checkID=".$checkID."'>";
                             echo "<button>Stufe überspringen</button></a>";
 
                         }
                         else {
-                            echo"<a href='index.php?action=generieren&area=ronda&kategorie_id=".$kategorie->getId()."&stufe_id=".$anzahlqualiStufe->getStufe()->getId()."'>";
+                            echo"<a href='index.php?action=generieren&area=ronda&kategorie_id=".$kategorie->getId()."&stufe_id=".$anzahlqualiStufe->getStufe()->getId()."&checkID=".$checkID."'>";
                             echo "<button>Stufe abschließen</button></a>";
                         }
                     }
                     else {
-                        echo"<a href='index.php?action=generieren&area=gewinner&kategorie_id=".$kategorie->getId()."&stufe_id=".$anzahlqualiStufe->getStufe()->getId()."'>";
+                        echo"<a href='index.php?action=generieren&area=gewinner&kategorie_id=".$kategorie->getId()."&stufe_id=".$anzahlqualiStufe->getStufe()->getId()."&checkID=".$checkID."'>";
                         echo "<button>Bestenliste</button></a>";
                     }
                 }
                 // wenn es die letzte Stufe ist kann der gewinner ermittelt werden ($stufeCount==Count($anzahlqualiKat))
                 else {
-                    echo"<a href='index.php?action=generieren&area=gewinner&kategorie_id=".$kategorie->getId()."&stufe_id=".$anzahlqualiStufe->getStufe()->getId()."'>";
+                    echo"<a href='index.php?action=generieren&area=gewinner&kategorie_id=".$kategorie->getId()."&stufe_id=".$anzahlqualiStufe->getStufe()->getId()."&checkID=".$checkID."'>";
                     echo "<button>zeige Gewinner</button></a>";
                 }
             }
@@ -91,13 +91,13 @@ if ($area=='ronda'){$area = 'rondateilnehmer';}
             else{
                 // das soll aber nur in der ersten Stufe passieren (bei den anderne passiert das beim abschließen)
                 if ($stufeCount==1 and !rondaInKategorie($kategorie->getId())){
-                    echo"<a href='index.php?action=generieren&area=rondastufe1&kategorie_id=".$kategorie->getId()."&stufe_id=".$anzahlqualiStufe->getStufe()->getId()."'>";
+                    echo"<a href='index.php?action=generieren&area=rondastufe1&kategorie_id=".$kategorie->getId()."&stufe_id=".$anzahlqualiStufe->getStufe()->getId()."&checkID=".$checkID."'>";
                     echo "<button>Rondas autom. erstellen</button></a>";
                 }
             }
             echo "</td><td>";
             if ($rondaCount>0){
-                echo "<a href='index.php?action=drucken&area=einlassbogen&kategorie_id=".$kategorie->getId()."&stufe_id=".$anzahlqualiStufe->getStufe()->getId()."' target='_blank'><button>Einlass drucken</button></a></th>";
+                echo "<a href='index.php?action=drucken&area=einlassbogen&kategorie_id=".$kategorie->getId()."&stufe_id=".$anzahlqualiStufe->getStufe()->getId()."&checkID=".$checkID."' target='_blank'><button>Einlass drucken</button></a></th>";
             }
             echo "</td>\n\t</tr>";
         }

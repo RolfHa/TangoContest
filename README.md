@@ -31,8 +31,9 @@ teilnehmer2.kuenstlername AS teilnehmer2kuenstlername,
 teilnehmer2.geburtsname AS teilnehmer2geburtsname,
 tanzpaar2kategorie.kategorie_id AS kategorie_id,
 kategorie.kategorie AS kategorie,
-ronda.stufe_id AS stufe_id,
+kategorie2stufe.stufe_id AS stufe_id,
 stufe.stufe AS stufe,
+kategorie2stufe_id,
 ronda.id AS ronda_id,
 ronda.ronda AS ronda,
 tanzpaar2ronda.reihenfolge AS reihenfolge,
@@ -44,12 +45,13 @@ left join ronda ON ronda.id = tanzpaar2ronda.ronda_id
 left join jury2ronda on jury2ronda.ronda_id = tanzpaar2ronda.ronda_id
 left join jury on jury2ronda.jury_id = jury.id
 join tanzpaar2kategorie on tanzpaar2kategorie.id = tanzpaar2ronda.tanzpaar2kategorie_id
-join stufe on stufe.id = ronda.stufe_id
-join kategorie ON kategorie.id = ronda.kategorie_id
+join kategorie2stufe ON kategorie2stufe.id = ronda.kategorie2stufe_id
+join stufe on stufe.id = kategorie2stufe.stufe_id
+join kategorie on kategorie.id = kategorie2stufe.kategorie_id
 join tanzpaar on tanzpaar.id = tanzpaar2kategorie.tanzpaar_id
 join teilnehmer teilnehmer1 on teilnehmer1.id = tanzpaar.teilnehmer1_id
 join teilnehmer teilnehmer2 on teilnehmer2.id = tanzpaar.teilnehmer2_id
-order by tango.kategorie.id ,tango.stufe.id , ronda.ronda, tanzpaar2ronda.reihenfolge
+order by kategorie.id , stufe.id , ronda, reihenfolge
 
 
 

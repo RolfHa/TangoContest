@@ -108,20 +108,18 @@ class Jury implements Saveable {
     }
 
     public static function delete($id)    {
+        Jury2ronda::deleteByJuryId($id);
         $db = DB::connect();
-        //$result = Punkte::getByJuryId($id);
-        //if ($result == 0)        {
-        //    Jury2ronda::deleteByJuryId($id);
-            $sql = "DELETE FROM jury WHERE id = $id";
-            $success = mysqli_query($db, $sql);
+        $sql = "DELETE FROM jury WHERE id = $id";
+        $success = mysqli_query($db, $sql);
         global $optionZeigeSQL;
         if ($optionZeigeSQL==1){
             echo "<br>".$sql;
         }
-        
-            return $success;
-        //}
-        //return false;
+        if ($success!=1){
+            echo "kann Jury nicht löschen, event. wurden schon Punkte vergeben";
+        }
+        return $success;
     }
 
 }

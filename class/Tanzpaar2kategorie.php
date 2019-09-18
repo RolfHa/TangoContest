@@ -104,18 +104,16 @@ class Tanzpaar2kategorie {
         }
         
         $tanzpaar2kategorie = array();
-        $i=0;
         while ($row = mysqli_fetch_assoc($result)) {
             $tanzpaar = Tanzpaar::getById($row['tanzpaar_id']);
             $kategorie = Kategorie::getById($row['kategorie_id']);
-            $tanzpaar2kategorie[$i] = new Tanzpaar2kategorie(
+            $tanzpaar2kategorie[] = new Tanzpaar2kategorie(
                 $row['tanzpaar_id'],
                 $tanzpaar,
                 $row['kategorie_id'],
                 $kategorie,
                 $row['id']
             );
-            $i++;
         }
         return $tanzpaar2kategorie;
     }
@@ -130,18 +128,40 @@ class Tanzpaar2kategorie {
         }
         
         $tanzpaar2kategorie = array();
-        $i=0;
         $kategorie = Kategorie::getById($id); //ist ja immer die selbe
         while ($row = mysqli_fetch_assoc($result)) {
             $tanzpaar = Tanzpaar::getById($row['tanzpaar_id']);
-            $tanzpaar2kategorie[$i] = new Tanzpaar2kategorie(
+            $tanzpaar2kategorie[] = new Tanzpaar2kategorie(
                 $row['tanzpaar_id'],
                 $tanzpaar,
                 $row['kategorie_id'],
                 $kategorie,
                 $row['id']
             );
-            $i++;
+        }
+        return $tanzpaar2kategorie;
+    }
+
+
+    public static function getByTanzpaarId($id){
+        $db = DB::connect();
+        $sql = "SELECT * FROM tanzpaar2kategorie WHERE tanzpaar_id=$id order by kategorie_id;";
+        $result = mysqli_query($db, $sql);
+        global $optionZeigeSQL;
+        if ($optionZeigeSQL==1){
+            echo "<br>".$sql;
+        }
+        $tanzpaar2kategorie = array();
+        $tanzpaar = Tanzpaar::getById($id); //ist ja immer die selbe
+        while ($row = mysqli_fetch_assoc($result)) {
+            $kategorie = Kategorie::getById($row['kategorie_id']);
+            $tanzpaar2kategorie[] = new Tanzpaar2kategorie(
+                $row['tanzpaar_id'],
+                $tanzpaar,
+                $row['kategorie_id'],
+                $kategorie,
+                $row['id']
+            );
         }
         return $tanzpaar2kategorie;
     }

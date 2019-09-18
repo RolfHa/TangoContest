@@ -1,6 +1,4 @@
 <?php
-
-
 // config datei laden (kann außerhalb des WEB-zugriffs gespeichert werden)
 include_once  'config.php';
 //alle andern klassen laden (dateien müssen den klassennamen haben und im Verzeichnis class liegen)
@@ -30,13 +28,40 @@ if (isset($_REQUEST['action'])){
 if (isset($_REQUEST['id'])){
     $id = (int)$_REQUEST['id'];
 }
+/*
+// werden direkt übergeben
+if (isset($_REQUEST['vorname'])){    $vorname = (int)$_REQUEST['vorname'];}
+if (isset($_REQUEST['nachname'])){   $nachname = (int)$_REQUEST['nachname'];}
+if (isset($_REQUEST['geschlecht'])){    $geschlecht = (int)$_REQUEST['geschlecht'];}
+if (isset($_REQUEST['telefonnummer'])){ $telefonnummer = (int)$_REQUEST['telefonnummer'];}
+if (isset($_REQUEST['wohnort'])){    $wohnort = (int)$_REQUEST['wohnort'];}
+if (isset($_REQUEST['wohnland'])){   $wohnland = (int)$_REQUEST['wohnland'];}
+if (isset($_REQUEST['kuenstlername'])){  $kuenstlername = (int)$_REQUEST['kuenstlername'];}
+if (isset($_REQUEST['geburtsname'])){    $geburtsname = (int)$_REQUEST['geburtsname'];}
+if (isset($_REQUEST['startnummer'])){    $startnummer = (int)$_REQUEST['startnummer'];}
+if (isset($_REQUEST['teilnehmer1'])){    $teilnehmer1= (int)$_REQUEST['teilnehmer1'];}
+if (isset($_REQUEST['teilnehmer2'])){    $teilnehmer2= (int)$_REQUEST['teilnehmer2'];}
+if (isset($_REQUEST['fuehrungsfolge'])){ $fuehrungsfolge = (int)$_REQUEST['fuehrungsfolge'];}
+if (isset($_REQUEST['anmeldebetrag'])){  $anmeldebetrag = (int)$_REQUEST['anmeldebetrag'];}
+if (isset($_REQUEST['bezahlt'])){        $bezahlt = (int)$_REQUEST['bezahlt'];}
+if (isset($_REQUEST['bezahldatum'])){    $bezahldatum = (int)$_REQUEST['bezahldatum'];}
+if (isset($_REQUEST['bezahlart'])){      $bezahlart = (int)$_REQUEST['bezahlart'];}
+if (isset($_REQUEST['reihenfolge'])){    $reihenfolge = (int)$_REQUEST['reihenfolge'];}
+*/
 
-// F5 abfrangen
-if (isset($_SERVER['HTTP_CACHE_CONTROL'])){
-    echo "<h1>bitte nicht Refresh(F5)- oder die Vor- und Zurückfunktion des Browsers Benutzen</h1>";
-    $action = "";
-    $area = "";
+
+// abfrangen von f5 und browserbutton abfangen
+if ($action=='speichern' or $action=='neuanlegen' or $action=='generieren' or $action=='loeschen' ){
+    if(isset($_REQUEST['checkID'])){
+        DB::checkDB(($_REQUEST['checkID']));
+    }
+    else {
+        echo "<h3>keine checkID</h3>";
+        $action = "";
+        $area = "";
+    }
 }
+
 
 
 
@@ -56,13 +81,13 @@ switch ($action){
         $view =  $area . 'liste';
         switch ($area){
             case 'teilnehmer':
-                $teinehmer = new Teilnehmer($_POST['vorname'],$_POST['nachname'],$_POST['geschlecht'],$_POST['telefonnummer'],$_POST['wohnort'],$_POST['wohnland'],$_POST['kuenstlername'], $_POST['geburtsname']);
-                $teinehmer->setId($_POST['id']);
+                $teinehmer = new Teilnehmer($_REQUEST['vorname'],$_REQUEST['nachname'],$_REQUEST['geschlecht'],$_REQUEST['telefonnummer'],$_REQUEST['wohnort'],$_REQUEST['wohnland'],$_REQUEST['kuenstlername'], $_REQUEST['geburtsname']);
+                $teinehmer->setId($_REQUEST['id']);
                 $success = Teilnehmer::change($teinehmer);
                 break;
             case 'tanzpaar':
-                $tanzpaar = new Tanzpaar($_POST['startnummer'],$_POST['teilnehmer1'],'',$_POST['teilnehmer2'],'',$_POST['fuehrungsfolge'],$_POST['anmeldebetrag'],$_POST['bezahlt'],$_POST['bezahldatum'],$_POST['bezahlart'],'');
-                $tanzpaar ->setId($_POST['id']);
+                $tanzpaar = new Tanzpaar($_REQUEST['startnummer'],$_REQUEST['teilnehmer1'],'',$_REQUEST['teilnehmer2'],'',$_REQUEST['fuehrungsfolge'],$_REQUEST['anmeldebetrag'],$_REQUEST['bezahlt'],$_REQUEST['bezahldatum'],$_REQUEST['bezahlart'],'');
+                $tanzpaar ->setId($_REQUEST['id']);
                 $success = Tanzpaar::change($tanzpaar);
                 break;
             case 'tanzpaar2kategorie':
@@ -77,23 +102,23 @@ switch ($action){
                 $view =  'rondateilnehmeraendern';
                 break;
             case 'kategorie':
-                $kategorie = new Kategorie($_POST['kategorie'],$_POST['id']);
+                $kategorie = new Kategorie($_REQUEST['kategorie'],$_REQUEST['id']);
                 $success = Kategorie::change($kategorie);
                 $view =  'optionenliste';
                 break;
             case 'stufe':
-                $stufe = new Stufe($_POST['stufe'],$_POST['id']);
+                $stufe = new Stufe($_REQUEST['stufe'],$_REQUEST['id']);
                 $success = Stufe::change($stufe);
                 $view =  'optionenliste';
                 break;
             case 'bezahlart':
-                $bezahlart = new Bezahlart($_POST['bezahlart'],$_POST['id']);
+                $bezahlart = new Bezahlart($_REQUEST['bezahlart'],$_REQUEST['id']);
                 $success = Bezahlart::change($bezahlart);
                 $view =  'optionenliste';
                 break;
             case 'jury':
                 $jury = new Jury($_REQUEST['vorname'],$_REQUEST['nachname']);
-                $jury->setId($_POST['id']);
+                $jury->setId($_REQUEST['id']);
                 $success = Jury::change($jury);
                 break;
             case 'jury2ronda':
@@ -115,7 +140,7 @@ switch ($action){
                 $view =  'optionenliste';
                 break;
             case 'optionen':
-                $optionen =new Optionen($_POST['name'],$_POST['wert']);
+                $optionen =new Optionen($_REQUEST['name'],$_REQUEST['wert']);
                 $success = Optionen::change($optionen);
                 break;
         }
@@ -124,21 +149,23 @@ switch ($action){
         $view =  $area . 'liste';
         switch ($area){
             case 'teilnehmer':
-                $teinehmer = new Teilnehmer($_POST['vorname'],$_POST['nachname'],$_POST['geschlecht'],$_POST['telefonnummer'],$_POST['wohnort'],$_POST['wohnland'],$_POST['kuenstlername'], $_POST['geburtsname']);
+                $teinehmer = new Teilnehmer($_REQUEST['vorname'],$_REQUEST['nachname'],$_REQUEST['geschlecht'],$_REQUEST['telefonnummer'],$_REQUEST['wohnort'],$_REQUEST['wohnland'],$_REQUEST['kuenstlername'], $_REQUEST['geburtsname']);
                 $success = Teilnehmer::save($teinehmer);
                 break;
             case 'tanzpaar':
-                $tanzpaar = new Tanzpaar($_POST['startnummer'],$_POST['teilnehmer1'],'',$_POST['teilnehmer2'],'',$_POST['fuehrungsfolge'],$_POST['anmeldebetrag'],$_POST['bezahlt'],$_POST['bezahldatum'],$_POST['bezahlart'],'');
+                $tanzpaar = new Tanzpaar($_REQUEST['startnummer'],$_REQUEST['teilnehmer1'],'',$_REQUEST['teilnehmer2'],'',$_REQUEST['fuehrungsfolge'],$_REQUEST['anmeldebetrag'],$_REQUEST['bezahlt'],$_REQUEST['bezahldatum'],$_REQUEST['bezahlart'],'');
                 $success = Tanzpaar::save($tanzpaar);
                 echo 'angelegt';
+                $id=$tanzpaar->getId();
+                $view = 'tanzpaaraendern';
                 break;
             case 'kategorie':
-                $kategorie = new Kategorie($_POST['kategorie']);
+                $kategorie = new Kategorie($_REQUEST['kategorie']);
                 $success = Kategorie::save($kategorie);
                 $view =  'optionenliste';
                 break;
             case 'stufe':
-                $stufe = new Stufe($_POST['stufe']);
+                $stufe = new Stufe($_REQUEST['stufe']);
                 $success = Stufe::save($stufe);
                 $view =  'optionenliste';
                 break;
@@ -148,12 +175,12 @@ switch ($action){
                 $view =  'optionenliste';
             break;
             case 'bezahlart':
-                $bezahlart = new Bezahlart($_POST['bezahlart']);
+                $bezahlart = new Bezahlart($_REQUEST['bezahlart']);
                 $success = Bezahlart::save($bezahlart);
                 $view =  'optionenliste';
                 break;
             case 'jury':
-                $jury = new Jury($_POST['vorname'],$_POST['nachname']);
+                $jury = new Jury($_REQUEST['vorname'],$_REQUEST['nachname']);
                 $success = Jury::save($jury);
                 break;
             case 'ronda':
@@ -164,7 +191,7 @@ switch ($action){
                 //siehe Punke speichern
                 break;
             case 'optionen':
-                $optionen =new Optionen($_POST['name'],$_POST['wert']);
+                $optionen =new Optionen($_REQUEST['name'],$_REQUEST['wert']);
                 $success = Optionen::save($optionen);
                 break;
         }
@@ -266,18 +293,32 @@ switch ($action){
         break;
 }
 
+// checkID als eindeutige Kennung der seite erzeugen
+$checkID = microtime(true);
+
+
+
+
+/*   bitte wie folgt ins Formular oder link einbauen:
+    echo "<input name='checkID' type='hidden' value=".$checkID.">";
+    <input name='checkID' type='hidden' value="<?php echo $checkID; ?>">
+    &checkID=<?php echo $checkID; ?>
+    &checkID=".$checkID."
+*/
+
+//Aufruf der Standartseite mit menue usw
+// über $view wird der Inhalt gesteuert
+// bei Ausdrucken wird die Standardseite umgangen
 if ($nobasicview!=1){include 'view/basicview.php';}
-
-
 
 
 
 // zur Fehleranalyse
 if ($optionZeigeREQUEST==1){
     // Übergabewerte für testzwecke ausgeben
-    echo '<br><pre>';
+    echo '<hr>Übergabeparameter: <br><pre>';
     print_r($_REQUEST);
-    print_r($_SERVER);
+    //print_r($_SERVER);
     echo '</pre>';
 }
 
@@ -296,29 +337,5 @@ if ($optionZeigeSQL==1){
 }
 */
 
-
-
-/*
-
-// werden direkt übergeben
-if (isset($_REQUEST['vorname'])){    $vorname = (int)$_REQUEST['vorname'];}
-if (isset($_REQUEST['nachname'])){   $nachname = (int)$_REQUEST['nachname'];}
-if (isset($_REQUEST['geschlecht'])){    $geschlecht = (int)$_REQUEST['geschlecht'];}
-if (isset($_REQUEST['telefonnummer'])){ $telefonnummer = (int)$_REQUEST['telefonnummer'];}
-if (isset($_REQUEST['wohnort'])){    $wohnort = (int)$_REQUEST['wohnort'];}
-if (isset($_REQUEST['wohnland'])){   $wohnland = (int)$_REQUEST['wohnland'];}
-if (isset($_REQUEST['kuenstlername'])){  $kuenstlername = (int)$_REQUEST['kuenstlername'];}
-if (isset($_REQUEST['geburtsname'])){    $geburtsname = (int)$_REQUEST['geburtsname'];}
-if (isset($_REQUEST['startnummer'])){    $startnummer = (int)$_REQUEST['startnummer'];}
-if (isset($_REQUEST['teilnehmer1'])){    $teilnehmer1= (int)$_REQUEST['teilnehmer1'];}
-if (isset($_REQUEST['teilnehmer2'])){    $teilnehmer2= (int)$_REQUEST['teilnehmer2'];}
-if (isset($_REQUEST['fuehrungsfolge'])){ $fuehrungsfolge = (int)$_REQUEST['fuehrungsfolge'];}
-if (isset($_REQUEST['anmeldebetrag'])){  $anmeldebetrag = (int)$_REQUEST['anmeldebetrag'];}
-if (isset($_REQUEST['bezahlt'])){        $bezahlt = (int)$_REQUEST['bezahlt'];}
-if (isset($_REQUEST['bezahldatum'])){    $bezahldatum = (int)$_REQUEST['bezahldatum'];}
-if (isset($_REQUEST['bezahlart'])){      $bezahlart = (int)$_REQUEST['bezahlart'];}
-if (isset($_REQUEST['reihenfolge'])){    $reihenfolge = (int)$_REQUEST['reihenfolge'];}
-
-*/
 
 ?>
