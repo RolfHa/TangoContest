@@ -1,8 +1,8 @@
 <?php
 
-//$stage = "local";
+$stage = "local";
 //$stage = "copy";
-$stage = "live";
+//$stage = "live";
 
 switch ($stage){
     case 'local':
@@ -24,10 +24,10 @@ switch ($stage){
         define("DB_NAME",'tango');
         break;
     default:
-        define("HOST",'10.101.209.13');
+        define("HOST",'localhost');
         define("USER",'tango');
         define("PWD",'tango');
-        define("DB_NAME",'tangokopie');
+        define("DB_NAME",'tango');
         break;
 }
 
