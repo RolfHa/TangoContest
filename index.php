@@ -142,8 +142,8 @@ else {
                         Punkte::punkteVerarbeiten($_REQUEST['punkte']);
                         $view = 'rondapunkteaendern';
                         break;
-                    case 'Kategorie2Stufe':
-                        $anzahlquali = new Kategorie2Stufe($_REQUEST['kategorie_id'], '', $_REQUEST['stufe_id'], '', $_REQUEST['Kategorie2Stufe'], $_REQUEST['maxpaare']);
+                    case 'kategorie2stufe':
+                        $anzahlquali = new Kategorie2Stufe($_REQUEST['kategorie_id'], '', $_REQUEST['stufe_id'], '', $_REQUEST['anzahlquali'], $_REQUEST['maxpaare'],$_REQUEST['kategorie2stufe']);
                         $success = Kategorie2Stufe::change($anzahlquali);
                         $view = 'optionenliste';
                         break;

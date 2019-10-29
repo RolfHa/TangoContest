@@ -61,6 +61,7 @@
 
 
 <?php
+//echo "view ist:";echo $view;
 if ($view !=""){    include 'view/' . $view . '.php';}
 else {
     if ($optionStartbild==1){
