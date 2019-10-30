@@ -9,7 +9,8 @@
     }
 
 if ($area=='punkte'){$area = 'rondapunkte';}
-if ($area=='ronda'){$area = 'rondateilnehmer';}
+elseif ($area=='ronda'){$area = 'rondateilnehmer';}
+else {$area = 'rondapunkte';}
 ?>
 <table>
     <tr>

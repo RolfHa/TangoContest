@@ -51,7 +51,7 @@
                 <th style="padding: 0px;">
                     <?php
                     if (!$rondaInNextStufe){
-                        echo "<a href='index.php?action=generieren&area=vorigejury&id=".$id."&checkID=".$checkID."'><button>vorige Jury übernehmen</button></a></th>";
+                        echo "<a href='index.php?action=generieren&area=vorigejury&id=".$id."&checkID=".$checkID."'><button>vorherige Jury übernehmen</button></a></th>";
                     }
                     ?>
                 <th style="padding: 0px;" width="10"></th>

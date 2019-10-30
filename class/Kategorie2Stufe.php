@@ -130,7 +130,7 @@ class Kategorie2Stufe {
                 join kategorie on kategorie2stufe.kategorie_id=kategorie.id
                 join stufe on kategorie2stufe.stufe_id = stufe.id
                 WHERE kategorie_id=$kategorie_id 
-                order by kategorie_id, stufe_id;";
+                order by stufe_id;";
         $result = mysqli_query($db, $sql);
         global $optionZeigeSQL;
         if ($optionZeigeSQL==1){

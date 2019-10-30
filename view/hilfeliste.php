@@ -1,10 +1,7 @@
 <style>
     td, th {        vertical-align: top;    }
 </style>
-
 <ul>
-<br>
-
 <table >
     <thead>
         <th colspan="3" style="border: 0px"><h1>Vorgehensweis:</h1>
@@ -14,9 +11,14 @@
         <th> 1.</th>
         <td> Optionen einstellen</td>
         <td>
-            Kategorien und Stufen anlegen (Stufen solten vor den Kategorien angelegt werden für bessere autowerte der Rondas)<br>
-            jeweils die maximalen Paare pro Ronda und die weiterkommen pro Stufe einstellen<br>
-            Bezahlarten überprüfen
+            Kategorien und Stufen anlegen
+            <ul>
+                <li>Stufen solten vor den Kategorien angelegt (werden für bessere autowerte der Rondas)
+                <li>Die Reichnfolge der Stufen ist binden und sollte (unterste zurerst, finale am ende), sie können aber jederzeit umbenannt werden
+            </ul>
+            Pro Kategorie und Stufe sollten die maximalen Paare pro Ronda und die weiterkommen pro Stufe einstellen (in der letzten immmer 1 also Gewinner)
+            <br>Bezahlarten erstellen bzw überprüfen
+            <br>zusätzliche Optionen die das Programm braucht werden beim löschen mit den Standartwerten neu erstellt (0=nein 1=ja)
         </td>
     </tr>
     <tr>
@@ -28,7 +30,7 @@
     <tr>
         <th> 3.</th>
         <td> Tanzpaare anlegen</td>
-        <td>gegebenfalls csv import in die DB
+        <td>Angelegte Teilnehmer können zu Paaren angelegt werden, einzellne Teilnehmer drüfen in mehreren Paaren vertreten sein
         </td>
     </tr>
     <tr>
@@ -46,15 +48,17 @@
     <tr>
         <th> 6.</th>
         <td> Rondas anlegen</td>
-        <td>mit klick auf "Rondas erstellen" werden automatisch alle Tanzpaare die in der Kategorie sind in Rondas verteilt (optionen beachten)<br>
-            manuelle anpassungen möglich
+        <td>mit klick auf "Rondas erstellen" werden automatisch alle Tanzpaare die in der Kategorie sind in Rondas verteilt (optionen beachten)
+            <br>manuelle Anlegen auch möglich, dann müssen auch die Paare manuell pro Ronda zugeordnet werden
+            <br>Änderungen der Paare oder der Jury in der Ronda sind solange möglich wie noch keine Punkte vergeben wurden
         </td>
     </tr>
     <tr>
         <th> 7.</th>
         <td> Jury einstellen</td>
-        <td>in Jeder Ronda muss eine Jury eingestellt werden!(<b>min 3 </b>da erst ab 3 Wertungen die Punkte gezählt werden)<br>
-            dazu auf "Ronda Teilnehmer" und die entsprechene Ronda klicken
+        <td>in Jeder Ronda muss eine Jury eingestellt werden!(<b>min 3 </b>da erst ab 3 Wertungen die Punkte gezählt werden)
+            <br>dazu auf "Ronda Teilnehmer" und die entsprechene Ronda klicken
+            <br>mit klick auf "vorherige Jury" wird die Jury aus der vorhergehenden Ronda übernommen (bzw bei der ersten Ronda aus der letzen Ronda der vorherigen Stufe)
         </td>
     </tr>
     <tr>

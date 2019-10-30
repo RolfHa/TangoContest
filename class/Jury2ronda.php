@@ -179,35 +179,42 @@ class Jury2ronda {
     }
 
 
-    public static function vorigeJury($id)    {
-        $dieseRonda=Ronda::getById($id);
-        $rondaId=Ronda::getRondaIdByStufeIdAndKategorieId($dieseRonda->getKategorie_id(),$dieseRonda->getStufe_id());
-        for($i=0; $i<count($rondaId);$i++){
-            if($rondaId[$i]==$id){
+    public static function vorigeJury($rondaId)    {
+        $dieseRonda=Ronda::getById($rondaId);
+        $rondaIdListe=Ronda::getRondaIdByStufeIdAndKategorieId($dieseRonda->getKategorie_id(),$dieseRonda->getStufe_id());
+
+        for($i=0; $i<count($rondaIdListe);$i++){
+            if($rondaIdListe[$i]==$rondaId){
+                $jury2rondaAll=array();
                 if ($i>0){
-                    $jury2rondaAll=Jury2ronda::getByRondaId($rondaId[$i-1]);
+                    $jury2rondaAll=Jury2ronda::getByRondaId($rondaIdListe[$i-1]);
                 }
                 else{
                     //wenn es die erste Ronda ist wird die Jury aus der letzten stufe genommen
-                    $kategorie2Stufe=Kategorie2Stufe::getByKategorieId($dieseRonda->getKategorie_id());
+                    $kategorie2Stufe=Kategorie2Stufe::getByKategorieId($dieseRonda->getKategorie_id()); //lisste alle stufen in der kategorie als object
                     for ($j=0;$j<count($kategorie2Stufe);$j++){
-                        if ($kategorie2Stufe[$j]->getStufe_id()==$dieseRonda->getStufe_id() and $j>0){
-                            $lezteStufeRondaIdAll=Ronda::getRondaIdByStufeIdAndKategorieId($dieseRonda->getKategorie_id(),$kategorie2Stufe[$j-1]->getStufe_id());
-                            foreach ($lezteStufeRondaIdAll as $lezteStufeRondaId){
-                                $jury2rondaAll=Jury2ronda::getByRondaId($lezteStufeRondaId);
-                            }
+                        if ($kategorie2Stufe[$j]->getStufe_id()==$dieseRonda->getStufe_id()) {
+                            if ($j > 0) {                                                                  // wenn die aktuelle stufe nicht nicht die erste ist
+                                $vorherigeStufeRondaIdAll = Ronda::getRondaIdByStufeIdAndKategorieId($dieseRonda->getKategorie_id(), $kategorie2Stufe[$j - 1]->getStufe_id());
+                                if (cout($vorherigeStufeRondaIdAll) > 0) {
+                                    $vorherigeStufeRondaId = end($vorherigeStufeRondaIdAll);
+                                    $jury2rondaAll = Jury2ronda::getByRondaId($vorherigeStufeRondaId);
+                                }
+                            } else {echo "<h3>keine vorherige Jury vorhanden</h3>";}
                         }
                     }
                 }
                 $success=1;
                 //alte jury löschen
-                foreach (Jury2ronda::getByRondaId($id) as $jury2ronda){
+                foreach (Jury2ronda::getByRondaId($rondaId) as $jury2ronda){
                     $success=Jury2ronda::delete($jury2ronda->getId());
                 }
                 if ($success==1){
                     // jury aus vorheriger Runde übernehmen
+                    //echo "<pre>";
+                    //print_r($jury2rondaAll);
                     foreach ($jury2rondaAll as $jury2ronda){
-                        $jury2ronda->setRondaId($id);
+                        $jury2ronda->setRondaId($rondaId);
                         $success = Jury2ronda::save($jury2ronda);
                     }
                 }

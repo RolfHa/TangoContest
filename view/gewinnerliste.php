@@ -8,7 +8,7 @@
             $letztestufe=Kategorie2Stufe::getByKategorieId($_REQUEST['kategorie_id']);
             $letztestufe=end($letztestufe)->getStufe()->getId();
             if ($_REQUEST['stufe_id']==$letztestufe){
-                echo "<br><br><br><h1>Gewinner</h1> <h3>in der Kategorie ".Kategorie::getById($_REQUEST['kategorie_id'])->getKategorie()." sind:</h3>";
+                echo "<br><br><br><h1>Gewinner</h1> <h4>in der Kategorie ".Kategorie::getById($_REQUEST['kategorie_id'])->getKategorie()." sind:</h4>";
                 echo "<h2>".$tanzpaar2kategorieAll[0]->getTanzpaar()->getTanzpaarnamen();
                 for($i=1;$i<count($tanzpaar2kategorieAll);$i++){
                     if ($tanzpaar2kategorieAll[0]->getStufendurchschnitt()==$tanzpaar2kategorieAll[$i]->getStufendurchschnitt()){
@@ -21,7 +21,7 @@
             <table>
                 <thead>
                 <th colspan="4" style="text-align: center ; border: 0px"><h2>Bestenliste <?php echo Stufe::getById($_REQUEST['stufe_id'])->getStufe ();?></h2>
-                    <h3>in der Kategorie: <?php echo Kategorie::getById($_REQUEST['kategorie_id'])->getKategorie();?></h3>
+                    <h4>in der Kategorie: <?php echo Kategorie::getById($_REQUEST['kategorie_id'])->getKategorie();?></h4>
                 </th>
                 </thead>
                 <thead>

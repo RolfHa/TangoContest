@@ -139,8 +139,8 @@ else {
                         $view = 'rondaeingeben';
                         break;
                     case 'punkte':
-                        Punkte::punkteVerarbeiten($_REQUEST['punkte']);
-                        $view = 'rondapunkteaendern';
+                        if (isset($_REQUEST['punkte'])){Punkte::punkteVerarbeiten($_REQUEST['punkte']);$view = 'rondapunkteaendern';}
+                        else  {echo "<h3>Keine Punkte übergeben (event. sind keine Teilnehmer oder Jury angelegt</h3>";$view = 'rondateilnehmeraendern';}
                         break;
                     case 'kategorie2stufe':
                         $anzahlquali = new Kategorie2Stufe($_REQUEST['kategorie_id'], '', $_REQUEST['stufe_id'], '', $_REQUEST['anzahlquali'], $_REQUEST['maxpaare'],$_REQUEST['kategorie2stufe']);
@@ -222,11 +222,12 @@ else {
                         }
                         break;
                     case 'gewinner':
+                        // ohne anlegen werden keine neuen stufen angelegt sonder nur berechnet
                         $tanzpaar2kategorieAll = Tanzpaar2ronda::generiereStufe($_REQUEST['kategorie_id'], $_REQUEST['stufe_id'], 'nurAnsicht');
                         if ($tanzpaar2kategorieAll != null) {
                             $view = 'gewinnerliste';
                         } else {
-                            echo "Keine Daten vorhanden";
+                            echo "<h3>Keine Daten vorhanden</h3>";
                             $view = 'rondaliste';
                         }
                         break;

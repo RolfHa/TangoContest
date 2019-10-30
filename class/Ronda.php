@@ -23,7 +23,7 @@ class Ronda {
             $this->kategorie2stufe = $kategorie2stufe ;
         }
         else {
-            $this->kategorie2stufe_id = Kategorie2Stufe::getById($kategorie2stufe_id);
+            $this->kategorie2stufe = Kategorie2Stufe::getById($kategorie2stufe_id);
         }
 
     }
@@ -143,7 +143,7 @@ class Ronda {
                 join kategorie2stufe on ronda.kategorie2stufe_id=kategorie2stufe.id
                 join kategorie on kategorie2stufe.kategorie_id=kategorie.id
                 join stufe on kategorie2stufe.stufe_id=stufe.id
-                WHERE kategorie_id=$kategorie_id AND stufe_id = $stufe_id order by id";
+                WHERE kategorie_id=$kategorie_id AND stufe_id = $stufe_id order by ronda";
         $result = mysqli_query($db, $sql);
         global $optionZeigeSQL;
         if ($optionZeigeSQL==1){
@@ -167,7 +167,7 @@ class Ronda {
                 join kategorie on kategorie2stufe.kategorie_id=kategorie.id
                 join stufe on kategorie2stufe.stufe_id=stufe.id
                 WHERE kategorie2stufe_id=$kategorie2stufe_id
-                order by kategorie2stufe.stufe_id, ronda.ronda";
+                order by ronda.ronda";
         $result = mysqli_query($db, $sql);
         global $optionZeigeSQL;
         if ($optionZeigeSQL==1){
@@ -218,19 +218,13 @@ class Ronda {
     // Löscht die ronda nur wenn noch keine Punkte in der betreffenden Kategorie und Stufe stattfand
     public static function delete($id)    {
         $db = DB::connect();
-        $ronda=self::getById($id);
-        //  Gibt alle rondas züruck  die die gleiche Kategorie und Stufe haben
-        $rondaId = Ronda::getRondaIdByStufeIdAndKategorieId($ronda->getKategorie_id(), $ronda->getStufe_id());
-        $tanzpaar2ronda = array();
-        for ($i=0; $i < count($rondaId); $i++)        {
-            $tanzpaar2ronda = Tanzpaar2ronda::getByRondaId($rondaId[$i]);
-        }
+        $tanzpaar2ronda = Tanzpaar2ronda::getByRondaId($id);
         $num=0;
         for ($i=0; $i < count($tanzpaar2ronda); $i++)        {
-            $num = $num+Punkte::getAmountByTanzpaar2RondaId($tanzpaar2ronda[$i]->getId());
+                $num = $num+Punkte::getAmountByTanzpaar2RondaId($tanzpaar2ronda[$i]->getId());
         }
         if($num !=0)  {
-            echo 'kann Ronda nicht löschen da schon punkte vergeben wurden';
+            echo "<h3>kann Ronda nicht löschen da schon punkte vergeben wurden</h3>";
             return false;
         }
         else {
@@ -305,17 +299,26 @@ class Ronda {
     }
 
     public static function neuanlegen($kategorie2stufe_id){
-        //nächste ronda nr ermitteln
-        $ronda=Ronda::getByKategorie2stufeId($kategorie2stufe_id); // id list aller rondas in dem bereich
-        if($ronda!=null){
-            $ronda=end($ronda); // letzte id
-            //$ronda=Ronda::getById($ronda); // ronda objekt
-            $ronda=$ronda->getRonda(); // ronda nummer
-            $ronda++; // +1
+        //nächste freie ronda nr ermitteln
+        $rondaliste=Ronda::getByKategorie2stufeId($kategorie2stufe_id); // id list(objekte) aller rondas in dem bereich
+        if($rondaliste!=null){
+            $ronda=end($rondaliste);                            // letzte ronda
+            $rondanummer=$ronda->getRonda();                            // ronda nummer
+            $rondanummer++;                                             // +1
+            $freierondanummer=array();;
+            for ($i=1;$i<=$rondanummer;$i++){                           // geht alle zaheln von 1 bis (letzterondanummer+1) durch
+                $benutzt=0;
+                foreach ($rondaliste as $ronda){
+                    if ($ronda->getRonda()==$i){$benutzt++;}            //prüft ob die rondanummer schon benutz wird
+                }
+                if ($benutzt==0){$freierondanummer[]=$i;}                // sammelt alle freien rondanummern
+            }
+            if ($freierondanummer[0]>0){$rondanummer=$freierondanummer[0];} //wenn die erste freie nummer vorhanden ist soll diese genutzt werden
         }
-        else {$ronda=1;}
-        $kategorie2stufe=Kategorie2Stufe::getById($kategorie2stufe_id);
-        $ronda=new Ronda($kategorie2stufe->getKategorie_id(),$kategorie2stufe->getKategorie(),$kategorie2stufe->getStufe_id(),$kategorie2stufe->getStufe(),$ronda,$kategorie2stufe->getId(),$kategorie2stufe);
+        else {$rondanummer=1;}
+        //$kategorie2stufe=Kategorie2Stufe::getById($kategorie2stufe_id);
+        //$ronda=new Ronda($kategorie2stufe->getKategorie_id(),$kategorie2stufe->getKategorie(),$kategorie2stufe->getStufe_id(),$kategorie2stufe->getStufe(),$rondanummer,$kategorie2stufe->getId(),$kategorie2stufe);
+        $ronda=new Ronda('','','','',$rondanummer,$kategorie2stufe_id,'');
         $rondaMitId=Ronda::save($ronda);
         return $rondaMitId;
     }
